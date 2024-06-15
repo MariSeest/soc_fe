@@ -1,24 +1,18 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 
 const DynamicTablePage = () => {
-    const data = [
-        {
-            "id": "1",
-            "name": "name_1",
-            "status": "status_1",
-            "category": "category_1",
-            "text": "text_1",
-        },
-        {
-            "id": "2",
-            "name": "name_2",
-            "status": "status_2",
-            "category": "category_2",
-            "text": "text_2",
-        },
-    ];
+    const [tickets, setTickets] = useState([])
     const navigate = useNavigate(); // Using the useNavigate hook to get the navigation function
+
+    useEffect(() => {
+
+        fetch("http://localhost:3001/tickets")
+            .then((res) => res.json())
+            .then((data) => setTickets(data));
+
+
+    }, []);
 
     const handleGoBack = (e) => {
         e.preventDefault();
@@ -50,7 +44,7 @@ const DynamicTablePage = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((item) => (
+                {tickets.map((item) => (
                     <tr key={item.id}>
                         <td>{item.id}</td>
                         <td>{item.name}</td>
