@@ -4,6 +4,7 @@ import LogoutButton from "./logout";
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from "./Login";
 import Chat from './Chat'; // Importa il componente Chat
+import './Home.css';
 
 export const Home = ({ username }) => {
     const navigate = useNavigate();
@@ -27,6 +28,9 @@ export const Home = ({ username }) => {
     return (
         isAuthenticated && (
             <div>
+                <div className="header">
+                    <h1>SOCX</h1>
+                </div>
                 <div className="toolbar">
                     <span>Welcome, {username}</span>
                     <img src={user.picture} alt={user.name} />
@@ -43,7 +47,7 @@ export const Home = ({ username }) => {
                 </div>
 
                 {/* Aggiungi l'icona per aprire la chat */}
-                <button onClick={() => document.querySelector('.chat-popup').style.display = 'flex'}>
+                <button className="open-chat-button" onClick={() => document.querySelector('.chat-popup').style.display = 'flex'}>
                     Open Chat
                 </button>
 
@@ -55,6 +59,7 @@ export const Home = ({ username }) => {
 };
 
 export default Home;
+
 
 
 

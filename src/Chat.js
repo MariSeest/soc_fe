@@ -6,6 +6,7 @@ const socket = io('http://localhost:3001');
 const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         socket.on('chat message', (msg) => {
@@ -20,8 +21,17 @@ const Chat = () => {
     useEffect(() => {
         // Recupera i messaggi dal server quando il componente viene montato
         fetch('http://localhost:3001/messages')
-            .then(res => res.json())
-            .then(data => setMessages(data));
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => setMessages(data))
+            .catch(error => {
+                console.error('Failed to fetch messages:', error);
+                setError(error);
+            });
     }, []);
 
     const handleSend = (e) => {
@@ -36,11 +46,19 @@ const Chat = () => {
                 },
                 body: JSON.stringify(message),
             })
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    return res.json();
+                })
                 .then(data => {
                     setInput('');
                 })
-                .catch(error => console.error('Error sending message:', error));
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    setError(error);
+                });
         }
     };
 
@@ -51,6 +69,7 @@ const Chat = () => {
                 <button onClick={() => document.querySelector('.chat-popup').style.display = 'none'}>Close</button>
             </div>
             <div className="chat-body">
+                {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}
                 {messages.map((msg, index) => (
                     <p key={index}>{msg.text} - <small>{new Date(msg.timestamp).toLocaleTimeString()}</small></p>
                 ))}
@@ -69,4 +88,5 @@ const Chat = () => {
 };
 
 export default Chat;
+
 

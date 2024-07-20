@@ -1,0 +1,134 @@
+/* CSS per Home.js */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #0000ff, #87cefa);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    position: fixed;
+    top: 0;
+    z-index: 1; /* Mantiene la scritta "SOCX" sopra la toolbar */
+    box-sizing: border-box; /* Assicura che il padding non influenzi la larghezza */
+}
+
+.header h1 {
+    font-size: 3em;
+    font-family: 'Arial Black', sans-serif;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    position: fixed;
+    top: 60px; /* Sposta la toolbar in basso per fare spazio a "SOCX" */
+    left: 0;
+    box-sizing: border-box; /* Assicura che il padding non influenzi la larghezza */
+    z-index: 1; /* Mantiene la toolbar sopra gli altri elementi */
+}
+
+.toolbar span {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.toolbar img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.toolbar h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.5em;
+}
+
+.toolbar p {
+    margin: 0 0 10px 0;
+    font-size: 1em;
+}
+
+.toolbar button {
+    margin: 5px 0;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.main-content {
+    text-align: center;
+    margin-top: 120px; /* Aggiungi margine per evitare la sovrapposizione con la toolbar */
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.chat-popup {
+    display: none; /* Nascondi la chat popup per default */
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    max-width: 300px;
+    height: 400px;
+    border: 2px solid #ccc;
+    background-color: white;
+    z-index: 9;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.open-chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+/* Aggiungi media queries per una migliore responsività */
+@media (max-width: 600px) {
+    .toolbar {
+        top: 120px; /* Regola la posizione della toolbar per schermi più piccoli */
+    }
+
+    .main-content {
+        margin-top: 180px; /* Aggiungi margine per evitare la sovrapposizione con la toolbar su schermi più piccoli */
+    }
+
+    .header h1 {
+        font-size: 2em;
+    }
+
+    .toolbar button {
+        margin: 5px 0;
+        width: auto;
+    }
+}
+
