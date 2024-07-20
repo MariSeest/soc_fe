@@ -11,7 +11,6 @@ import PageLoader from "./components/page-loader";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AuthenticationGuard } from "./components/authentication-guard";
 import ClosedTickets from "./ClosedTickets";
-import PageNotFound from "./PageNotFound";
 
 function App() {
     const { isLoading } = useAuth0();
@@ -30,7 +29,6 @@ function App() {
     }
 
     return (
-        <Router>
             <Routes>
                 <Route path="/" element={<AuthenticationGuard component={Home} />} />
                 <Route path="/home" element={<AuthenticationGuard component={Home} />} />
@@ -40,16 +38,16 @@ function App() {
                 <Route path="/visualizzaticket" element={<AuthenticationGuard component={VisualizzaTicket} />} />
                 <Route path="/apriunticket" element={<AuthenticationGuard component={ApriUnTicket} />} />
                 <Route path="/closedtickets" element={<AuthenticationGuard component={ClosedTickets} />} />
-                <Route path="*" element={<PageNotFound />} />
-            </Routes>
-            <header className="App-header">
-                {data ? <p>{data.message}</p> : <p>Loading...</p>}
-            </header>
-        </Router>
+        </Routes>
     );
 }
 
 export default App;
+
+
+
+
+
 
 
 

@@ -1,36 +1,41 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-const DynamicTablePage = () => {
-    const [tickets, setTickets] = useState([])
-    const navigate = useNavigate(); // Using the useNavigate hook to get the navigation function
+const VisualizzaTicket = () => {
+    const [tickets, setTickets] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-
         fetch("http://localhost:3001/tickets")
             .then((res) => res.json())
             .then((data) => setTickets(data));
-
-
     }, []);
+
+    const handleDelete = (id) => {
+        fetch(`http://localhost:3001/tickets/${id}`, {
+            method: 'DELETE',
+        })
+            .then((res) => res.json())
+            .then(() => {
+                setTickets(tickets.filter(ticket => ticket.id !== id));
+            })
+            .catch(error => console.error('Error deleting ticket:', error));
+    };
 
     const handleGoBack = (e) => {
         e.preventDefault();
-        // Assuming the login is successful, you can redirect to the home page
-        // Redirect to the home page
-        navigate('/Home'); // Update '/home' with your actual home page route
+        navigate('/home');
     };
 
     const handleClosedTickets = (e) => {
         e.preventDefault();
-        navigate('/ClosedTickets');
+        navigate('/closedtickets');
     };
 
     return (
         <div>
             <h2>Tutti i Ticket</h2>
             <button onClick={handleGoBack}>Torna alla Home</button>
-            {/* This button should redirect to the Home page */}
             <button onClick={handleClosedTickets}>Closed Tickets</button>
             <table>
                 <thead>
@@ -40,7 +45,7 @@ const DynamicTablePage = () => {
                     <th>Status</th>
                     <th>Category</th>
                     <th>Content</th>
-                    {/* Add more table headers as needed */}
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,6 +56,9 @@ const DynamicTablePage = () => {
                         <td>{item.status}</td>
                         <td>{item.category}</td>
                         <td>{item.text}</td>
+                        <td>
+                            <button onClick={() => handleDelete(item.id)}>Delete</button>
+                        </td>
                     </tr>
                 ))}
                 </tbody>
@@ -59,6 +67,7 @@ const DynamicTablePage = () => {
     );
 };
 
-export default DynamicTablePage;
+export default VisualizzaTicket;
+
 
 

@@ -1,45 +1,70 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
-import PopUpBox from './components/PopUpBox';
 
-const App = ({ username }) => {
-    const navigate = useNavigate(); // Initialize navigate
-    const { user, isAuthenticated, isLoading } = useAuth0();
-    const [showPopUp, setShowPopUp] = useState(false); // State to manage the visibility of the pop-up box
+const ApriUnTicket = () => {
+    const navigate = useNavigate();
+    const { user, isAuthenticated } = useAuth0();
+    const [ticket, setTicket] = useState({
+        name: "",
+        status: "open",
+        category: "",
+        text: ""
+    });
 
-    const handleGoBackHome = (e) => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setTicket(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        navigate('/Home');
-    }
+        fetch("http://localhost:3001/tickets", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(ticket)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Ticket created:", data);
+                navigate("/visualizzaticket");
+            })
+            .catch(error => {
+                console.error("Error creating ticket:", error);
+            });
+    };
 
-    const handleOpenPopUp = () => {
-        setShowPopUp(true);
-    }
-
-    const handleClosePopUp = () => {
-        setShowPopUp(false);
-    }
-
-    return (isAuthenticated && (
+    return (
+        isAuthenticated && (
             <div>
-                {/* Toolbar */}
-                <div className="toolbar">
-                    <span>Welcome,</span>
-                    <img src={user.picture} alt={user.name}/>
-                    <h2>{user.name}</h2>
-                    <p>{user.email}</p>
-                    <button onClick={handleOpenPopUp}>Apri un ticket</button>
-                    <p>oppure</p>
-                    <button onClick={handleGoBackHome}> Torna alla Home</button>
-                </div>
-                {/* Render the PopUpBox component conditionally */}
-                {showPopUp && <PopUpBox onClose={handleClosePopUp} />}
+                <h2>Apri un Ticket</h2>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Nome:
+                        <input type="text" name="name" value={ticket.name} onChange={handleChange} required />
+                    </label>
+                    <label>
+                        Categoria:
+                        <input type="text" name="category" value={ticket.category} onChange={handleChange} required />
+                    </label>
+                    <label>
+                        Descrizione:
+                        <textarea name="text" value={ticket.text} onChange={handleChange} required />
+                    </label>
+                    <button type="submit">Invia</button>
+                </form>
+                <button onClick={() => navigate('/home')}>Torna alla Home</button>
             </div>
         )
     );
 };
 
-export default App;
+export default ApriUnTicket;
+
 
 
