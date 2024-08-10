@@ -6,7 +6,7 @@ import LoginButton from "./Login";
 import Chat from './Chat'; // Importa il componente Chat
 import './Home.css';
 
-export const Home = ({ username }) => {
+export const Home = () => {
     const navigate = useNavigate();
     const { user, isAuthenticated, isLoading } = useAuth0();
 
@@ -25,14 +25,18 @@ export const Home = ({ username }) => {
         navigate('/apriunticket');
     }
 
+    if (isLoading) return <div>Loading...</div>;
+
     return (
         isAuthenticated && (
             <div>
                 <div className="header">
-                    <h1>SOCX</h1>
+                    <div className="circle-container">
+                        <h1>SOCX</h1>
+                    </div>
                 </div>
                 <div className="toolbar">
-                    <span>Welcome, {username}</span>
+                    <span>Welcome, {user.nickname}</span>
                     <img src={user.picture} alt={user.name} />
                     <h2>{user.name}</h2>
                     <p>{user.email}</p>
@@ -42,23 +46,20 @@ export const Home = ({ username }) => {
                     <LogoutButton />
                 </div>
 
-                <div className="main-content">
-                    <h1>SOCX</h1>
-                </div>
-
                 {/* Aggiungi l'icona per aprire la chat */}
                 <button className="open-chat-button" onClick={() => document.querySelector('.chat-popup').style.display = 'flex'}>
                     Open Chat
                 </button>
 
                 {/* Componente Chat */}
-                <Chat />
+                <Chat username={user.nickname} />
             </div>
         )
     );
 };
 
 export default Home;
+
 
 
 

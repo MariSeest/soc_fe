@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import './chat.css'
 
 const socket = io('http://localhost:3001');
 
-const Chat = () => {
+const Chat = ({ username }) => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
+    const [recipient, setRecipient] = useState('');
     const [error, setError] = useState(null);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
+        socket.emit('register', username);
+
         socket.on('chat message', (msg) => {
             setMessages((prevMessages) => [...prevMessages, msg]);
         });
@@ -16,10 +21,9 @@ const Chat = () => {
         return () => {
             socket.off('chat message');
         };
-    }, []);
+    }, [username]);
 
     useEffect(() => {
-        // Recupera i messaggi dal server quando il componente viene montato
         fetch('http://localhost:3001/messages')
             .then(res => {
                 if (!res.ok) {
@@ -32,12 +36,17 @@ const Chat = () => {
                 console.error('Failed to fetch messages:', error);
                 setError(error);
             });
+
+        fetch('http://localhost:3001/users')
+            .then(res => res.json())
+            .then(data => setUsers(data))
+            .catch(error => console.error('Failed to fetch users:', error));
     }, []);
 
     const handleSend = (e) => {
         e.preventDefault();
-        if (input.trim()) {
-            const message = { text: input, timestamp: new Date() };
+        if (input.trim() && recipient.trim()) {
+            const message = { text: input, recipient, timestamp: new Date(), sender: username };
 
             fetch('http://localhost:3001/messages', {
                 method: 'POST',
@@ -71,10 +80,16 @@ const Chat = () => {
             <div className="chat-body">
                 {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}
                 {messages.map((msg, index) => (
-                    <p key={index}>{msg.text} - <small>{new Date(msg.timestamp).toLocaleTimeString()}</small></p>
+                    <p key={index}><strong>{msg.sender}:</strong> {msg.text} - <small>{new Date(msg.timestamp).toLocaleTimeString()}</small></p>
                 ))}
             </div>
             <form onSubmit={handleSend}>
+                <select onChange={(e) => setRecipient(e.target.value)} value={recipient}>
+                    <option value="">Select recipient</option>
+                    {users.map((user, index) => (
+                        <option key={index} value={user}>{user}</option>
+                    ))}
+                </select>
                 <input
                     type="text"
                     value={input}
@@ -88,5 +103,3 @@ const Chat = () => {
 };
 
 export default Chat;
-
-
