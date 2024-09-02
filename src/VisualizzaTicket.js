@@ -161,13 +161,13 @@ const VisualizzaTicket = () => {
 
             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
                 <thead>
-                <tr style={{backgroundColor:'lightblue'}}>
-                    <th style={{ border: '2px solid black', padding: '8px' }}>ID</th>
-                    <th style={{ border: '2px solid black', padding: '8px' }}>Name</th>
-                    <th style={{ border: '2px solid black', padding: '8px' }}>Status</th>
-                    <th style={{ border: '2px solid black', padding: '8px' }}>Category</th>
-                    <th style={{ border: '2px solid black', padding: '8px' }}>Content</th>
-                    <th style={{ border: '2px solid black', padding: '8px' }}>Actions</th>
+                <tr style={{backgroundColor:'lightblue', border: '2px solid black', padding: '8px' }}>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Category</th>
+                    <th>Content</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
