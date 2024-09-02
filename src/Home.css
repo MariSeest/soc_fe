@@ -4,7 +4,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     min-height: 100vh;
-    background: linear-gradient(to bottom, #0000ff, #87cefa);
+    background: linear-gradient(to bottom, #0000ff, #38598b);
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,24 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from 'react-router-dom';
 
-export const DynamicTablePage2 = () => {
-    const data = [
-        {
-            "id": "1",
-            "name": "name_1",
-            "status": "status_1",
-            "category": "category_1",
-            "text": "text_1",
-        },
-        {
-            "id": "2",
-            "name": "name_2",
-            "status": "status_2",
-            "category": "category_2",
-            "text": "text_2",
-        },
-    ];
+const ClosedTickets = () => {
+    const [tickets, setTickets] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:3001/tickets")
+            .then((res) => res.json())
+            .then((data) => {
+                const closedTickets = data.filter(ticket => ticket.status === "closed");
+                setTickets(closedTickets);
+            })
+            .catch(error => console.error('Error fetching closed tickets:', error));
+    }, []);
 
     const navigate = useNavigate();
 
@@ -29,7 +24,7 @@ export const DynamicTablePage2 = () => {
 
     return (
         <div>
-            <h2> Tickets Chiusi </h2>
+            <h2>Tickets Chiusi</h2>
             <table>
                 <thead>
                 <tr>
@@ -38,16 +33,28 @@ export const DynamicTablePage2 = () => {
                     <th>Status</th>
                     <th>Category</th>
                     <th>Content</th>
+                    <th>Comments</th>
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((item) => (
+                {tickets.map((item) => (
                     <tr key={item.id}>
                         <td>{item.id}</td>
                         <td>{item.name}</td>
                         <td>{item.status}</td>
                         <td>{item.category}</td>
                         <td>{item.text}</td>
+                        <td>
+                            {item.comments && item.comments.length > 0 ? (
+                                <ul>
+                                    {item.comments.map((comment, index) => (
+                                        <li key={index}>{comment}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <span>No comments</span>
+                            )}
+                        </td>
                     </tr>
                 ))}
                 </tbody>
@@ -70,17 +77,20 @@ const ClosedTicketsPage = () => {
         isAuthenticated && (
             <div>
                 <span>Welcome,</span>
-                <img src={user.picture} alt={user.name}/>
+                <img src={user.picture} alt={user.name} />
                 <h2>{user.name}</h2>
                 <p>{user.email}</p>
                 <button onClick={handleGoBack}>Go Back</button>
-                <DynamicTablePage2/>
+                <ClosedTickets />
             </div>
         )
     );
 };
 
 export default ClosedTicketsPage;
+
+
+
 
 
 
