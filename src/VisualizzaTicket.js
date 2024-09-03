@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import './VisualizzaTicket.css';
 
 const VisualizzaTicket = () => {
     const [tickets, setTickets] = useState([]);
@@ -11,14 +12,14 @@ const VisualizzaTicket = () => {
     useEffect(() => {
         fetch("http://localhost:3001/tickets")
             .then((res) => res.json())
-            .then((data) => setTickets(data));
+            .then((data) => setTickets(data))
+            .catch(error => console.error('Error fetching tickets:', error));
     }, []);
 
     const handleDelete = (id) => {
         fetch(`http://localhost:3001/tickets/${id}`, {
             method: 'DELETE',
         })
-            .then((res) => res.json())
             .then(() => {
                 setTickets(tickets.filter(ticket => ticket.id !== id));
             })
@@ -39,9 +40,10 @@ const VisualizzaTicket = () => {
                 }
                 return res.json();
             })
-            .then((updatedTicket) => {
-                console.log("Ticket closed:", updatedTicket);
-                setTickets(tickets.filter(ticket => ticket.status !== 'closed'));
+            .then(() => {
+                setTickets(tickets.map(ticket =>
+                    ticket.id === id ? { ...ticket, status: 'closed' } : ticket
+                ));
                 navigate('/closedtickets');
             })
             .catch(error => console.error('Error closing ticket:', error));
@@ -129,39 +131,18 @@ const VisualizzaTicket = () => {
 
     return (
         <div>
-            <div style={{
-                backgroundColor: 'lightblue',
-                padding: '10px 0',
-                textAlign: 'center',
-                marginBottom: '20px',
-                width: '100vw',
-                position: 'relative',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                boxSizing: 'border-box'
-            }}>
-                <h2 style={{ margin: 0, fontSize: '4vw' }}>Tutti i Ticket</h2>
+            <div className="title-container">
+                <h2>Tutti i Ticket</h2>
             </div>
 
-            <div style={{
-                position: 'fixed',
-                top: '10px',
-                right: '10px',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '10px',
-                backgroundColor: '#f0f0f0',
-                border: '1px solid #ccc',
-                borderRadius: '10px',
-                zIndex: 1000
-            }}>
-                <button onClick={handleGoBack} style={{ marginBottom: '10px' }}>Torna alla Home</button>
+            <div className="button-container">
+                <button onClick={handleGoBack}>Torna alla Home</button>
                 <button onClick={handleClosedTickets}>Closed Tickets</button>
             </div>
 
-            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+            <table className="table">
                 <thead>
-                <tr style={{backgroundColor:'lightblue', border: '2px solid black', padding: '8px' }}>
+                <tr>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Status</th>
@@ -173,27 +154,22 @@ const VisualizzaTicket = () => {
                 <tbody>
                 {tickets.map((item) => (
                     <tr key={item.id}>
-                        <td style={{ border: '2px solid black', padding: '8px' , backgroundColor:'aqua'}}>{item.id}</td>
-                        <td style={{ border: '2px solid black', padding: '8px',backgroundColor:'aqua' }}>{item.name}</td>
-                        <td style={{
-                            border: '2px solid black',
-                            padding: '8px',
-                            backgroundColor:'aqua',
-                            color: item.status === 'closed' ? 'red' : 'green'  // Colore condizionale
-                        }}>
+                        <td>{item.id}</td>
+                        <td>{item.name}</td>
+                        <td className={item.status === 'closed' ? 'status-closed' : 'status-open'}>
                             {item.status}
                         </td>
-                        <td style={{ border: '2px solid black', padding: '8px', backgroundColor:'aqua' }}>{item.category}</td>
-                        <td style={{ border: '2px solid black', padding: '8px',backgroundColor:'aqua' }}>{item.text}</td>
-                        <td style={{ border: '2px solid black', padding: '8px' ,backgroundColor:'aqua'}}>
+                        <td>{item.category}</td>
+                        <td>{item.text}</td>
+                        <td>
                             {activeCommentId === item.id ? (
                                 <div>
-                                    <textarea
-                                        style={{ width: '100%', marginBottom: '5px' }}
-                                        value={commentText}
-                                        onChange={(e) => setCommentText(e.target.value)}
-                                        placeholder="Enter your comment here"
-                                    />
+                                        <textarea
+                                            style={{ width: '100%', marginBottom: '5px' }}
+                                            value={commentText}
+                                            onChange={(e) => setCommentText(e.target.value)}
+                                            placeholder="Enter your comment here"
+                                        />
                                     <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Submit</button>
                                     <button onClick={() => handleCommentAndCloseTicket(item.id)}>Submit & Close</button>
                                     <button onClick={handleCancelComment} style={{ marginBottom: '5px' }}>Cancel</button>
@@ -214,7 +190,7 @@ const VisualizzaTicket = () => {
                                 </div>
                             )}
                             {expandedCommentId === item.id && item.comments && item.comments.length > 0 && (
-                                <div style={{ marginTop: '10px', padding: '5px', borderTop: '1px solid #ccc' }}>
+                                <div className="comment-section">
                                     <strong>Comments:</strong>
                                     <ul>
                                         {item.comments.map((comment, index) => (
@@ -233,6 +209,8 @@ const VisualizzaTicket = () => {
 };
 
 export default VisualizzaTicket;
+
+
 
 
 

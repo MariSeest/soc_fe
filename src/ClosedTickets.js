@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from 'react-router-dom';
+import './ClosedTickets.CSS';  // Importa il CSS
 
 const ClosedTickets = () => {
     const [tickets, setTickets] = useState([]);
@@ -24,7 +25,14 @@ const ClosedTickets = () => {
 
     return (
         <div>
-            <h2>Tickets Chiusi</h2>
+            <div className="title-container">
+                <h2>Tickets Chiusi</h2>
+            </div>
+
+            <div className="gobackbutton">
+                <button onClick={handleGoBack}>Go Back</button>
+            </div>
+
             <table>
                 <thead>
                 <tr>
@@ -44,7 +52,7 @@ const ClosedTickets = () => {
                         <td>{item.status}</td>
                         <td>{item.category}</td>
                         <td>{item.text}</td>
-                        <td>
+                        <td className="comments-section">
                             {item.comments && item.comments.length > 0 ? (
                                 <ul>
                                     {item.comments.map((comment, index) => (
@@ -59,7 +67,6 @@ const ClosedTickets = () => {
                 ))}
                 </tbody>
             </table>
-            <button onClick={handleGoBack}>Go Back</button>
         </div>
     );
 };
@@ -76,11 +83,12 @@ const ClosedTicketsPage = () => {
     return (
         isAuthenticated && (
             <div>
-                <span>Welcome,</span>
-                <img src={user.picture} alt={user.name} />
-                <h2>{user.name}</h2>
-                <p>{user.email}</p>
-                <button onClick={handleGoBack}>Go Back</button>
+                <div className="toolbar">
+                    <span>Welcome,</span>
+                    <img src={user.picture} alt={user.name} />
+                    <h2>{user.name}</h2>
+                    <p>{user.email}</p>
+                </div>
                 <ClosedTickets />
             </div>
         )
@@ -88,6 +96,8 @@ const ClosedTicketsPage = () => {
 };
 
 export default ClosedTicketsPage;
+
+
 
 
 

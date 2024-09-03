@@ -1,81 +1,101 @@
+/* Stile generale della pagina */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     min-height: 100vh;
-    background: linear-gradient(to bottom, #0000ff, #38598b);
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Gradiente futuristico blu */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    color: #e0e0e0; /* Testo chiaro su sfondo scuro */
 }
 
+/* Stile per l'header */
 .header {
     display: flex;
-    justify-content: center;  /* Centra orizzontalmente il contenuto */
-    align-items: center;      /* Centra verticalmente il contenuto */
+    justify-content: flex-start; /* Allinea il contenuto a sinistra */
+    align-items: center;
     position: fixed;
     top: 0;
+    left: 0; /* Attacca l'header al bordo sinistro */
     z-index: 1;
-    box-sizing: border-box;
-    height: 120px; /* Aggiunge un'altezza fissa per contenere la figura rotonda */
+    width: 100%; /* Copre tutta la larghezza della pagina */
+    height: 150px; /* Altezza aumentata per un aspetto più imponente */
+    background: rgba(0, 0, 0, 0.8); /* Sfondo semi-trasparente per un look futuristico */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Aggiunge un'ombra all'header */
 }
 
-.header h1 {
-    font-size: 2em;
-    font-family: 'Arial Black', sans-serif;
-    margin: 0;
-    padding: 0;
-    color: white; /* Imposta il colore del testo a bianco per contrastare con il verde scuro */
-    text-align: center; /* Centra il testo all'interno della figura */
-}
-
+/* Stile per il contenitore circolare nell'header */
 .header .circle-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 120px; /* Imposta la larghezza della figura rotonda */
-    height: 120px; /* Imposta l'altezza della figura rotonda */
-    background-color: #006400; /* Colore verde scuro */
-    border: 5px solid black; /* Bordo nero intorno alla figura rotonda */
+    width: 150px;
+    height: 150px;
+    background-color: #282828; /* Colore scuro per contrastare il testo neon */
+    border: 5px solid #00e0ff; /* Bordo neon */
     border-radius: 50%; /* Rende la figura rotonda */
-    box-sizing: border-box;
+    box-shadow: 0 0 15px #00e0ff; /* Ombra neon per un effetto di luce */
+    margin-left: 0; /* Attacca il contenitore circolare al bordo sinistro */
 }
 
+/* Stile per la scritta SOC X */
+.header .circle-container h1 {
+    font-size: 2em;
+    font-family: 'Orbitron', sans-serif; /* Font futuristica */
+    margin: 0;
+    padding: 0;
+    color: #00e0ff; /* Colore del testo neon */
+    text-transform: uppercase; /* Testo in maiuscolo per un effetto futuristico */
+    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff; /* Effetto di luce neon */
+    text-align: center; /* Centra il testo all'interno del cerchio */
+}
+
+/* Stile per la toolbar */
 .toolbar {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 10px;
+    width: 250px;
+    background: rgba(0, 0, 0, 0.7); /* Sfondo scuro semi-trasparente */
+    padding: 20px;
     position: fixed;
-    top: 160px; /* Aggiusta la posizione per evitare sovrapposizioni con l'header */
-    left: 0;
+    top: 180px; /* Posizionato sotto l'header */
+    left: 20px;
     box-sizing: border-box;
     z-index: 1;
+    border-radius: 10px; /* Angoli arrotondati */
+    border: 1px solid #00e0ff; /* Bordo neon */
+    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
 }
 
 .toolbar span {
     font-size: 1.2em;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #00e0ff; /* Testo neon */
 }
 
 .toolbar img {
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+    border: 2px solid #00e0ff; /* Bordo neon intorno all'immagine */
+    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
 }
 
 .toolbar h2 {
     margin: 0 0 10px 0;
     font-size: 1.5em;
+    color: #ffffff; /* Testo bianco per contrastare con lo sfondo scuro */
 }
 
 .toolbar p {
     margin: 0 0 10px 0;
     font-size: 1em;
+    color: #b0b0b0; /* Testo grigio chiaro */
 }
 
 .toolbar button {
@@ -84,45 +104,56 @@ body {
     font-size: 1em;
     cursor: pointer;
     border: none;
-    background-color: #007bff;
-    color: white;
+    background-color: #00e0ff; /* Colore neon per il bottone */
+    color: #1f1c2c; /* Testo scuro per contrastare il bottone neon */
     border-radius: 5px;
     width: 100%;
+    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    transition: background-color 0.3s ease;
 }
 
+.toolbar button:hover {
+    background-color: #00a3cc; /* Colore più scuro al passaggio del mouse */
+}
+
+/* Stile per il contenuto principale */
 .main-content {
     text-align: center;
-    margin-top: 180px; /* Aumenta la distanza dalla parte superiore per tenere conto dell'header */
+    margin-top: 200px; /* Aumenta la distanza dalla parte superiore per tenere conto dell'header */
     flex: 1;
     width: 100%;
     box-sizing: border-box;
+    padding-left: 270px; /* Spazio per evitare sovrapposizione con la toolbar */
 }
 
 .ticket-stats {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 8cm; /* Sposta il contenuto 8 cm sotto il centro della pagina */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
+    margin-top: 10cm; /* Aggiunge un margine superiore di 10 cm */
+    color: #00e0ff; /* Testo neon */
+    border: 1px solid #00e0ff; /* Bordo neon */
 }
 
+/* Stile per la chat popup */
 .chat-popup {
     display: none;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 300px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
     height: 400px;
-    border: 2px solid #ccc;
-    background-color: white;
+    border: 2px solid #00e0ff;
+    background-color: rgba(0, 0, 0, 0.9);
     z-index: 9;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 15px #00e0ff;
+    border-radius: 10px;
+    padding: 15px;
     box-sizing: border-box;
-    padding: 10px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    color: #ffffff;
 }
 
 .chat-popup .form-container {
@@ -136,25 +167,27 @@ body {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid #00e0ff;
     border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
     margin-top: 10px;
     flex: 1;
     overflow-y: auto;
-    max-height: calc(100% - 60px);
 }
 
 .chat-popup .send-button {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-    background-color: #007bff;
-    color: white;
+    background-color: #00e0ff;
+    color: #1f1c2c;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
     flex-shrink: 0;
+    box-shadow: 0 0 10px #00e0ff;
 }
 
 .open-chat-button {
@@ -165,22 +198,29 @@ body {
     font-size: 1em;
     cursor: pointer;
     border: none;
-    background-color: #007bff;
-    color: white;
+    background-color: #00e0ff;
+    color: #1f1c2c;
     border-radius: 5px;
+    box-shadow: 0 0 10px #00e0ff;
+    transition: background-color 0.3s ease;
+}
+
+.open-chat-button:hover {
+    background-color: #00a3cc;
 }
 
 @media (max-width: 600px) {
     .toolbar {
-        top: 200px; /* Aggiusta la posizione della toolbar per evitare sovrapposizioni */
+        top: 220px; /* Aggiusta la posizione della toolbar per evitare sovrapposizioni */
     }
 
     .main-content {
-        margin-top: 240px; /* Aumenta la distanza dalla parte superiore per tenere conto dell'header */
+        margin-top: 260px; /* Aumenta la distanza dalla parte superiore per tenere conto dell'header */
+        padding-left: 0; /* Rimuove il padding per evitare sovrapposizioni su schermi piccoli */
     }
 
-    .header h1 {
-        font-size: 2em;
+    .header .circle-container h1 {
+        font-size: 1.5em; /* Riduce la dimensione del testo nei dispositivi più piccoli */
     }
 
     .toolbar button {
@@ -194,6 +234,9 @@ body {
         transform: translateX(-50%);
     }
 }
+
+
+
 
 
 

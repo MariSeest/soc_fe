@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
+import './ApriUnTicket.css';
 
 const ApriUnTicket = () => {
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ const ApriUnTicket = () => {
 
     return (
         isAuthenticated && (
-            <div>
+            <div className="container">
                 <h2>Apri un Ticket</h2>
                 <form onSubmit={handleSubmit}>
                     <label>
@@ -65,6 +66,7 @@ const ApriUnTicket = () => {
 };
 
 export default ApriUnTicket;
+
 
 
 

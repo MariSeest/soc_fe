@@ -1,0 +1,135 @@
+/* Stile per la toolbar */
+.toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    padding: 15px 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    box-sizing: border-box;
+    margin: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.toolbar img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+}
+
+.toolbar h2 {
+    color: #00e0ff;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff;
+    margin: 0;
+}
+
+.toolbar p {
+    color: #e0e0e0;
+    margin: 0;
+}
+
+/* Stile per il pulsante Go Back */
+.gobackbutton {
+    margin: 5px 0;
+    text-align: center;
+}
+
+.gobackbutton button {
+    padding: 12px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    background-color: #00e0ff;
+    color: #1a1a2e;
+    border-radius: 8px;
+    width: auto;
+    box-shadow: 0px 4px 10px rgba(0, 224, 255, 0.5);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.gobackbutton button:hover {
+    background-color: #00a3cc;
+    transform: scale(1.05);
+}
+
+/* Stile generale della pagina */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+table {
+    margin-top: 100px;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(32, 32, 32, 0.9); /* Sfondo scuro traslucido */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7); /* Ombra per profondità */
+    border-radius: 10px; /* Angoli arrotondati */
+    overflow: hidden; /* Per mantenere gli angoli arrotondati */
+}
+
+thead tr {
+    background-color: #00e0ff; /* Colore neon per l'intestazione */
+    color: #000000; /* Testo nero */
+    border-bottom: 4px solid #1a1a2e; /* Bordo inferiore scuro */
+}
+
+thead th {
+    padding: 12px;
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #000000; /* Testo nero per contrasto */
+}
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: rgba(64, 64, 64, 0.8); /* Colore più chiaro al passaggio del mouse */
+}
+
+tbody td {
+    padding: 12px;
+    border: 2px solid #00e0ff; /* Bordo neon */
+    background-color: #e0e0e0; /* Sfondo grigio chiaro per contrasto con testo nero */
+    color: #000000; /* Testo nero */
+}
+
+/* Stile per la sezione dei commenti */
+.comments-section {
+    border: 2px solid #00e0ff;
+    padding: 10px;
+    background-color: #c0c0c0; /* Sfondo grigio chiaro per contrasto con testo nero */
+    color: #000000; /* Testo nero */
+    border-radius: 5px;
+    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.5); /* Ombra interna neon */
+}
+
+.comments-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.comments-section li {
+    margin-bottom: 5px;
+}
+
+
+
