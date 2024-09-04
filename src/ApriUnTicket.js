@@ -9,7 +9,8 @@ const ApriUnTicket = () => {
     const [ticket, setTicket] = useState({
         name: "",
         status: "open",
-        category: "",
+        category: "Exfiltration", // Categoria di default
+        severity: "Medium", // Severity di default
         text: ""
     });
 
@@ -51,7 +52,19 @@ const ApriUnTicket = () => {
                     </label>
                     <label>
                         Categoria:
-                        <input type="text" name="category" value={ticket.category} onChange={handleChange} required />
+                        <select name="category" value={ticket.category} onChange={handleChange} required>
+                            <option value="Exfiltration">Exfiltration</option>
+                            <option value="DDOS">DDOS</option>
+                            <option value="Support">Support</option>
+                        </select>
+                    </label>
+                    <label>
+                        Gravità (Severity):
+                        <select name="severity" value={ticket.severity} onChange={handleChange} required>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
                     </label>
                     <label>
                         Descrizione:
@@ -66,6 +79,8 @@ const ApriUnTicket = () => {
 };
 
 export default ApriUnTicket;
+
+
 
 
 

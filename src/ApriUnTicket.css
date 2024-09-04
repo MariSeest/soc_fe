@@ -111,4 +111,47 @@
     background-color: #5a6268;
     transform: scale(1.05);
 }
+/* Aggiungi stile per il campo select */
+.container form select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #00e0ff; /* Bordo neon */
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9; /* Sfondo chiaro */
+    color: #000; /* Testo nero */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Effetto hover e focus per il campo select */
+.container form select:focus {
+    border-color: #00a3cc;
+    box-shadow: 0 0 10px #00e0ff; /* Effetto neon */
+    outline: none;
+}
+/* Stile per il campo select (già esistente) */
+.container form select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #00e0ff; /* Bordo neon */
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9; /* Sfondo chiaro */
+    color: #000; /* Testo nero */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Effetto hover e focus per il campo select */
+.container form select:focus {
+    border-color: #00a3cc;
+    box-shadow: 0 0 10px #00e0ff; /* Effetto neon */
+    outline: none;
+}
+
 

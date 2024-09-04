@@ -118,4 +118,30 @@
     margin-bottom: 5px;
     color: #ffffff;
 }
+/* Stile per il contenitore dei filtri */
+.filter-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8); /* Sfondo scuro trasparente */
+    border: 1px solid #00e0ff; /* Bordo neon */
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+}
+
+.filter-container label {
+    color: #00e0ff; /* Testo neon */
+    font-family: 'Roboto', sans-serif;
+    margin-right: 10px;
+}
+
+.filter-container select {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #1a1a2e;
+    color: #00e0ff; /* Colore neon */
+    border: 1px solid #00e0ff;
+}
+
 

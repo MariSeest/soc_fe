@@ -4,17 +4,34 @@ import './VisualizzaTicket.css';
 
 const VisualizzaTicket = () => {
     const [tickets, setTickets] = useState([]);
+    const [filteredTickets, setFilteredTickets] = useState([]); // Stato per ticket filtrati
     const [activeCommentId, setActiveCommentId] = useState(null);
     const [commentText, setCommentText] = useState("");
     const [expandedCommentId, setExpandedCommentId] = useState(null);
+    const [categoryFilter, setCategoryFilter] = useState(''); // Stato per filtro categoria
+    const [severityFilter, setSeverityFilter] = useState(''); // Stato per filtro severity
     const navigate = useNavigate();
 
     useEffect(() => {
         fetch("http://localhost:3001/tickets")
             .then((res) => res.json())
-            .then((data) => setTickets(data))
+            .then((data) => {
+                setTickets(data);
+                setFilteredTickets(data); // Imposta lo stato iniziale dei ticket filtrati
+            })
             .catch(error => console.error('Error fetching tickets:', error));
     }, []);
+
+    useEffect(() => {
+        // Filtra i ticket in base ai filtri selezionati
+        const filtered = tickets.filter(ticket => {
+            return (
+                (categoryFilter === '' || ticket.category === categoryFilter) &&
+                (severityFilter === '' || ticket.severity === severityFilter)
+            );
+        });
+        setFilteredTickets(filtered);
+    }, [categoryFilter, severityFilter, tickets]);
 
     const handleDelete = (id) => {
         fetch(`http://localhost:3001/tickets/${id}`, {
@@ -51,13 +68,13 @@ const VisualizzaTicket = () => {
 
     const handleCommentTicket = (id) => {
         setActiveCommentId(id);
-        setExpandedCommentId(id); // Espandi automaticamente la cella per mostrare l'area di commento
+        setExpandedCommentId(id);
     };
 
     const handleCancelComment = () => {
         setActiveCommentId(null);
         setCommentText("");
-        setExpandedCommentId(null); // Collassa la cella quando annulli l'azione di commento
+        setExpandedCommentId(null);
     };
 
     const handleSubmitComment = (id) => {
@@ -85,7 +102,7 @@ const VisualizzaTicket = () => {
                 ));
                 setActiveCommentId(null);
                 setCommentText("");
-                setExpandedCommentId(id); // Automatically expand to show the new comment
+                setExpandedCommentId(id);
             })
             .catch(error => console.error('Error commenting on ticket:', error));
     };
@@ -110,7 +127,7 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then(() => {
-                handleCloseTicket(id); // Once the comment is submitted, close the ticket
+                handleCloseTicket(id);
             })
             .catch(error => console.error('Error commenting and closing ticket:', error));
     };
@@ -140,6 +157,24 @@ const VisualizzaTicket = () => {
                 <button onClick={handleClosedTickets}>Closed Tickets</button>
             </div>
 
+            <div className="filter-container">
+                <label>Filtra per Categoria:</label>
+                <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+                    <option value="">Tutte</option>
+                    <option value="DDOS">DDOS</option>
+                    <option value="Exfiltration">Exfiltration</option>
+                    <option value="Support">Support</option>
+                </select>
+
+                <label>Filtra per Severity:</label>
+                <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
+                    <option value="">Tutte</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+
             <table className="table">
                 <thead>
                 <tr>
@@ -147,12 +182,13 @@ const VisualizzaTicket = () => {
                     <th>Name</th>
                     <th>Status</th>
                     <th>Category</th>
+                    <th>Severity</th> {/* Aggiungiamo la colonna severity */}
                     <th>Content</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {tickets.map((item) => (
+                {filteredTickets.map((item) => (
                     <tr key={item.id}>
                         <td>{item.id}</td>
                         <td>{item.name}</td>
@@ -160,16 +196,17 @@ const VisualizzaTicket = () => {
                             {item.status}
                         </td>
                         <td>{item.category}</td>
+                        <td>{item.severity}</td> {/* Mostra la severity */}
                         <td>{item.text}</td>
                         <td>
                             {activeCommentId === item.id ? (
                                 <div>
-                                        <textarea
-                                            style={{ width: '100%', marginBottom: '5px' }}
-                                            value={commentText}
-                                            onChange={(e) => setCommentText(e.target.value)}
-                                            placeholder="Enter your comment here"
-                                        />
+                                    <textarea
+                                        style={{ width: '100%', marginBottom: '5px' }}
+                                        value={commentText}
+                                        onChange={(e) => setCommentText(e.target.value)}
+                                        placeholder="Enter your comment here"
+                                    />
                                     <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Submit</button>
                                     <button onClick={() => handleCommentAndCloseTicket(item.id)}>Submit & Close</button>
                                     <button onClick={handleCancelComment} style={{ marginBottom: '5px' }}>Cancel</button>
@@ -209,6 +246,7 @@ const VisualizzaTicket = () => {
 };
 
 export default VisualizzaTicket;
+
 
 
 

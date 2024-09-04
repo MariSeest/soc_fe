@@ -56,6 +56,10 @@ export const Home = () => {
         setIsChatOpen(prevState => !prevState);
     };
 
+    const handleSeverityClick = (severity) => {
+        navigate(`/tickets?severity=${severity}`);
+    };
+
     if (isLoading) return <div>Loading...</div>;
 
     return (
@@ -77,22 +81,11 @@ export const Home = () => {
                     <LogoutButton />
                 </div>
 
-                {/* Centro della pagina: Numero di ticket aperti per categoria */}
-                <div className="ticket-stats-container">
-                    <div className="ticket-stats">
-                        <h2>Open Tickets by Category</h2>
-                        {Object.keys(ticketsByCategory).length === 0 ? (
-                            <p>No open tickets</p>
-                        ) : (
-                            <ul>
-                                {Object.entries(ticketsByCategory).map(([category, count]) => (
-                                    <li key={category}>
-                                        {category}: {count} {count === 1 ? "ticket" : "tickets"}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
+                {/* Centro della pagina: Bottoni di severity */}
+                <div className="severity-buttons-container">
+                    <button className="severity-box high" onClick={() => handleSeverityClick('High')}>High</button>
+                    <button className="severity-box medium" onClick={() => handleSeverityClick('Medium')}>Medium</button>
+                    <button className="severity-box low" onClick={() => handleSeverityClick('Low')}>Low</button>
                 </div>
 
                 {/* Pulsante per aprire/chiudere la chat */}
@@ -108,6 +101,7 @@ export const Home = () => {
 };
 
 export default Home;
+
 
 
 

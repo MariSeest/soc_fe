@@ -234,6 +234,57 @@ body {
         transform: translateX(-50%);
     }
 }
+/* Stile per il contenitore dei bottoni di severity */
+.severity-buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 300px;
+    width: 400px;
+    margin-top: 7cm; /* Aumenta il margine superiore a 7 cm per abbassare ulteriormente i bottoni */
+}
+
+/* Bottoni 3D per la severity */
+.severity-box {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: black; /* Imposta il colore del testo su nero */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3); /* Effetto 3D */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: absolute;
+}
+
+/* Effetti hover per i bottoni */
+.severity-box:hover {
+    transform: translateY(-10px); /* Solleva il bottone al passaggio del mouse */
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.5); /* Aumenta l'ombra */
+}
+
+/* Posizionamento dei bottoni a triangolo */
+.high {
+    background-color: red;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.medium {
+    background-color: yellow;
+    bottom: 0;
+    left: 10%;
+}
+
+.low {
+    background-color: green;
+    bottom: 0;
+    right: 10%;
+}
 
 
 
