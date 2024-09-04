@@ -10,7 +10,8 @@ const ClosedTickets = () => {
         fetch("http://localhost:3001/tickets")
             .then((res) => res.json())
             .then((data) => {
-                const closedTickets = data.filter(ticket => ticket.status === "closed");
+                // Filtra i ticket chiusi che non appartengono alla categoria 'phishing'
+                const closedTickets = data.filter(ticket => ticket.status === "closed" && ticket.category !== 'phishing');
                 setTickets(closedTickets);
             })
             .catch(error => console.error('Error fetching closed tickets:', error));
@@ -96,6 +97,7 @@ const ClosedTicketsPage = () => {
 };
 
 export default ClosedTicketsPage;
+
 
 
 
