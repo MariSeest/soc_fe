@@ -42,6 +42,21 @@ export const Home = () => {
         navigate('/profile');
     };
 
+    const handleRedir2 = (e) => {
+        e.preventDefault();
+        navigate('/SeverityHighTicket');
+    };
+
+    const handleRedir3 = (e) => {
+        e.preventDefault();
+        navigate('/SeverityMediumTicket');
+    };
+
+    const handleRedir4 = (e) => {
+        e.preventDefault();
+        navigate('/SeverityLowTicket');
+    };
+
     const handleVisualizza = (e) => {
         e.preventDefault();
         navigate('/visualizzaticket');
@@ -83,9 +98,9 @@ export const Home = () => {
 
                 {/* Centro della pagina: Bottoni di severity */}
                 <div className="severity-buttons-container">
-                    <button className="severity-box high" onClick={() => handleSeverityClick('High')}>High</button>
-                    <button className="severity-box medium" onClick={() => handleSeverityClick('Medium')}>Medium</button>
-                    <button className="severity-box low" onClick={() => handleSeverityClick('Low')}>Low</button>
+                    <button className="severity-box high" onClick={handleRedir2}>High</button>
+                    <button className="severity-box medium" onClick={handleRedir3}>Medium</button>
+                    <button className="severity-box low" onClick={handleRedir4}>Low</button>
                 </div>
 
                 {/* Pulsante per aprire/chiudere la chat */}
@@ -101,6 +116,7 @@ export const Home = () => {
 };
 
 export default Home;
+
 
 
 
