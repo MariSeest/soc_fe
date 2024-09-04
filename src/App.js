@@ -14,6 +14,8 @@ import ClosedTickets from "./ClosedTickets";
 import SeverityHighTickets from './SeverityHighTickets';
 import SeverityMediumTickets from './SeverityMediumTickets';
 import SeverityLowTickets from './SeverityLowTickets';
+import PhishingTickets from './PhishingTickets';
+import PhishingTicketsClosed from "./PhishingTicketsClosed";
 
 function App() {
     const { isLoading } = useAuth0();
@@ -41,9 +43,11 @@ function App() {
                 <Route path="/visualizzaticket" element={<AuthenticationGuard component={VisualizzaTicket} />} />
                 <Route path="/apriunticket" element={<AuthenticationGuard component={ApriUnTicket} />} />
                 <Route path="/closedtickets" element={<AuthenticationGuard component={ClosedTickets} />} />
-                <Route path="/SeverityHighTickets" element={<SeverityHighTickets />} />
-                <Route path="/SeverityMediumTickets" element={<SeverityMediumTickets />} />
-                <Route path="/SeverityLowTickets" element={<SeverityLowTickets />}/>
+                <Route path="/SeverityHighTickets" element={<AuthenticationGuard component={SeverityHighTickets} />} />
+                <Route path="/SeverityMediumTickets" element={<AuthenticationGuard component={SeverityMediumTickets} />} />
+                <Route path="/SeverityLowTickets" element={<AuthenticationGuard component={SeverityLowTickets} />} />
+                <Route path="/PhishingTickets" element={<AuthenticationGuard component={PhishingTickets} />} />
+                <Route path="/PhishingTicketsClosed" element={<AuthenticationGuard component={PhishingTicketsClosed} />} />
         </Routes>
     );
 }

@@ -70,9 +70,10 @@ export const Home = () => {
         setIsChatOpen(prevState => !prevState);
     };
 
-    const handleSeverityClick = (severity) => {
-        navigate(`/tickets?severity=${severity}`);
-    };
+const handlePhishing=(e) => {
+    e.preventDefault();
+    navigate('/PhishingTickets');
+};
 
     if (isLoading) return <div>Loading...</div>;
 
@@ -103,13 +104,14 @@ export const Home = () => {
 
                 <div className="toolbar">
                     <span>Welcome, {user.nickname}</span>
-                    <img src={user.picture} alt={user.name} />
+                    <img src={user.picture} alt={user.name}/>
                     <h2>{user.name}</h2>
                     <p>{user.email}</p>
                     <button onClick={handleVisualizza}>Visualizza Ticket</button>
                     <button onClick={handleRedir}>Apri un Ticket</button>
-                    <button onClick={handleProfile}>Profile</button>
-                    <LogoutButton />
+                    <button onClick={handlePhishing}>Phishing</button>
+                    <button onClick={() => navigate('/profile')}>Profile</button>
+                    <LogoutButton/>
                 </div>
 
                 {/* Centro della pagina: Bottoni di severity */}

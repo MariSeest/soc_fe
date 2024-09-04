@@ -1,0 +1,190 @@
+/* Stile per il contenitore del titolo */
+.title-container {
+    background-color: #1a1a2e;
+    padding: 30px 0;
+    text-align: center;
+    margin-bottom: 40px;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 3px solid #00e0ff;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.title-container h2 {
+    margin: 0;
+    font-size: 3.5vw;
+    color: #00e0ff;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px #00e0ff, 0 0 25px #00e0ff;
+}
+
+/* Stile per il contenitore dei pulsanti */
+.button-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid #00e0ff;
+    border-radius: 12px;
+    z-index: 1000;
+    box-shadow: 0 0 20px #00e0ff;
+}
+
+.button-container button {
+    margin-bottom: 15px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    font-family: 'Roboto', sans-serif;
+    background-color: #00e0ff;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.button-container button:hover {
+    background-color: #00a3cc;
+    transform: scale(1.08);
+}
+
+/* Stile per il form di apertura ticket */
+.form-container {
+    background-color: #1a1a2e;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.6);
+    margin-bottom: 40px;
+    max-width: 650px;
+    margin: auto;
+    color: #00e0ff;
+    font-family: 'Roboto', sans-serif;
+}
+
+.form-container h3 {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    color: #00e0ff;
+    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff;
+}
+
+/* Contenitore per il riquadro scuro che racchiude Dominio, Severity e Commento */
+.form-container-new {
+    background-color: #16213e;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.5);
+    margin-bottom: 35px;
+    width: 100%;
+    color: #00e0ff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5mm; /* Aggiunge 5mm di spazio tra gli elementi */
+}
+
+/* Posizionamento assoluto del selettore di Severity */
+.input-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 5mm; /* Aggiunge 5mm di margine sotto l'input group */
+}
+
+.input-group select {
+    background-color: #16213e;
+    border: 1px solid #00e0ff;
+    color: #00e0ff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
+    font-size: 1.1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 2;
+    margin-right: 10px; /* Spazio tra label e selettore */
+}
+
+.input-group select:focus {
+    border-color: #00a3cc;
+    box-shadow: 0 0 15px rgba(0, 163, 204, 0.7);
+}
+
+/* Textbox del dominio centrata */
+.input-group input[type="text"] {
+    width: 90%; /* Ridotta per evitare sovrapposizione */
+    background-color: #16213e;
+    border: 1px solid #00e0ff;
+    color: #00e0ff;
+    padding: 18px;
+    border-radius: 50px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.7);
+    font-size: 1.2em;
+    margin-top: 40px; /* Spazio dal selettore */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: center; /* Centra il testo */
+    margin-left: auto;
+    margin-right: auto; /* Centra l'elemento */
+}
+
+.input-group input[type="text"]:focus {
+    outline: none;
+    border-color: #00a3cc;
+    box-shadow: 0 0 20px rgba(0, 163, 204, 0.9);
+}
+
+/* Textarea simile alla textbox del dominio, centrata */
+.textarea-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 5mm; /* Aggiunge 5mm di margine sotto la textarea */
+}
+
+.textarea-container textarea {
+    width: 90%;
+    background-color: #16213e;
+    border: 1px solid #00e0ff;
+    color: #00e0ff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.5);
+    resize: vertical;
+    margin-left: auto;
+    margin-right: auto; /* Centra l'elemento */
+}
+
+/* Pulsante "Apri un Ticket" con lo stile dell'intera applicazione */
+.submit-ticket {
+    width: 100%;
+    padding: 18px;
+    background-color: #00e0ff;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.5);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 5mm; /* Aggiunge 5mm di margine sopra il pulsante */
+}
+
+.submit-ticket:hover {
+    background-color: #00a3cc;
+    transform: scale(1.07);
+}
+
+
+
+
+
