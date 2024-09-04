@@ -11,6 +11,9 @@ import PageLoader from "./components/page-loader";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AuthenticationGuard } from "./components/authentication-guard";
 import ClosedTickets from "./ClosedTickets";
+import SeverityHighTickets from './SeverityHighTickets';
+import SeverityMediumTickets from './SeverityMediumTickets';
+import SeverityLowTickets from './SeverityLowTickets';
 
 function App() {
     const { isLoading } = useAuth0();
@@ -38,6 +41,9 @@ function App() {
                 <Route path="/visualizzaticket" element={<AuthenticationGuard component={VisualizzaTicket} />} />
                 <Route path="/apriunticket" element={<AuthenticationGuard component={ApriUnTicket} />} />
                 <Route path="/closedtickets" element={<AuthenticationGuard component={ClosedTickets} />} />
+                <Route path="/SeverityHighTickets" element={<SeverityHighTickets />} />
+                <Route path="/SeverityMediumTickets" element={<SeverityMediumTickets />} />
+                <Route path="/SeverityLowTickets" element={<SeverityLowTickets />}/>
         </Routes>
     );
 }

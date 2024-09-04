@@ -9,32 +9,31 @@ export const Home = () => {
     const [tickets, setTickets] = useState([]);
     const [ticketsByCategory, setTicketsByCategory] = useState({});
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const [news, setNews] = useState([]);
     const navigate = useNavigate();
     const { user, isAuthenticated, isLoading } = useAuth0();
 
     useEffect(() => {
-        // Funzione per recuperare i ticket
-        const fetchTickets = async () => {
+        // Funzione per recuperare le news
+        const fetchNews = async () => {
             try {
-                const response = await fetch("http://localhost:3001/tickets");
-                const data = await response.json();
+                const response = await fetch("https://www.cybersecurity360.it/news/");
+                const text = await response.text();
 
-                // Filtra solo i ticket "open"
-                const openTickets = data.filter(ticket => ticket.status === 'open');
+                // Esegui il parsing dell'HTML per estrarre i titoli (assicurati di usare il selettore giusto)
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const titles = Array.from(doc.querySelectorAll('.title-class-selector')) // Cambia con il giusto selettore
+                    .slice(0, 5)
+                    .map(el => el.textContent);
 
-                // Conta i ticket per categoria
-                const categoryCounts = openTickets.reduce((acc, ticket) => {
-                    acc[ticket.category] = (acc[ticket.category] || 0) + 1;
-                    return acc;
-                }, {});
-
-                setTicketsByCategory(categoryCounts);
+                setNews(titles);
             } catch (error) {
-                console.error('Error fetching tickets:', error);
+                console.error('Error fetching news:', error);
             }
         };
 
-        fetchTickets();
+        fetchNews();
     }, []);
 
     const handleProfile = (e) => {
@@ -44,17 +43,17 @@ export const Home = () => {
 
     const handleRedir2 = (e) => {
         e.preventDefault();
-        navigate('/SeverityHighTicket');
+        navigate('/SeverityHighTickets');
     };
 
     const handleRedir3 = (e) => {
         e.preventDefault();
-        navigate('/SeverityMediumTicket');
+        navigate('/SeverityMediumTickets');
     };
 
     const handleRedir4 = (e) => {
         e.preventDefault();
-        navigate('/SeverityLowTicket');
+        navigate('/SeverityLowTickets');
     };
 
     const handleVisualizza = (e) => {
@@ -80,11 +79,28 @@ export const Home = () => {
     return (
         isAuthenticated && (
             <div>
+                {/* Banner dinamico per le news */}
+                <div className="news-banner">
+                    <marquee>
+                        {news.length > 0 ? (
+                            news.map((title, index) => (
+                                <span key={index}>{title} | </span>
+                            ))
+                        ) : (
+                            <span>Loading latest news...</span>
+                        )}
+                    </marquee>
+                </div>
+
+                {/* Spazio per evitare sovrapposizione tra header e news banner */}
+                <div style={{ height: '1cm' }}></div>
+
                 <div className="header">
                     <div className="circle-container">
                         <h1>SOCX</h1>
                     </div>
                 </div>
+
                 <div className="toolbar">
                     <span>Welcome, {user.nickname}</span>
                     <img src={user.picture} alt={user.name} />
@@ -116,6 +132,8 @@ export const Home = () => {
 };
 
 export default Home;
+
+
 
 
 

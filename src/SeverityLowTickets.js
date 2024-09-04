@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './VisualizzaTicket.css';
 
-const SeverityHighTickets = () => {
+const SeverityLowTickets = () => {
     const [tickets, setTickets] = useState([]);
     const [filteredTickets, setFilteredTickets] = useState([]);
     const navigate = useNavigate();
@@ -11,9 +11,9 @@ const SeverityHighTickets = () => {
         fetch("http://localhost:3001/tickets")
             .then((res) => res.json())
             .then((data) => {
-                const highSeverityTickets = data.filter(ticket => ticket.severity === 'High');
-                setTickets(highSeverityTickets);
-                setFilteredTickets(highSeverityTickets);
+                const lowSeverityTickets = data.filter(ticket => ticket.severity === 'Low');
+                setTickets(lowSeverityTickets);
+                setFilteredTickets(lowSeverityTickets);
             })
             .catch(error => console.error('Error fetching tickets:', error));
     }, []);
@@ -26,7 +26,7 @@ const SeverityHighTickets = () => {
     return (
         <div>
             <div className="title-container">
-                <h2>High Severity Tickets</h2>
+                <h2>Low Severity Tickets</h2>
             </div>
             <div className="button-container">
                 <button onClick={handleGoBack}>Torna alla Home</button>
@@ -61,4 +61,4 @@ const SeverityHighTickets = () => {
     );
 };
 
-export default SeverityHighTickets;
+export default SeverityLowTickets;
