@@ -143,5 +143,25 @@
     color: #00e0ff; /* Colore neon */
     border: 1px solid #00e0ff;
 }
+.comment-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.comment-section li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+
+.comment-text {
+    flex-grow: 1;
+}
+.comment-section .buttons-container {
+    margin-left: auto; /* Sposta i pulsanti completamente a destra */
+}
+
 
 

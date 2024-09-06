@@ -11,6 +11,8 @@ const VisualizzaTicket = () => {
     const [categoryFilter, setCategoryFilter] = useState(''); // Stato per filtro categoria
     const [severityFilter, setSeverityFilter] = useState(''); // Stato per filtro severity
     const [comments, setComments] = useState({});  // Stato per memorizzare i commenti per ogni ticket
+    const [activeReplyId, setActiveReplyId] = useState(null); // Stato per tracciare il commento a cui si sta rispondendo
+    const [replyText, setReplyText] = useState("");  // Stato per il testo della risposta
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -96,6 +98,7 @@ const VisualizzaTicket = () => {
             })
             .catch(error => console.error('Error commenting on ticket:', error));
     };
+
     const handleDeleteComment = (commentId) => {
         fetch(`http://localhost:3001/comments/${commentId}`, {
             method: 'DELETE',
@@ -112,13 +115,19 @@ const VisualizzaTicket = () => {
             })
             .catch((error) => console.error('Error deleting comment:', error));
     };
-    const [replyText, setReplyText] = useState("");  // Stato per memorizzare la risposta
 
     const handleReplyToComment = (commentId) => {
-        const reply = prompt('Inserisci la tua risposta:');  // Puoi cambiare questo con un campo di input nella UI
+        if (activeReplyId === commentId) {
+            setActiveReplyId(null);  // Se clicchi di nuovo sullo stesso commento, nascondi la textbox
+        } else {
+            setActiveReplyId(commentId);  // Mostra la textbox per il commento selezionato
+        }
+    };
 
-        if (!reply) {
-            return;  // Se non viene inserita nessuna risposta
+    const handleSubmitReply = (commentId) => {
+        if (replyText.trim() === "") {
+            alert("Please enter a reply before submitting.");
+            return;
         }
 
         fetch(`http://localhost:3001/comments/${commentId}/reply`, {
@@ -126,17 +135,26 @@ const VisualizzaTicket = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ reply }),
+            body: JSON.stringify({ reply: replyText }),
         })
             .then((res) => {
                 if (!res.ok) {
                     throw new Error('Error replying to comment');
                 }
-                // Aggiorna lo stato con la nuova risposta
-                // Potresti voler aggiornare i commenti per mostrare le risposte
-                console.log(`Reply added to comment ${commentId}`);
+                return res.json();
             })
-            .catch((error) => console.error('Error replying to comment:', error));
+            .then(updatedComment => {
+                // Aggiorna i commenti con la nuova risposta
+                setComments((prevComments) => ({
+                    ...prevComments,
+                    [activeReplyId]: prevComments[activeReplyId].map(comment =>
+                        comment.id === commentId ? { ...comment, replies: updatedComment.replies } : comment
+                    ),
+                }));
+                setReplyText("");  // Resetta il campo di testo
+                setActiveReplyId(null);  // Chiudi la textbox
+            })
+            .catch(error => console.error('Error replying to comment:', error));
     };
 
     const handleCancelComment = () => {
@@ -145,7 +163,6 @@ const VisualizzaTicket = () => {
         setExpandedCommentId(null);  // Chiudi la sezione commenti
     };
 
-    // Funzione per gestire il click su "Visualizza Commenti"
     const handleToggleComments = (id) => {
         if (expandedCommentId === id) {
             setExpandedCommentId(null);  // Nascondi commenti
@@ -168,8 +185,6 @@ const VisualizzaTicket = () => {
                 .catch((error) => console.error("Error fetching comments:", error));
         }
     };
-
-
 
     return (
         <div>
@@ -230,12 +245,12 @@ const VisualizzaTicket = () => {
                         <td>
                             {activeCommentId === item.id ? (
                                 <div>
-                                    <textarea
-                                        style={{ width: '100%', marginBottom: '5px' }}
-                                        value={commentText}
-                                        onChange={(e) => setCommentText(e.target.value)}
-                                        placeholder="Enter your comment here"
-                                    />
+                                        <textarea
+                                            style={{ width: '100%', marginBottom: '5px' }}
+                                            value={commentText}
+                                            onChange={(e) => setCommentText(e.target.value)}
+                                            placeholder="Enter your comment here"
+                                        />
                                     <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Submit</button>
                                     <button onClick={handleCancelComment} style={{ marginBottom: '5px' }}>Cancel</button>
                                 </div>
@@ -260,9 +275,29 @@ const VisualizzaTicket = () => {
                                     <ul>
                                         {comments[item.id].map((comment, index) => (
                                             <li key={index}>
-                                                {comment.comment_text}
-                                                <button onClick={() => handleDeleteComment(comment.id)} style={{ marginLeft: '10px' }}>Delete</button>
-                                                <button onClick={() => handleReplyToComment(comment.id)} style={{ marginLeft: '5px' }}>Reply</button>
+                                                <span className="comment-text">{comment.comment_text}</span>
+                                                <div className="buttons-container">
+                                                    <button onClick={() => handleDeleteComment(comment.id)} style={{ marginLeft: '10px' }}>Delete</button>
+                                                    <button onClick={() => handleReplyToComment(comment.id)} style={{ marginLeft: '5px' }}>Reply</button>
+                                                </div>
+                                                {/* Mostra la textarea per la risposta se è il commento selezionato */}
+                                                {activeReplyId === comment.id && (
+                                                    <div style={{ marginTop: '10px' }}>
+                                                            <textarea
+                                                                style={{ width: '100%', marginBottom: '5px' }}
+                                                                value={replyText}
+                                                                onChange={(e) => setReplyText(e.target.value)}
+                                                                placeholder="Enter your reply here"
+                                                            />
+                                                        <button
+                                                            onClick={() => handleSubmitReply(comment.id)}
+                                                            style={{ marginRight: '5px' }}
+                                                        >
+                                                            Submit Reply
+                                                        </button>
+                                                        <button onClick={() => setActiveReplyId(null)}>Cancel</button>
+                                                    </div>
+                                                )}
                                             </li>
                                         ))}
                                     </ul>
@@ -270,8 +305,6 @@ const VisualizzaTicket = () => {
                             ) : (
                                 expandedCommentId === item.id && <p>Nessun commento ancora.</p>
                             )}
-
-
                         </td>
                     </tr>
                 ))}
@@ -282,6 +315,7 @@ const VisualizzaTicket = () => {
 };
 
 export default VisualizzaTicket;
+
 
 
 
