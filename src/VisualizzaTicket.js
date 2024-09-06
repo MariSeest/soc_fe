@@ -66,6 +66,42 @@ const VisualizzaTicket = () => {
             .catch(error => console.error('Error closing ticket:', error));
     };
 
+    const handleSubmitComment = (id) => {
+        if (commentText.trim() === "") {
+            alert("Please enter a comment before submitting.");
+            return;
+        }
+
+        fetch(`http://localhost:3001/tickets/${id}/comment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment: commentText }),  // Invia il commento
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return res.json();
+            })
+            .then(updatedTicket => {
+                // Aggiorna il ticket con i nuovi commenti
+                setTickets(tickets.map(ticket =>
+                    ticket.id === id ? { ...ticket, comments: updatedTicket.comments } : ticket
+                ));
+                setCommentText("");  // Pulisci la textarea
+                setExpandedCommentId(id);  // Mostra i commenti appena aggiunti
+            })
+            .catch(error => console.error('Error commenting on ticket:', error));
+    };
+
+    const handleCancelComment = () => {
+        setActiveCommentId(null);  // Resetta il commento attivo
+        setCommentText("");  // Pulisci il campo di testo del commento
+        setExpandedCommentId(null);  // Chiudi la sezione commenti
+    };
+
     return (
         <div>
             <div className="title-container">
@@ -123,7 +159,39 @@ const VisualizzaTicket = () => {
                         <td>{item.severity}</td>
                         <td>{item.content}</td>
                         <td>
-                            {/* Azioni per eliminare, commentare e chiudere */}
+                            {activeCommentId === item.id ? (
+                                <div>
+                                    <textarea
+                                        style={{ width: '100%', marginBottom: '5px' }}
+                                        value={commentText}
+                                        onChange={(e) => setCommentText(e.target.value)}
+                                        placeholder="Enter your comment here"
+                                    />
+                                    <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Submit</button>
+                                    <button onClick={handleCancelComment} style={{ marginBottom: '5px' }}>Cancel</button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <button onClick={() => handleDelete(item.id)} style={{ marginBottom: '5px' }}>Delete</button>
+                                    {item.status !== 'closed' && (
+                                        <>
+                                            <button onClick={() => handleCloseTicket(item.id)} style={{ marginBottom: '5px' }}>Close</button>
+                                            <button onClick={() => setActiveCommentId(item.id)} style={{ marginBottom: '5px' }}>Comment</button>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                            {/* Mostra i commenti */}
+                            {expandedCommentId === item.id && item.comments && item.comments.length > 0 && (
+                                <div className="comment-section">
+                                    <strong>Comments:</strong>
+                                    <ul>
+                                        {item.comments.map((comment, index) => (
+                                            <li key={index}>{comment}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </td>
                     </tr>
                 ))}
@@ -134,6 +202,9 @@ const VisualizzaTicket = () => {
 };
 
 export default VisualizzaTicket;
+
+
+
 
 
 
