@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const DettaglioTicket = () => {
     const { id } = useParams();  // Ottieni l'ID del ticket dalla rotta
     const [ticket, setTicket] = useState(null);  // Stato per memorizzare i dettagli del ticket
-    const [commentText, setCommentText] = useState("");
+    const [comments, setComments] = useState([]);  // Stato per memorizzare i commenti
+    const [commentText, setCommentText] = useState("");  // Stato per il testo del nuovo commento
+    const navigate = useNavigate();
 
+    // Effettua il fetch per i dettagli del ticket quando il componente viene montato
     useEffect(() => {
-        // Recupera i dettagli del ticket dal backend
         fetch(`http://localhost:3001/ticket/${id}`)
             .then((res) => res.json())
             .then((data) => {
@@ -16,9 +18,20 @@ const DettaglioTicket = () => {
             .catch((error) => console.error("Error fetching ticket details:", error));
     }, [id]);
 
+    // Effettua il fetch per i commenti del ticket
+    useEffect(() => {
+        fetch(`http://localhost:3001/tickets/${id}/comments`)
+            .then((res) => res.json())
+            .then((data) => {
+                setComments(data);  // Imposta i commenti
+            })
+            .catch((error) => console.error("Error fetching comments:", error));
+    }, [id]);
+
+    // Funzione per inviare un nuovo commento
     const handleSubmitComment = () => {
         if (commentText.trim() === "") {
-            alert("Please enter a comment before submitting.");
+            alert("Per favore, inserisci un commento prima di inviare.");
             return;
         }
 
@@ -27,12 +40,18 @@ const DettaglioTicket = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ comment: commentText }),
+            body: JSON.stringify({ comment: commentText }),  // Invia il commento al backend
         })
             .then((res) => res.json())
-            .then((updatedTicket) => {
-                setTicket(updatedTicket);  // Aggiorna i dettagli del ticket con il nuovo commento
+            .then(() => {
                 setCommentText("");  // Reset del campo di testo
+                // Ricarica i commenti per aggiornare la lista
+                fetch(`http://localhost:3001/tickets/${id}/comments`)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setComments(data);  // Aggiorna i commenti
+                    })
+                    .catch((error) => console.error("Error fetching comments after submission:", error));
             })
             .catch((error) => console.error('Error submitting comment:', error));
     };
@@ -42,7 +61,8 @@ const DettaglioTicket = () => {
     }
 
     return (
-        <div>
+        <div className="button-container">
+            <button onClick={() => navigate('/home')}>Torna alla Home</button>
             <h2>Dettagli del Ticket {ticket.name}</h2>
             <p><strong>Status:</strong> {ticket.status}</p>
             <p><strong>Categoria:</strong> {ticket.category}</p>
@@ -50,10 +70,13 @@ const DettaglioTicket = () => {
             <p><strong>Contenuto:</strong> {ticket.content}</p>
 
             <h3>Commenti:</h3>
-            {ticket.comments && ticket.comments.length > 0 ? (
+            {comments.length > 0 ? (
                 <ul>
-                    {ticket.comments.map((comment, index) => (
-                        <li key={index}>{comment}</li>
+                    {comments.map((comment, index) => (
+                        <li key={index}>
+                            <p>{comment.comment_text}</p>
+                            <small>{new Date(comment.created_at).toLocaleString()}</small>
+                        </li>
                     ))}
                 </ul>
             ) : (
@@ -71,3 +94,4 @@ const DettaglioTicket = () => {
 };
 
 export default DettaglioTicket;
+
