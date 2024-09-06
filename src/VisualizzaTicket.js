@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';  // Importa Link
 import './VisualizzaTicket.css';
 
 const VisualizzaTicket = () => {
@@ -66,86 +66,6 @@ const VisualizzaTicket = () => {
             .catch(error => console.error('Error closing ticket:', error));
     };
 
-    const handleCommentTicket = (id) => {
-        setActiveCommentId(id);
-        setExpandedCommentId(id);
-    };
-
-    const handleCancelComment = () => {
-        setActiveCommentId(null);
-        setCommentText("");
-        setExpandedCommentId(null);
-    };
-
-    const handleSubmitComment = (id) => {
-        if (commentText.trim() === "") {
-            alert("Please enter a comment before submitting.");
-            return;
-        }
-
-        fetch(`http://localhost:3001/tickets/${id}/comment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ comment: commentText }),
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return res.json();
-            })
-            .then(updatedTicket => {
-                setTickets(tickets.map(ticket =>
-                    ticket.id === id ? { ...ticket, comments: updatedTicket.comments } : ticket
-                ));
-                setActiveCommentId(null);
-                setCommentText("");
-                setExpandedCommentId(id);
-            })
-            .catch(error => console.error('Error commenting on ticket:', error));
-    };
-
-    const handleCommentAndCloseTicket = (id) => {
-        if (commentText.trim() === "") {
-            alert("Please enter a comment before submitting.");
-            return;
-        }
-
-        fetch(`http://localhost:3001/tickets/${id}/comment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ comment: commentText }),
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return res.json();
-            })
-            .then(() => {
-                handleCloseTicket(id);
-            })
-            .catch(error => console.error('Error commenting and closing ticket:', error));
-    };
-
-    const handleToggleExpand = (id) => {
-        setExpandedCommentId(expandedCommentId === id ? null : id);
-    };
-
-    const handleGoBack = (e) => {
-        e.preventDefault();
-        navigate('/home');
-    };
-
-    const handleClosedTickets = (e) => {
-        e.preventDefault();
-        navigate('/closedtickets');
-    };
-
     return (
         <div>
             <div className="title-container">
@@ -153,8 +73,8 @@ const VisualizzaTicket = () => {
             </div>
 
             <div className="button-container">
-                <button onClick={handleGoBack}>Torna alla Home</button>
-                <button onClick={handleClosedTickets}>Closed Tickets</button>
+                <button onClick={() => navigate('/home')}>Torna alla Home</button>
+                <button onClick={() => navigate('/closedtickets')}>Closed Tickets</button>
             </div>
 
             <div className="filter-container">
@@ -182,7 +102,7 @@ const VisualizzaTicket = () => {
                     <th>Name</th>
                     <th>Status</th>
                     <th>Category</th>
-                    <th>Severity</th> {/* Aggiungiamo la colonna severity */}
+                    <th>Severity</th>
                     <th>Content</th>
                     <th>Actions</th>
                 </tr>
@@ -191,51 +111,19 @@ const VisualizzaTicket = () => {
                 {filteredTickets.map((item) => (
                     <tr key={item.id}>
                         <td>{item.id}</td>
-                        <td>{item.name}</td>
+                        <td>
+                            <Link to={`/ticket/${item.id}`} style={{ textDecoration: 'none', color: '#00e0ff' }}>
+                                {item.name}
+                            </Link>
+                        </td>
                         <td className={item.status === 'closed' ? 'status-closed' : 'status-open'}>
                             {item.status}
                         </td>
                         <td>{item.category}</td>
-                        <td>{item.severity}</td> {/* Mostra la severity */}
-                        <td>{item.text}</td>
+                        <td>{item.severity}</td>
+                        <td>{item.content}</td>
                         <td>
-                            {activeCommentId === item.id ? (
-                                <div>
-                                    <textarea
-                                        style={{ width: '100%', marginBottom: '5px' }}
-                                        value={commentText}
-                                        onChange={(e) => setCommentText(e.target.value)}
-                                        placeholder="Enter your comment here"
-                                    />
-                                    <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Submit</button>
-                                    <button onClick={() => handleCommentAndCloseTicket(item.id)}>Submit & Close</button>
-                                    <button onClick={handleCancelComment} style={{ marginBottom: '5px' }}>Cancel</button>
-                                </div>
-                            ) : (
-                                <div>
-                                    <button onClick={() => handleDelete(item.id)} style={{ marginBottom: '5px' }}>Delete</button>
-                                    {item.status !== 'closed' && (
-                                        <>
-                                            <button onClick={() => handleCloseTicket(item.id)} style={{ marginBottom: '5px' }}>Close</button>
-                                            <button onClick={() => handleCommentTicket(item.id)} style={{ marginBottom: '5px' }}>Comment</button>
-                                            <button onClick={() => handleCommentAndCloseTicket(item.id)} style={{ marginBottom: '5px' }}>Comment & Close</button>
-                                        </>
-                                    )}
-                                    <button onClick={() => handleToggleExpand(item.id)}>
-                                        {expandedCommentId === item.id ? '▲' : '▼'}
-                                    </button>
-                                </div>
-                            )}
-                            {expandedCommentId === item.id && item.comments && item.comments.length > 0 && (
-                                <div className="comment-section">
-                                    <strong>Comments:</strong>
-                                    <ul>
-                                        {item.comments.map((comment, index) => (
-                                            <li key={index}>{comment}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
+                            {/* Azioni per eliminare, commentare e chiudere */}
                         </td>
                     </tr>
                 ))}
@@ -246,6 +134,7 @@ const VisualizzaTicket = () => {
 };
 
 export default VisualizzaTicket;
+
 
 
 
