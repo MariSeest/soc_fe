@@ -95,15 +95,21 @@ const VisualizzaTicket = () => {
                 }
                 return res.json();
             })
-            .then(updatedTicket => {
-                setTickets(tickets.map(ticket =>
-                    ticket.id === id ? { ...ticket, comments: updatedTicket.comments } : ticket
-                ));
+            .then(newComment => {
+                // Aggiorna i commenti immediatamente nel componente dopo aver inviato il commento
+                setComments((prevComments) => {
+                    const updatedComments = { ...prevComments };
+                    updatedComments[id] = updatedComments[id] || [];  // Inizializza l'array se non esiste
+                    updatedComments[id].push(newComment);  // Aggiungi il nuovo commento alla lista
+                    return updatedComments;
+                });
+
                 setCommentText("");  // Pulisci la textarea
                 setExpandedCommentId(id);  // Mostra i commenti appena aggiunti
             })
             .catch(error => console.error('Error commenting on ticket:', error));
     };
+
 
     const handleDeleteComment = (commentId) => {
         fetch(`http://localhost:3001/comments/${commentId}`, {
@@ -145,8 +151,19 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then(() => {
+                // Aggiungi subito la nuova risposta nello stato dei commenti
+                setComments((prevComments) => {
+                    const updatedComments = { ...prevComments };
+                    const updatedComment = updatedComments[expandedCommentId].find(comment => comment.id === commentId);
+                    if (updatedComment) {
+                        updatedComment.replies = updatedComment.replies || [];
+                        updatedComment.replies.push({ reply_text: replyText[commentId] });
+                    }
+                    return updatedComments;
+                });
+
                 setReplyText(prevState => ({ ...prevState, [commentId]: "" }));  // Pulisci la textbox dopo l'invio
-                // Aggiorna lo stato dei commenti se necessario
+                setActiveReplyId(null);  // Chiudi la textbox di risposta
             })
             .catch(error => console.error('Error replying to comment:', error));
     };
@@ -238,12 +255,12 @@ const VisualizzaTicket = () => {
                         <td>
                             {activeCommentId === item.id ? (
                                 <div>
-                                    <textarea
-                                        style={{ width: '100%', marginBottom: '5px' }}
-                                        value={commentText}
-                                        onChange={(e) => setCommentText(e.target.value)}
-                                        placeholder="Enter your comment here"
-                                    />
+                                        <textarea
+                                            style={{ width: '100%', marginBottom: '5px' }}
+                                            value={commentText}
+                                            onChange={(e) => setCommentText(e.target.value)}
+                                            placeholder="Enter your comment here"
+                                        />
                                     <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Submit</button>
                                     <button onClick={handleCancelComment} style={{ marginBottom: '5px' }}>Cancel</button>
                                 </div>
@@ -267,46 +284,47 @@ const VisualizzaTicket = () => {
                                     <strong>Comments:</strong>
                                     <ul>
                                         {comments[item.id].map((comment, index) => (
-                                            <li key={index}>
-                                                <span className="comment-text">{comment.comment_text}</span>
-                                                <div className="buttons-container">
-                                                    <button onClick={() => handleDeleteComment(comment.id)} style={{ marginLeft: '10px' }}>Delete</button>
-                                                    <button onClick={() => handleReplyToComment(comment.id)} style={{ marginLeft: '5px' }}>Reply</button>
+                                            <li key={index} className="comment-container">
+                                                <div className="reply-container">
+                                                    <span className="comment-text">{comment.comment_text}</span>
+
+                                                    {/* Visualizza le risposte per ciascun commento */}
+                                                    <div className="replies-section">
+                                                        <strong>Replies:</strong>
+                                                        <ul>
+                                                            {comment.replies && comment.replies.length > 0 ? (
+                                                                comment.replies.map((reply, replyIndex) => (
+                                                                    <li key={replyIndex} className="reply-container">
+                                                                        <span className="reply-text">{reply.reply_text}</span>
+                                                                    </li>
+                                                                ))
+                                                            ) : (
+                                                                <p>No replies yet.</p>
+                                                            )}
+                                                        </ul>
+                                                    </div>
                                                 </div>
 
-                                                {/* Textbox di risposta per ogni commento */}
-                                                {activeReplyId === comment.id && (
-                                                    <div style={{ marginTop: '10px' }}>
-                                                        <textarea
-                                                            style={{ width: '100%', marginBottom: '5px' }}
-                                                            value={replyText[comment.id] || ""}  // Assicurati di usare il valore corretto per ogni commento
-                                                            onChange={(e) => handleReplyChange(comment.id, e.target.value)}
-                                                            placeholder="Enter your reply here"
-                                                        />
-                                                        <button
-                                                            onClick={() => handleSubmitReply(comment.id)}
-                                                            style={{ marginRight: '5px' }}
-                                                        >
-                                                            Submit Reply
-                                                        </button>
-                                                        <button onClick={() => setActiveReplyId(null)}>Cancel</button>
-                                                    </div>
-                                                )}
+                                                {/* Contenitore dei pulsanti */}
+                                                <div className="buttons-container">
+                                                    <button onClick={() => handleDeleteComment(comment.id)} className="reply-button">Delete</button>
+                                                    <button onClick={() => handleReplyToComment(comment.id)} className="reply-button">Reply</button>
 
-                                                {/* Visualizza le risposte per ciascun commento */}
-                                                <div>
-                                                    <strong>Replies:</strong>
-                                                    <ul>
-                                                        {comment.replies && comment.replies.length > 0 ? (
-                                                            comment.replies.map((reply, replyIndex) => (
-                                                                <li key={replyIndex}>
-                                                                    {reply.reply_text}
-                                                                </li>
-                                                            ))
-                                                        ) : (
-                                                            <p>No replies yet.</p>
-                                                        )}
-                                                    </ul>
+                                                    {/* Textbox di risposta per ogni commento */}
+                                                    {activeReplyId === comment.id && (
+                                                        <div style={{ marginTop: '10px' }}>
+                                <textarea
+                                    style={{ width: '100%', marginBottom: '5px' }}
+                                    value={replyText[comment.id] || ""}  // Assicurati di usare il valore corretto per ogni commento
+                                    onChange={(e) => handleReplyChange(comment.id, e.target.value)}
+                                    placeholder="Enter your reply here"
+                                />
+                                                            <button onClick={() => handleSubmitReply(comment.id)} className="reply-button" style={{ marginRight: '5px' }}>
+                                                                Submit Reply
+                                                            </button>
+                                                            <button onClick={() => setActiveReplyId(null)} className="reply-button">Cancel</button>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </li>
                                         ))}
@@ -315,6 +333,8 @@ const VisualizzaTicket = () => {
                             ) : (
                                 expandedCommentId === item.id && <p>Nessun commento ancora.</p>
                             )}
+
+
                         </td>
                     </tr>
                 ))}
@@ -325,6 +345,7 @@ const VisualizzaTicket = () => {
 };
 
 export default VisualizzaTicket;
+
 
 
 

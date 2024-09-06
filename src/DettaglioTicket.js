@@ -61,37 +61,52 @@ const DettaglioTicket = () => {
     }
 
     return (
-        <div className="button-container">
-            <button onClick={() => navigate('/home')}>Torna alla Home</button>
-            <h2>Dettagli del Ticket {ticket.name}</h2>
-            <p><strong>Status:</strong> {ticket.status}</p>
-            <p><strong>Categoria:</strong> {ticket.category}</p>
-            <p><strong>Severità:</strong> {ticket.severity}</p>
-            <p><strong>Contenuto:</strong> {ticket.content}</p>
+        <div className="container">
+            <div className="button-container">
+                <button onClick={() => navigate('/home')}>Torna alla Home</button>
+            </div>
 
-            <h3>Commenti:</h3>
-            {comments.length > 0 ? (
-                <ul>
-                    {comments.map((comment, index) => (
-                        <li key={index}>
-                            <p>{comment.comment_text}</p>
-                            <small>{new Date(comment.created_at).toLocaleString()}</small>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>Nessun commento ancora.</p>
-            )}
+            <div className="ticket-content">
+                <h2>Dettagli del Ticket {ticket.name}</h2>
+                <p><strong>Status:</strong> {ticket.status}</p>
+                <p><strong>Categoria:</strong> {ticket.category}</p>
+                <p><strong>Severità:</strong> {ticket.severity}</p>
+                <p><strong>Contenuto:</strong> {ticket.content}</p>
+            </div>
 
-            <textarea
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Aggiungi un commento"
-            />
-            <button onClick={handleSubmitComment}>Aggiungi Commento</button>
+            <div className="comment-section">
+                <h3>Commenti:</h3>
+                {comments.length > 0 ? (
+                    <ul>
+                        {comments.map((comment, index) => (
+                            <li key={index}>
+                                <div className="comment-container">
+                                    <p>{comment.comment_text}</p>
+                                    <small>{new Date(comment.created_at).toLocaleString()}</small>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>Nessun commento ancora.</p>
+                )}
+
+                {/* Textarea per aggiungere un nuovo commento */}
+                <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Aggiungi un commento"
+                />
+
+                {/* Bottone per aggiungere il commento spostato sotto al textbox */}
+                <button onClick={handleSubmitComment}>Aggiungi Commento</button>
+            </div>
         </div>
     );
 };
 
 export default DettaglioTicket;
+
+
+
 

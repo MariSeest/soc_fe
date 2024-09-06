@@ -91,7 +91,78 @@
     font-weight: bold;
 }
 
-/* Stile per i commenti */
+/* Contenitore separato per i commenti */
+.comment-list-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #0f3460; /* Colore di sfondo scuro per il contenitore dei commenti */
+    border: 2px solid #00e0ff; /* Bordo neon */
+    border-radius: 8px; /* Angoli arrotondati */
+    box-shadow: 0 0 10px rgba(0, 224, 255, 0.3); /* Ombra neon */
+    max-width: 100%; /* Limita la larghezza */
+}
+
+/* Stile per il titolo della sezione dei commenti */
+.comment-list-container strong {
+    font-size: 1.5em;
+    color: #00e0ff; /* Colore neon per il titolo */
+    margin-bottom: 20px;
+    display: block;
+}
+
+/* Stile per i singoli commenti */
+.comment-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #0f3460;
+    border: 1px solid #00e0ff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 224, 255, 0.3);
+}
+
+/* Contenitore per il testo e le risposte */
+.reply-container {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #16213e;
+    border: 1px solid #00e0ff;
+    border-radius: 6px;
+    flex-grow: 1;
+}
+
+.reply-text {
+    color: #ffffff;
+}
+
+/* Contenitore per i pulsanti */
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 20px;
+}
+
+/* Stile per il pulsante "Reply" */
+.reply-button {
+    padding: 5px 10px;
+    background-color: #00e0ff;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.reply-button:hover {
+    background-color: #00a3cc;
+    transform: scale(1.05);
+}
+
+/* Stile per la sezione dei commenti */
 .comment-section {
     margin-top: 10px;
     padding: 10px;
@@ -118,50 +189,39 @@
     margin-bottom: 5px;
     color: #ffffff;
 }
-/* Stile per il contenitore dei filtri */
-.filter-container {
-    margin-bottom: 20px;
+
+/* Contenitore per ogni commento */
+.comment-container {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start; /* Mantieni l'allineamento all'inizio per evitare di centrare verticalmente */
+    margin-bottom: 20px; /* Spazio tra i commenti */
+    padding: 15px;
+    background-color: #0f3460; /* Sfondo scuro per il commento */
+    border: 1px solid #00e0ff; /* Bordo neon per il commento */
+    border-radius: 8px; /* Angoli arrotondati */
+    box-shadow: 0 0 10px rgba(0, 224, 255, 0.3); /* Ombra per dare profondità */
+}
+
+/* Contenitore per le risposte */
+.reply-container {
+    margin-top: 10px; /* Spazio tra le risposte e il commento */
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.8); /* Sfondo scuro trasparente */
-    border: 1px solid #00e0ff; /* Bordo neon */
-    border-radius: 10px;
-    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    background-color: #16213e; /* Sfondo più scuro per le risposte */
+    border: 1px solid #00e0ff; /* Bordo neon per le risposte */
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 224, 255, 0.2); /* Ombra leggera per differenziarle */
+    flex-grow: 1; /* Le risposte prendono tutto lo spazio disponibile a sinistra */
 }
 
-.filter-container label {
-    color: #00e0ff; /* Testo neon */
-    font-family: 'Roboto', sans-serif;
-    margin-right: 10px;
-}
-
-.filter-container select {
-    padding: 5px;
-    border-radius: 5px;
-    background-color: #1a1a2e;
-    color: #00e0ff; /* Colore neon */
-    border: 1px solid #00e0ff;
-}
-.comment-section ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.comment-section li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+/* Stile per il testo della risposta */
+.reply-text {
+    color: #ffffff; /* Testo bianco per contrastare con lo sfondo scuro */
+    margin-bottom: 5px;
 }
 
 
-.comment-text {
-    flex-grow: 1;
-}
-.comment-section .buttons-container {
-    margin-left: auto; /* Sposta i pulsanti completamente a destra */
-}
+
 
 
 
