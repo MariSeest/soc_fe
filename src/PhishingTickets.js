@@ -17,13 +17,14 @@ const PhishingTickets = () => {
 
     // Fetch solo ticket di phishing aperti
     useEffect(() => {
-        fetch("http://localhost:3001/tickets?category=phishing&status=open")
+        fetch("http://localhost:3001/phishing-tickets")
             .then((res) => res.json())
             .then((data) => {
-                setTickets(data); // Salva solo i ticket di categoria "phishing"
+                setTickets(data);
             })
             .catch(error => console.error('Error fetching phishing tickets:', error));
     }, []);
+
 
     const handleDelete = (id) => {
         fetch(`http://localhost:3001/tickets/${id}`, {
@@ -134,15 +135,12 @@ const PhishingTickets = () => {
         }
 
         const newTicket = {
-            name: "Phishing Report",
-            category: "phishing",
-            text: `Domain: ${domain}`,
-            status: "open",
-            comments: [newComment],
-            severity: severity
+            domain: domain,
+            severity: severity,
+            status: 'open'
         };
 
-        fetch("http://localhost:3001/tickets", {
+        fetch("http://localhost:3001/phishing-tickets", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -157,6 +155,7 @@ const PhishingTickets = () => {
             })
             .catch(error => console.error('Error creating ticket:', error));
     };
+
 
     return (
         <div>
