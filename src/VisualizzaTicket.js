@@ -14,6 +14,7 @@ const VisualizzaTicket = () => {
     const [activeReplyId, setActiveReplyId] = useState(null); // Stato per tracciare il commento a cui si sta rispondendo
     const [replyText, setReplyText] = useState({});  // Stato per il testo della risposta
     const navigate = useNavigate();
+    const [author, setAuthor] = useState("");  // Stato per l'autore
 
     useEffect(() => {
         fetch("http://localhost:3001/tickets")
@@ -77,17 +78,20 @@ const VisualizzaTicket = () => {
     };
 
     const handleSubmitComment = (id) => {
-        if (commentText.trim() === "") {
-            alert("Please enter a comment before submitting.");
+        if (commentText.trim() === "" || author.trim() === "") {
+            alert("Please enter both a comment and your name.");
             return;
         }
 
-        fetch(`http://localhost:3001/tickets/${id}/comment`, {
+        fetch(`http://localhost:3001/tickets/${id}/comments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ comment: commentText }),  // Invia il commento
+            body: JSON.stringify({
+                comment: commentText,
+                author: author
+            }),
         })
             .then((res) => {
                 if (!res.ok) {
@@ -96,20 +100,19 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then(newComment => {
-                // Aggiorna i commenti immediatamente nel componente dopo aver inviato il commento
                 setComments((prevComments) => {
                     const updatedComments = { ...prevComments };
-                    updatedComments[id] = updatedComments[id] || [];  // Inizializza l'array se non esiste
-                    updatedComments[id].push(newComment);  // Aggiungi il nuovo commento alla lista
+                    updatedComments[id] = updatedComments[id] || [];
+                    updatedComments[id].push(newComment);
                     return updatedComments;
                 });
 
                 setCommentText("");  // Pulisci la textarea
+                setAuthor("");  // Pulisci il nome dell'autore
                 setExpandedCommentId(id);  // Mostra i commenti appena aggiunti
             })
             .catch(error => console.error('Error commenting on ticket:', error));
     };
-
 
     const handleDeleteComment = (commentId) => {
         fetch(`http://localhost:3001/comments/${commentId}`, {
@@ -132,17 +135,20 @@ const VisualizzaTicket = () => {
     };
 
     const handleSubmitReply = (commentId) => {
-        if (replyText[commentId]?.trim() === "") {
-            alert("Please enter a reply before submitting.");
+        if (replyText[commentId]?.trim() === "" || author.trim() === "") {
+            alert("Please enter both a reply and your name.");
             return;
         }
 
-        fetch(`http://localhost:3001/comments/${commentId}/reply`, {
+        fetch(`http://localhost:3001/comments/${commentId}/replies`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ reply: replyText[commentId] }),
+            body: JSON.stringify({
+                reply: replyText[commentId],
+                author: author
+            }),
         })
             .then((res) => {
                 if (!res.ok) {
@@ -151,18 +157,18 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then(() => {
-                // Aggiungi subito la nuova risposta nello stato dei commenti
                 setComments((prevComments) => {
                     const updatedComments = { ...prevComments };
                     const updatedComment = updatedComments[expandedCommentId].find(comment => comment.id === commentId);
                     if (updatedComment) {
                         updatedComment.replies = updatedComment.replies || [];
-                        updatedComment.replies.push({ reply_text: replyText[commentId] });
+                        updatedComment.replies.push({ reply_text: replyText[commentId], author: author });
                     }
                     return updatedComments;
                 });
 
                 setReplyText(prevState => ({ ...prevState, [commentId]: "" }));  // Pulisci la textbox dopo l'invio
+                setAuthor("");  // Pulisci il nome dell'autore
                 setActiveReplyId(null);  // Chiudi la textbox di risposta
             })
             .catch(error => console.error('Error replying to comment:', error));
@@ -207,22 +213,26 @@ const VisualizzaTicket = () => {
                 <button onClick={() => navigate('/closedtickets')}>Closed Tickets</button>
             </div>
 
+            {/* Sezione separata per i filtri */}
             <div className="filter-container">
-                <label>Filtra per Categoria:</label>
-                <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-                    <option value="">Tutte</option>
-                    <option value="DDOS">DDOS</option>
-                    <option value="Exfiltration">Exfiltration</option>
-                    <option value="Support">Support</option>
-                </select>
-
-                <label>Filtra per Severity:</label>
-                <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
-                    <option value="">Tutte</option>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
+                <div className="filter-cell">
+                    <label className="filter-label">Filtra per Categoria:</label>
+                    <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="filter-select">
+                        <option value="">Tutte</option>
+                        <option value="DDOS">DDOS</option>
+                        <option value="Exfiltration">Exfiltration</option>
+                        <option value="Support">Support</option>
+                    </select>
+                </div>
+                <div className="filter-cell">
+                    <label className="filter-label">Filtra per Severity:</label>
+                    <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)} className="filter-select">
+                        <option value="">Tutte</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
             </div>
 
             <table className="table">
@@ -255,25 +265,36 @@ const VisualizzaTicket = () => {
                         <td>
                             {activeCommentId === item.id ? (
                                 <div>
-                                        <textarea
-                                            style={{ width: '100%', marginBottom: '5px' }}
-                                            value={commentText}
-                                            onChange={(e) => setCommentText(e.target.value)}
-                                            placeholder="Enter your comment here"
-                                        />
-                                    <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Submit</button>
-                                    <button onClick={handleCancelComment} style={{ marginBottom: '5px' }}>Cancel</button>
+                                    <input
+                                        type="text"
+                                        value={author}
+                                        onChange={(e) => setAuthor(e.target.value)}
+                                        placeholder="Enter your name"
+                                        style={{ width: '100%', marginBottom: '5px' }}
+                                    />
+                                    <textarea
+                                        style={{ width: '100%', marginBottom: '5px' }}
+                                        value={commentText}
+                                        onChange={(e) => setCommentText(e.target.value)}
+                                        placeholder="Enter your comment here"
+                                    />
+                                    <button onClick={() => handleSubmitComment(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>
+                                        Submit
+                                    </button>
+                                    <button onClick={handleCancelComment} className="reply-button" style={{ marginBottom: '5px' }}>
+                                        Cancel
+                                    </button>
                                 </div>
                             ) : (
                                 <div>
-                                    <button onClick={() => handleDelete(item.id)} style={{ marginBottom: '5px' }}>Delete</button>
+                                    <button onClick={() => handleDelete(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Delete</button>
                                     {item.status !== 'closed' && (
                                         <>
-                                            <button onClick={() => handleCloseTicket(item.id)} style={{ marginBottom: '5px' }}>Close</button>
-                                            <button onClick={() => setActiveCommentId(item.id)} style={{ marginBottom: '5px' }}>Comment</button>
+                                            <button onClick={() => handleCloseTicket(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Close</button>
+                                            <button onClick={() => setActiveCommentId(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Comment</button>
                                         </>
                                     )}
-                                    <button onClick={() => handleToggleComments(item.id)} style={{ marginBottom: '5px' }}>
+                                    <button onClick={() => handleToggleComments(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>
                                         {expandedCommentId === item.id ? 'Nascondi Commenti' : 'Visualizza Commenti'}
                                     </button>
                                 </div>
@@ -287,6 +308,7 @@ const VisualizzaTicket = () => {
                                             <li key={index} className="comment-container">
                                                 <div className="reply-container">
                                                     <span className="comment-text">{comment.comment_text}</span>
+                                                    <span className="comment-author"> - {comment.author}</span> {/* Mostra l'autore del commento */}
 
                                                     {/* Visualizza le risposte per ciascun commento */}
                                                     <div className="replies-section">
@@ -296,6 +318,7 @@ const VisualizzaTicket = () => {
                                                                 comment.replies.map((reply, replyIndex) => (
                                                                     <li key={replyIndex} className="reply-container">
                                                                         <span className="reply-text">{reply.reply_text}</span>
+                                                                        <span className="reply-author"> - {reply.author}</span>
                                                                     </li>
                                                                 ))
                                                             ) : (
@@ -313,16 +336,25 @@ const VisualizzaTicket = () => {
                                                     {/* Textbox di risposta per ogni commento */}
                                                     {activeReplyId === comment.id && (
                                                         <div style={{ marginTop: '10px' }}>
-                                <textarea
-                                    style={{ width: '100%', marginBottom: '5px' }}
-                                    value={replyText[comment.id] || ""}  // Assicurati di usare il valore corretto per ogni commento
-                                    onChange={(e) => handleReplyChange(comment.id, e.target.value)}
-                                    placeholder="Enter your reply here"
-                                />
+                                                            <input
+                                                                type="text"
+                                                                value={author}
+                                                                onChange={(e) => setAuthor(e.target.value)}
+                                                                placeholder="Enter your name"
+                                                                style={{ width: '100%', marginBottom: '5px' }}
+                                                            />
+                                                            <textarea
+                                                                style={{ width: '100%', marginBottom: '5px' }}
+                                                                value={replyText[comment.id] || ""}
+                                                                onChange={(e) => handleReplyChange(comment.id, e.target.value)}
+                                                                placeholder="Enter your reply here"
+                                                            />
                                                             <button onClick={() => handleSubmitReply(comment.id)} className="reply-button" style={{ marginRight: '5px' }}>
                                                                 Submit Reply
                                                             </button>
-                                                            <button onClick={() => setActiveReplyId(null)} className="reply-button">Cancel</button>
+                                                            <button onClick={() => setActiveReplyId(null)} className="reply-button">
+                                                                Cancel
+                                                            </button>
                                                         </div>
                                                     )}
                                                 </div>
@@ -333,8 +365,6 @@ const VisualizzaTicket = () => {
                             ) : (
                                 expandedCommentId === item.id && <p>Nessun commento ancora.</p>
                             )}
-
-
                         </td>
                     </tr>
                 ))}
@@ -345,35 +375,3 @@ const VisualizzaTicket = () => {
 };
 
 export default VisualizzaTicket;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

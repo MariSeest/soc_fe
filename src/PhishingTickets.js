@@ -16,7 +16,7 @@ const PhishingTickets = () => {
 
     // Fetch solo ticket di phishing aperti
     useEffect(() => {
-        fetch("http://localhost:3001/phishing-tickets")
+        fetch("http://localhost:3001/phishing_tickets")
             .then((res) => res.json())
             .then((data) => {
                 setTickets(data);
@@ -29,14 +29,13 @@ const PhishingTickets = () => {
             alert("Inserisci un dominio e un commento.");
             return;
         }
-
         const newTicket = {
             domain: domain,
             severity: severity,
-            status: 'open'
+            status: 'open'  // Imposta lo status su 'open' durante la creazione 
         };
 
-        fetch("http://localhost:3001/phishing-tickets", {
+        fetch("http://localhost:3001/phishing_tickets", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,9 +51,6 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error creating ticket:', error));
     };
 
-    const handleComment = (ticketId) => {
-        setSelectedTicketId(ticketId);
-    };
 
     const handleAddComment = () => {
         if (!selectedTicketId || !commentText) {
@@ -62,12 +58,12 @@ const PhishingTickets = () => {
             return;
         }
 
-        fetch(`http://localhost:3001/tickets/${selectedTicketId}/comment`, {
+        fetch(`http://localhost:3001/phishing_tickets/${selectedTicketId}/comments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ comment: commentText }),
+            body: JSON.stringify({ comment_text: commentText }),
         })
             .then((res) => res.json())
             .then((newComment) => {
@@ -81,11 +77,11 @@ const PhishingTickets = () => {
     };
 
     const handleCloseTicket = (ticketId) => {
-        fetch(`http://localhost:3001/tickets/${ticketId}/close`, {
+        fetch(`http://localhost:3001/phishing_tickets/${ticketId}/close`, {
             method: 'PUT',
         })
             .then((res) => res.json())
-            .then((data) => {
+            .then(() => {
                 setTickets(tickets.map(ticket =>
                     ticket.id === ticketId ? { ...ticket, status: 'closed' } : ticket
                 ));
@@ -93,18 +89,33 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error closing ticket:', error));
     };
 
+    const handleViewComments = (ticketId) => {
+        if (!ticketComments[ticketId]) {
+            fetch(`http://localhost:3001/phishing_tickets/${ticketId}/comments`)
+                .then((res) => res.json())
+                .then((comments) => {
+                    setTicketComments(prev => ({
+                        ...prev,
+                        [ticketId]: comments  // Associa i commenti al ticket 
+                    }));
+                })
+                .catch(error => console.error('Error fetching comments:', error));
+        }
+    };
+
+
     const handleReply = (commentId) => {
         if (!replyText) {
             alert("Inserisci una risposta.");
             return;
         }
 
-        fetch(`http://localhost:3001/comments/${commentId}/reply`, {
+        fetch(`http://localhost:3001/phishing_comments/${commentId}/replies`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ reply: replyText }),
+            body: JSON.stringify({ reply_text: replyText }),
         })
             .then((res) => res.json())
             .then((reply) => {
@@ -116,23 +127,9 @@ const PhishingTickets = () => {
                             : comment
                     )
                 }));
-                setReplyText("");
+                setReplyText(""); // Resetta il campo di testo della risposta
             })
             .catch(error => console.error('Error adding reply:', error));
-    };
-
-    const handleViewComments = (ticketId) => {
-        if (!ticketComments[ticketId]) {
-            fetch(`http://localhost:3001/tickets/${ticketId}/comments`)
-                .then((res) => res.json())
-                .then((comments) => {
-                    setTicketComments(prev => ({
-                        ...prev,
-                        [ticketId]: comments
-                    }));
-                })
-                .catch(error => console.error('Error fetching comments:', error));
-        }
     };
 
     return (
@@ -195,7 +192,7 @@ const PhishingTickets = () => {
                         <td>{item.status === 'closed' ? 'Chiuso' : 'Aperto'}</td>
                         <td>{item.severity}</td>
                         <td>
-                            <button onClick={() => handleComment(item.id)}>Commenta</button>
+                            <button onClick={() => setSelectedTicketId(item.id)}>Commenta</button>
                             <button onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
                             <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
                             {/* Mostra commenti e risposte se disponibili */}

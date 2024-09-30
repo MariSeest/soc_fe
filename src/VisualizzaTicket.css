@@ -31,71 +31,127 @@
     border: 1px solid #00e0ff; /* Bordo neon */
     border-radius: 10px;
     z-index: 1000;
-    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    box-shadow: 0 0 15px #00e0ff; /* Ombra neon */
 }
 
 .button-container button {
     margin-bottom: 10px;
-    padding: 10px 20px;
-    font-size: 1em;
-    font-family: 'Roboto', sans-serif;
-    background-color: #00e0ff; /* Colore neon per il bottone */
-    color: #1a1a2e;
-    border: none;
-    border-radius: 5px;
+    padding: 12px 24px;
+    font-size: 1.2em; /* Aumentato per maggiore impatto */
+    font-family: 'Orbitron', sans-serif; /* Font futuristica */
+    background-color: transparent; /* Sfondo trasparente per effetto più pulito */
+    color: #00e0ff; /* Colore neon per il testo */
+    border: 2px solid #00e0ff; /* Bordo neon per un effetto più forte */
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Transizione al passaggio del mouse */
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .button-container button:hover {
-    background-color: #00a3cc; /* Colore più scuro al passaggio del mouse */
-    transform: scale(1.05); /* Leggero ingrandimento al passaggio del mouse */
+    background-color: rgba(0, 224, 255, 0.1); /* Leggero sfondo trasparente al passaggio del mouse */
+    box-shadow: 0 0 20px #00e0ff, 0 0 30px #00e0ff; /* Effetto neon più intenso */
+    transform: scale(1.1); /* Aumentato per un effetto di ingrandimento più evidente */
 }
 
 /* Stile per la tabella */
 .table {
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 30px; /* Spazio sotto la tabella */
+    margin-bottom: 30px;
     background-color: rgba(0, 0, 0, 0.7); /* Sfondo scuro trasparente */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Ombra per dare profondità */
-    border-radius: 10px; /* Angoli arrotondati */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5); /* Ombra più marcata */
+    border-radius: 12px; /* Angoli arrotondati più morbidi */
     overflow: hidden; /* Per mantenere gli angoli arrotondati */
 }
 
 .table th {
-    background-color: #00e0ff; /* Colore neon */
+    background-color: #00e0ff; /* Colore neon più luminoso */
     color: #1a1a2e;
     border: 2px solid #00e0ff;
-    padding: 12px;
-    font-family: 'Roboto', sans-serif;
+    padding: 14px;
+    font-family: 'Orbitron', sans-serif; /* Font futuristica */
     font-weight: bold;
-    text-transform: uppercase; /* Testo in maiuscolo */
+    text-transform: uppercase;
+    text-shadow: 0 0 10px #00e0ff; /* Effetto neon per il testo */
 }
 
 .table td {
     border: 2px solid #00e0ff;
-    padding: 12px;
+    padding: 14px;
     background-color: #16213e; /* Sfondo scuro per le celle */
-    color: #ffffff; /* Testo bianco per contrastare */
+    color: #ffffff;
     font-family: 'Roboto', sans-serif;
+    font-size: 1.1em; /* Aumentato per migliorare la leggibilità */
+    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.2); /* Ombra interna per effetto futuristico */
 }
 
+/* Stile per gli stati aperto e chiuso */
 .status-closed {
-    color: red;
+    color: #ff4d4d; /* Rosso acceso per indicare stato chiuso */
     font-weight: bold;
 }
 
 .status-open {
-    color: #00ff00;
+    color: #00ff00; /* Verde acceso per indicare stato aperto */
     font-weight: bold;
+}
+
+/* Stile per i commenti e le risposte */
+.comment-list-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #0f3460; /* Sfondo scuro per il contenitore dei commenti */
+    border: 2px solid #00e0ff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra neon più intensa */
+}
+
+/* Stile per i singoli commenti */
+.comment-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 20px; /* Aumentato per maggiore spazio */
+    background-color: #0f3460;
+    border: 1px solid #00e0ff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra futuristica */
+}
+
+/* Stile per la sezione di risposta */
+.reply-container {
+    margin-top: 10px;
+    padding: 15px;
+    background-color: #16213e;
+    border: 1px solid #00e0ff;
+    border-radius: 6px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra neon più marcata */
+}
+
+/* Stile per il pulsante "Reply" */
+.reply-button {
+    padding: 8px 16px;
+    font-size: 1em;
+    background-color: transparent;
+    color: #00e0ff;
+    border: 2px solid #00e0ff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reply-button:hover {
+    background-color: rgba(0, 224, 255, 0.1);
+    box-shadow: 0 0 20px #00e0ff, 0 0 30px #00e0ff; /* Effetto neon più forte */
+    transform: scale(1.1);
 }
 
 /* Contenitore separato per i commenti */
 .comment-list-container {
     margin-top: 20px;
     padding: 20px;
-    background-color: #0f3460; /* Colore di sfondo scuro per il contenitore dei commenti */
+    background-color: #0f3460; /* Sfondo scuro per il contenitore dei commenti */
     border: 2px solid #00e0ff; /* Bordo neon */
     border-radius: 8px; /* Angoli arrotondati */
     box-shadow: 0 0 10px rgba(0, 224, 255, 0.3); /* Ombra neon */
@@ -133,6 +189,7 @@
     flex-grow: 1;
 }
 
+/* Stile per il testo della risposta */
 .reply-text {
     color: #ffffff;
 }
@@ -220,8 +277,47 @@
     margin-bottom: 5px;
 }
 
+/* Stile per il contenitore dei filtri */
+.filter-container {
+    display: table;
+    width: 100%;
+    margin-bottom: 2cm; /* Spazio di 2 cm tra la sezione dei filtri e la tabella */
+    background-color: rgba(0, 0, 0, 0.7); /* Sfondo scuro trasparente */
+    border: 2px solid #00e0ff; /* Bordo neon */
+    border-radius: 10px; /* Angoli arrotondati */
+    padding: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 224, 255, 0.3); /* Ombra futuristica */
+}
 
+/* Stile per le celle dei filtri */
+.filter-cell {
+    display: table-cell;
+    padding: 10px 20px;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    text-align: left;
+    vertical-align: middle;
+}
 
+/* Stile per i label e i select */
+.filter-label {
+    color: #00e0ff; /* Testo neon */
+    margin-bottom: 10px;
+    display: block;
+}
 
+.filter-select {
+    padding: 8px 16px;
+    background-color: #16213e;
+    color: #ffffff;
+    border: 1px solid #00e0ff; /* Bordo neon */
+    border-radius: 5px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1em;
+    outline: none;
+    transition: border 0.3s ease;
+}
 
-
+.filter-select:focus {
+    border-color: #00e0ff;
+}
