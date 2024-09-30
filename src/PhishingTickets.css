@@ -183,6 +183,27 @@
     background-color: #00a3cc;
     transform: scale(1.07);
 }
+.table button {
+    margin: 0 5px;
+}
+
+.comment-form, .reply-form {
+    margin-top: 20px;
+}
+
+.comment-form textarea, .reply-form textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.comment-form button, .reply-form button {
+    margin-top: 10px;
+}
+
+.reply {
+    margin-left: 20px;
+    font-style: italic;
+}
 
 
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import './chat.css'
+import './chat.css';
 
 const socket = io('http://localhost:3001');
 
@@ -11,18 +11,22 @@ const Chat = ({ username }) => {
     const [error, setError] = useState(null);
     const [users, setUsers] = useState([]);
 
+    // Effettua la registrazione dell'utente appena entra nella chat
     useEffect(() => {
         socket.emit('register', username);
 
+        // Ascolta i messaggi di chat in arrivo
         socket.on('chat message', (msg) => {
             setMessages((prevMessages) => [...prevMessages, msg]);
         });
 
         return () => {
+            // Disconnetti quando l'utente esce
             socket.off('chat message');
         };
     }, [username]);
 
+    // Recupera i messaggi e gli utenti registrati dal backend all'avvio
     useEffect(() => {
         fetch('http://localhost:3001/messages')
             .then(res => {
@@ -43,11 +47,13 @@ const Chat = ({ username }) => {
             .catch(error => console.error('Failed to fetch users:', error));
     }, []);
 
+    // Gestione dell'invio di un messaggio
     const handleSend = (e) => {
         e.preventDefault();
         if (input.trim() && recipient.trim()) {
             const message = { text: input, recipient, timestamp: new Date(), sender: username };
 
+            // Invia il messaggio al backend e aggiorna la chat
             fetch('http://localhost:3001/messages', {
                 method: 'POST',
                 headers: {
@@ -62,7 +68,7 @@ const Chat = ({ username }) => {
                     return res.json();
                 })
                 .then(data => {
-                    setInput('');
+                    setInput(''); // Svuota il campo di input dopo l'invio
                 })
                 .catch(error => {
                     console.error('Error sending message:', error);

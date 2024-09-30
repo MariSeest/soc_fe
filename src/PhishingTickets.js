@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import './PhishingTickets.css'; // Usa il CSS corretto
+import './PhishingTickets.css'; // Assicurati di avere questo file per lo stile
 
 const PhishingTickets = () => {
     const [tickets, setTickets] = useState([]);
-    const [activeCommentId, setActiveCommentId] = useState(null); // Per sapere quale ticket è in commento
-    const [commentText, setCommentText] = useState(""); // Testo del commento
-    const [expandedCommentId, setExpandedCommentId] = useState(null); // Per sapere quale commento è espanso
-    const [comments, setComments] = useState({}); // Stato per memorizzare i commenti per ogni ticket
-    const [activeReplyId, setActiveReplyId] = useState(null); // Stato per tracciare il commento a cui si sta rispondendo
-    const [replyText, setReplyText] = useState({}); // Stato per il testo della risposta
     const [domain, setDomain] = useState(""); // Dominio del sito di phishing
     const [severity, setSeverity] = useState("Low"); // Default severity "Low"
     const [newComment, setNewComment] = useState(""); // Commento per il nuovo ticket
+    const [selectedTicketId, setSelectedTicketId] = useState(null); // ID del ticket selezionato per commenti
+    const [commentText, setCommentText] = useState(""); // Testo del commento
+    const [replyText, setReplyText] = useState(""); // Testo della risposta
+    const [selectedCommentId, setSelectedCommentId] = useState(null); // ID del commento selezionato per risposte
+    const [ticketComments, setTicketComments] = useState({}); // Commenti per ogni ticket
     const navigate = useNavigate();
 
     // Fetch solo ticket di phishing aperti
@@ -24,109 +23,6 @@ const PhishingTickets = () => {
             })
             .catch(error => console.error('Error fetching phishing tickets:', error));
     }, []);
-
-
-    const handleDelete = (id) => {
-        fetch(`http://localhost:3001/tickets/${id}`, {
-            method: 'DELETE',
-        })
-            .then(() => {
-                setTickets(tickets.filter(ticket => ticket.id !== id));
-            })
-            .catch(error => console.error('Error deleting ticket:', error));
-    };
-
-    const handleCloseTicket = (id) => {
-        fetch(`http://localhost:3001/tickets/phishing/${id}/close`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => res.json())
-            .then(() => {
-                setTickets(tickets.map(ticket => ticket.id === id ? { ...ticket, status: 'closed' } : ticket));
-                navigate('/PhishingTicketsClosed'); // Naviga ai ticket chiusi di phishing
-            })
-            .catch(error => console.error('Error closing ticket:', error));
-    };
-
-    const handleSubmitComment = (id) => {
-        if (commentText.trim() === "") {
-            alert("Inserisci un commento prima di inviare.");
-            return;
-        }
-
-        fetch(`http://localhost:3001/tickets/${id}/comment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ comment: commentText }),
-        })
-            .then((res) => res.json())
-            .then(newComment => {
-                setComments((prevComments) => {
-                    const updatedComments = { ...prevComments };
-                    updatedComments[id] = updatedComments[id] || [];
-                    updatedComments[id].push(newComment);
-                    return updatedComments;
-                });
-
-                setCommentText("");  // Reset del campo di testo
-                setExpandedCommentId(id); // Espandi la sezione commenti
-            })
-            .catch(error => console.error('Error commenting on ticket:', error));
-    };
-
-    const handleReplyToComment = (commentId) => {
-        setActiveReplyId(activeReplyId === commentId ? null : commentId);  // Toggle della textbox di risposta
-    };
-
-    const handleSubmitReply = (commentId) => {
-        if (replyText[commentId]?.trim() === "") {
-            alert("Inserisci una risposta prima di inviare.");
-            return;
-        }
-
-        fetch(`http://localhost:3001/comments/${commentId}/reply`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ reply: replyText[commentId] }),
-        })
-            .then((res) => res.json())
-            .then(() => {
-                setComments((prevComments) => {
-                    const updatedComments = { ...prevComments };
-                    const updatedComment = updatedComments[expandedCommentId].find(comment => comment.id === commentId);
-                    if (updatedComment) {
-                        updatedComment.replies = updatedComment.replies || [];
-                        updatedComment.replies.push({ reply_text: replyText[commentId] });
-                    }
-                    return updatedComments;
-                });
-
-                setReplyText(prevState => ({ ...prevState, [commentId]: "" }));  // Reset della textbox
-                setActiveReplyId(null);  // Chiudi la textbox di risposta
-            })
-            .catch(error => console.error('Error replying to comment:', error));
-    };
-
-    const handleToggleExpand = (id) => {
-        if (expandedCommentId === id) {
-            setExpandedCommentId(null); // Nascondi commenti
-        } else {
-            fetch(`http://localhost:3001/tickets/${id}/comments`)
-                .then((res) => res.json())
-                .then((data) => {
-                    setComments((prevComments) => ({ ...prevComments, [id]: data }));
-                    setExpandedCommentId(id);  // Mostra i commenti
-                })
-                .catch(error => console.error("Error fetching comments:", error));
-        }
-    };
 
     const handleSubmitTicket = () => {
         if (!domain || !newComment) {
@@ -156,6 +52,88 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error creating ticket:', error));
     };
 
+    const handleComment = (ticketId) => {
+        setSelectedTicketId(ticketId);
+    };
+
+    const handleAddComment = () => {
+        if (!selectedTicketId || !commentText) {
+            alert("Seleziona un ticket e inserisci un commento.");
+            return;
+        }
+
+        fetch(`http://localhost:3001/tickets/${selectedTicketId}/comment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment: commentText }),
+        })
+            .then((res) => res.json())
+            .then((newComment) => {
+                setTicketComments(prev => ({
+                    ...prev,
+                    [selectedTicketId]: [...(prev[selectedTicketId] || []), newComment]
+                }));
+                setCommentText("");
+            })
+            .catch(error => console.error('Error adding comment:', error));
+    };
+
+    const handleCloseTicket = (ticketId) => {
+        fetch(`http://localhost:3001/tickets/${ticketId}/close`, {
+            method: 'PUT',
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setTickets(tickets.map(ticket =>
+                    ticket.id === ticketId ? { ...ticket, status: 'closed' } : ticket
+                ));
+            })
+            .catch(error => console.error('Error closing ticket:', error));
+    };
+
+    const handleReply = (commentId) => {
+        if (!replyText) {
+            alert("Inserisci una risposta.");
+            return;
+        }
+
+        fetch(`http://localhost:3001/comments/${commentId}/reply`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ reply: replyText }),
+        })
+            .then((res) => res.json())
+            .then((reply) => {
+                setTicketComments(prev => ({
+                    ...prev,
+                    [selectedTicketId]: prev[selectedTicketId].map(comment =>
+                        comment.id === commentId
+                            ? { ...comment, replies: [...(comment.replies || []), reply] }
+                            : comment
+                    )
+                }));
+                setReplyText("");
+            })
+            .catch(error => console.error('Error adding reply:', error));
+    };
+
+    const handleViewComments = (ticketId) => {
+        if (!ticketComments[ticketId]) {
+            fetch(`http://localhost:3001/tickets/${ticketId}/comments`)
+                .then((res) => res.json())
+                .then((comments) => {
+                    setTicketComments(prev => ({
+                        ...prev,
+                        [ticketId]: comments
+                    }));
+                })
+                .catch(error => console.error('Error fetching comments:', error));
+        }
+    };
 
     return (
         <div>
@@ -172,7 +150,12 @@ const PhishingTickets = () => {
             <div className="form-container-new">
                 <div className="input-group">
                     <label>Dominio del sito di phishing:</label>
-                    <input type="text" value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="Inserisci il dominio..." />
+                    <input
+                        type="text"
+                        value={domain}
+                        onChange={(e) => setDomain(e.target.value)}
+                        placeholder="Inserisci il dominio..."
+                    />
 
                     <select value={severity} onChange={(e) => setSeverity(e.target.value)}>
                         <option value="Low">Low</option>
@@ -183,7 +166,11 @@ const PhishingTickets = () => {
 
                 <div className="textarea-container">
                     <label>Commento:</label>
-                    <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Inserisci un commento..." />
+                    <textarea
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Inserisci un commento..."
+                    />
                 </div>
 
                 <button className="submit-ticket" onClick={handleSubmitTicket}>Apri Ticket</button>
@@ -194,11 +181,9 @@ const PhishingTickets = () => {
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
+                    <th>Domain</th>
                     <th>Status</th>
-                    <th>Category</th>
                     <th>Severity</th>
-                    <th>Content</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -206,85 +191,56 @@ const PhishingTickets = () => {
                 {tickets.map((item) => (
                     <tr key={item.id}>
                         <td>{item.id}</td>
-                        <td>{item.name}</td>
-                        <td className={item.status === 'closed' ? 'status-closed' : 'status-open'}>
-                            {item.status}
-                        </td>
-                        <td>{item.category}</td>
+                        <td>{item.domain}</td>
+                        <td>{item.status === 'closed' ? 'Chiuso' : 'Aperto'}</td>
                         <td>{item.severity}</td>
-                        <td>{item.text}</td>
                         <td>
-                            {activeCommentId === item.id ? (
-                                <div>
-                                    <textarea
-                                        style={{ width: '100%', marginBottom: '5px' }}
-                                        value={commentText}
-                                        onChange={(e) => setCommentText(e.target.value)}
-                                        placeholder="Inserisci un commento..."
-                                    />
-                                    <button onClick={() => handleSubmitComment(item.id)} style={{ marginBottom: '5px' }}>Commenta</button>
-                                    <button onClick={() => setActiveCommentId(null)} style={{ marginBottom: '5px' }}>Annulla</button>
+                            <button onClick={() => handleComment(item.id)}>Commenta</button>
+                            <button onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
+                            <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
+                            {/* Mostra commenti e risposte se disponibili */}
+                            {ticketComments[item.id] && ticketComments[item.id].map((comment) => (
+                                <div key={comment.id}>
+                                    <p>{comment.comment_text}</p>
+                                    <button onClick={() => setSelectedCommentId(comment.id)}>Rispondi</button>
+                                    {comment.replies && comment.replies.map((reply) => (
+                                        <p key={reply.id} className="reply">{reply.reply_text}</p>
+                                    ))}
                                 </div>
-                            ) : (
-                                <div>
-                                    <button onClick={() => handleCloseTicket(item.id)} style={{ marginBottom: '5px' }}>Chiudi</button>
-                                    <button onClick={() => setActiveCommentId(item.id)} style={{ marginBottom: '5px' }}>Commenta</button>
-                                    <button onClick={() => handleToggleExpand(item.id)} style={{ marginBottom: '5px' }}>
-                                        {expandedCommentId === item.id ? 'Nascondi Commenti' : 'Mostra Commenti'}
-                                    </button>
-                                </div>
-                            )}
-                            {expandedCommentId === item.id && comments[item.id] && comments[item.id].length > 0 && (
-                                <div className="comment-section">
-                                    <strong>Commenti:</strong>
-                                    <ul>
-                                        {comments[item.id].map((comment, index) => (
-                                            <li key={index} className="comment-container">
-                                                <span>{comment.comment_text}</span>
-                                                <button onClick={() => handleReplyToComment(comment.id)}>Rispondi</button>
-
-                                                {activeReplyId === comment.id && (
-                                                    <div>
-                                                        <textarea
-                                                            value={replyText[comment.id] || ""}
-                                                            onChange={(e) => setReplyText({ ...replyText, [comment.id]: e.target.value })}
-                                                            placeholder="Inserisci una risposta..."
-                                                        />
-                                                        <button onClick={() => handleSubmitReply(comment.id)}>Invia</button>
-                                                    </div>
-                                                )}
-
-                                                {comment.replies && comment.replies.length > 0 && (
-                                                    <ul>
-                                                        {comment.replies.map((reply, replyIndex) => (
-                                                            <li key={replyIndex}>{reply.reply_text}</li>
-                                                        ))}
-                                                    </ul>
-                                                )}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
+                            ))}
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+
+            {/* Sezione per aggiungere un commento al ticket selezionato */}
+            {selectedTicketId && (
+                <div className="comment-form">
+                    <h3>Aggiungi un commento al ticket {selectedTicketId}</h3>
+                    <textarea
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="Inserisci il commento..."
+                    />
+                    <button onClick={handleAddComment}>Aggiungi Commento</button>
+                </div>
+            )}
+
+            {/* Sezione per rispondere a un commento */}
+            {selectedCommentId && (
+                <div className="reply-form">
+                    <h3>Rispondi al commento {selectedCommentId}</h3>
+                    <textarea
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Inserisci la risposta..."
+                    />
+                    <button onClick={() => handleReply(selectedCommentId)}>Invia Risposta</button>
+                </div>
+            )}
         </div>
     );
 };
 
 export default PhishingTickets;
-
-
-
-
-
-
-
-
-
-
-
-
