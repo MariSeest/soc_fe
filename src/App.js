@@ -17,6 +17,7 @@ import SeverityLowTickets from './SeverityLowTickets';
 import PhishingTickets from './PhishingTickets';
 import PhishingTicketsClosed from "./PhishingTicketsClosed";
 import DettaglioTicket from './DettaglioTicket'; // Importa il nuovo componente
+import ErrorBoundary from './ErrorBoundary';  // Importa ErrorBoundary
 
 function App() {
     const { isLoading } = useAuth0();
@@ -35,33 +36,27 @@ function App() {
     }
 
     return (
-        <Routes>
-            <Route path="/" element={<AuthenticationGuard component={Home} />} />
-            <Route path="/home" element={<AuthenticationGuard component={Home} />} />
-            <Route path="/login" element={<LoginButton />} />
-            <Route path="/logout" element={<AuthenticationGuard component={LogoutButton} />} />
-            <Route path="/profile" element={<AuthenticationGuard component={Profile} />} />
-            <Route path="/visualizzaticket" element={<AuthenticationGuard component={VisualizzaTicket} />} />
-            <Route path="/apriunticket" element={<AuthenticationGuard component={ApriUnTicket} />} />
-            <Route path="/closedtickets" element={<AuthenticationGuard component={ClosedTickets} />} />
-            <Route path="/SeverityHighTickets" element={<AuthenticationGuard component={SeverityHighTickets} />} />
-            <Route path="/SeverityMediumTickets" element={<AuthenticationGuard component={SeverityMediumTickets} />} />
-            <Route path="/SeverityLowTickets" element={<AuthenticationGuard component={SeverityLowTickets} />} />
-            <Route path="/PhishingTickets" element={<AuthenticationGuard component={PhishingTickets} />} />
-            <Route path="/PhishingTicketsClosed" element={<AuthenticationGuard component={PhishingTicketsClosed} />} />
-            <Route path="/ticket/:id" element={<AuthenticationGuard component={DettaglioTicket} />} />
-        </Routes>
+            <Routes>
+                <Route path="/" element={<AuthenticationGuard component={Home} />} />
+                <Route path="/home" element={<AuthenticationGuard component={Home} />} />
+                <Route path="/login" element={<LoginButton />} />
+                <Route path="/logout" element={<AuthenticationGuard component={LogoutButton} />} />
+                <Route path="/profile" element={<AuthenticationGuard component={Profile} />} />
+                <Route path="/visualizzaticket" element={<AuthenticationGuard component={VisualizzaTicket} />} />
+                <Route path="/apriunticket" element={<AuthenticationGuard component={ApriUnTicket} />} />
+                <Route path="/closedtickets" element={<AuthenticationGuard component={ClosedTickets} />} />
+                <Route path="/SeverityHighTickets" element={<AuthenticationGuard component={SeverityHighTickets} />} />
+                <Route path="/SeverityMediumTickets" element={<AuthenticationGuard component={SeverityMediumTickets} />} />
+                <Route path="/SeverityLowTickets" element={<AuthenticationGuard component={SeverityLowTickets} />} />
+                <Route path="/PhishingTickets" element={
+                    <ErrorBoundary>
+                        <AuthenticationGuard component={PhishingTickets} />
+                    </ErrorBoundary>
+                } />
+                <Route path="/PhishingTicketsClosed" element={<AuthenticationGuard component={PhishingTicketsClosed} />} />
+                <Route path="/ticket/:id" element={<AuthenticationGuard component={DettaglioTicket} />} />
+            </Routes>
     );
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-

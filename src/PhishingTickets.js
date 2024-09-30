@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './PhishingTickets.css'; // Assicurati di avere questo file per lo stile
 
+
 const PhishingTickets = () => {
     const [tickets, setTickets] = useState([]);
     const [domain, setDomain] = useState(""); // Dominio del sito di phishing
@@ -9,10 +10,11 @@ const PhishingTickets = () => {
     const [newComment, setNewComment] = useState(""); // Commento per il nuovo ticket
     const [selectedTicketId, setSelectedTicketId] = useState(null); // ID del ticket selezionato per commenti
     const [commentText, setCommentText] = useState(""); // Testo del commento
-    const [replyText, setReplyText] = useState(""); // Testo della risposta
+    const [replyText, setReplyText] = useState({}); // Testo della risposta
     const [selectedCommentId, setSelectedCommentId] = useState(null); // ID del commento selezionato per risposte
     const [ticketComments, setTicketComments] = useState({}); // Commenti per ogni ticket
     const navigate = useNavigate();
+    const [author, setAuthor] = useState(""); // Autore del commento/risposta
 
     // Fetch solo ticket di phishing aperti
     useEffect(() => {
@@ -24,6 +26,7 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error fetching phishing tickets:', error));
     }, []);
 
+    // Funzione per inviare un nuovo ticket di phishing
     const handleSubmitTicket = () => {
         if (!domain || !newComment) {
             alert("Inserisci un dominio e un commento.");
@@ -32,7 +35,7 @@ const PhishingTickets = () => {
         const newTicket = {
             domain: domain,
             severity: severity,
-            status: 'open'  // Imposta lo status su 'open' durante la creazione 
+            status: 'open'  // Imposta lo status su 'open' durante la creazione
         };
 
         fetch("http://localhost:3001/phishing_tickets", {
@@ -51,10 +54,10 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error creating ticket:', error));
     };
 
-
+    // Funzione per aggiungere un commento a un ticket selezionato
     const handleAddComment = () => {
-        if (!selectedTicketId || !commentText) {
-            alert("Seleziona un ticket e inserisci un commento.");
+        if (!selectedTicketId || !commentText || !author) {
+            alert("Inserisci un commento e il tuo nome.");
             return;
         }
 
@@ -63,7 +66,7 @@ const PhishingTickets = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ comment_text: commentText }),
+            body: JSON.stringify({ comment_text: commentText, author: author }),
         })
             .then((res) => res.json())
             .then((newComment) => {
@@ -71,11 +74,13 @@ const PhishingTickets = () => {
                     ...prev,
                     [selectedTicketId]: [...(prev[selectedTicketId] || []), newComment]
                 }));
-                setCommentText("");
+                setCommentText(""); // Pulisci il campo di testo
+                setAuthor(""); // Pulisci il nome dell'autore
             })
             .catch(error => console.error('Error adding comment:', error));
     };
 
+    // Funzione per chiudere un ticket
     const handleCloseTicket = (ticketId) => {
         fetch(`http://localhost:3001/phishing_tickets/${ticketId}/close`, {
             method: 'PUT',
@@ -89,24 +94,29 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error closing ticket:', error));
     };
 
+    // Funzione per visualizzare i commenti associati a un ticket
     const handleViewComments = (ticketId) => {
         if (!ticketComments[ticketId]) {
             fetch(`http://localhost:3001/phishing_tickets/${ticketId}/comments`)
                 .then((res) => res.json())
                 .then((comments) => {
+                    const commentsWithReplies = comments.map(comment => ({
+                        ...comment,
+                        replies: comment.replies || []  // Assicurati che replies sia sempre un array
+                    }));
                     setTicketComments(prev => ({
                         ...prev,
-                        [ticketId]: comments  // Associa i commenti al ticket 
+                        [ticketId]: commentsWithReplies
                     }));
                 })
                 .catch(error => console.error('Error fetching comments:', error));
         }
     };
 
-
+    // Funzione per rispondere a un commento
     const handleReply = (commentId) => {
-        if (!replyText) {
-            alert("Inserisci una risposta.");
+        if (!replyText[commentId] || !author) {
+            alert("Inserisci una risposta e il tuo nome.");
             return;
         }
 
@@ -115,7 +125,7 @@ const PhishingTickets = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ reply_text: replyText }),
+            body: JSON.stringify({ reply_text: replyText[commentId], author: author }),
         })
             .then((res) => res.json())
             .then((reply) => {
@@ -127,7 +137,8 @@ const PhishingTickets = () => {
                             : comment
                     )
                 }));
-                setReplyText(""); // Resetta il campo di testo della risposta
+                setReplyText(prevState => ({ ...prevState, [commentId]: "" })); // Resetta il campo di testo della risposta
+                setAuthor(""); // Pulisci il nome dell'autore
             })
             .catch(error => console.error('Error adding reply:', error));
     };
@@ -178,10 +189,10 @@ const PhishingTickets = () => {
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Domain</th>
+                    <th>Dominio</th>
                     <th>Status</th>
                     <th>Severity</th>
-                    <th>Actions</th>
+                    <th>Azioni</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -196,13 +207,21 @@ const PhishingTickets = () => {
                             <button onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
                             <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
                             {/* Mostra commenti e risposte se disponibili */}
-                            {ticketComments[item.id] && ticketComments[item.id].map((comment) => (
+                            {ticketComments[item.id] && Array.isArray(ticketComments[item.id]) && ticketComments[item.id].map((comment) => (
                                 <div key={comment.id}>
                                     <p>{comment.comment_text}</p>
+                                    <span> - {comment.author}</span> {/* Mostra l'autore del commento */}
                                     <button onClick={() => setSelectedCommentId(comment.id)}>Rispondi</button>
-                                    {comment.replies && comment.replies.map((reply) => (
-                                        <p key={reply.id} className="reply">{reply.reply_text}</p>
-                                    ))}
+                                    {/* Mostra le risposte al commento */}
+                                    {Array.isArray(comment.replies) && comment.replies.length > 0 ? (
+                                        comment.replies.map((reply) => (
+                                            <p key={reply.id} className="reply">
+                                                {reply.reply_text} - {reply.author}
+                                            </p>
+                                        ))
+                                    ) : (
+                                        <p>Nessuna risposta</p>
+                                    )}
                                 </div>
                             ))}
                         </td>
@@ -215,6 +234,13 @@ const PhishingTickets = () => {
             {selectedTicketId && (
                 <div className="comment-form">
                     <h3>Aggiungi un commento al ticket {selectedTicketId}</h3>
+                    <input
+                        type="text"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        placeholder="Inserisci il tuo nome..."
+                        style={{ marginBottom: '5px' }}
+                    />
                     <textarea
                         value={commentText}
                         onChange={(e) => setCommentText(e.target.value)}
@@ -228,9 +254,16 @@ const PhishingTickets = () => {
             {selectedCommentId && (
                 <div className="reply-form">
                     <h3>Rispondi al commento {selectedCommentId}</h3>
+                    <input
+                        type="text"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        placeholder="Inserisci il tuo nome..."
+                        style={{ marginBottom: '5px' }}
+                    />
                     <textarea
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
+                        value={replyText[selectedCommentId] || ""}
+                        onChange={(e) => setReplyText(prevState => ({ ...prevState, [selectedCommentId]: e.target.value }))}
                         placeholder="Inserisci la risposta..."
                     />
                     <button onClick={() => handleReply(selectedCommentId)}>Invia Risposta</button>
