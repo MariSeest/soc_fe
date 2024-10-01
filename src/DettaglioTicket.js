@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import './DettaglioTicket.css'
 
 const DettaglioTicket = () => {
     const { id } = useParams();  // Ottieni l'ID del ticket dalla rotta
@@ -10,7 +11,7 @@ const DettaglioTicket = () => {
 
     // Effettua il fetch per i dettagli del ticket quando il componente viene montato
     useEffect(() => {
-        fetch(`http://localhost:3001/ticket/${id}`)
+        fetch(`http://localhost:3001/tickets/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setTicket(data);
@@ -35,7 +36,7 @@ const DettaglioTicket = () => {
             return;
         }
 
-        fetch(`http://localhost:3001/tickets/${id}/comment`, {
+        fetch(`http://localhost:3001/tickets/${id}/comments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

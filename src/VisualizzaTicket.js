@@ -5,12 +5,12 @@ import './VisualizzaTicket.css';
 const VisualizzaTicket = () => {
     const [tickets, setTickets] = useState([]);
     const [filteredTickets, setFilteredTickets] = useState([]);
-    const [expandedCommentId, setExpandedCommentId] = useState(null); // Per visualizzare i commenti
+    const [expandedCommentId, setExpandedCommentId] = useState(null);
     const [categoryFilter, setCategoryFilter] = useState('');
     const [severityFilter, setSeverityFilter] = useState('');
     const [comments, setComments] = useState({});
-    const [showSidebar, setShowSidebar] = useState(false); // Stato per visualizzare la barra laterale
-    const [showOnlyComments, setShowOnlyComments] = useState(false); // Stato per visualizzare solo i commenti
+    const [showSidebar, setShowSidebar] = useState(false);
+    const [showOnlyComments, setShowOnlyComments] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const VisualizzaTicket = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ status: 'closed' }),
+            body: JSON.stringify({ status: 'closed', closed_at: new Date() }),
         })
             .then((res) => {
                 if (!res.ok) {
@@ -59,14 +59,13 @@ const VisualizzaTicket = () => {
             })
             .then(() => {
                 setTickets(tickets.map(ticket =>
-                    ticket.id === id ? { ...ticket, status: 'closed' } : ticket
+                    ticket.id === id ? { ...ticket, status: 'closed', closed_at: new Date() } : ticket
                 ));
                 navigate('/closedtickets');
             })
             .catch(error => console.error('Error closing ticket:', error));
     };
 
-    // Funzione per recuperare e visualizzare solo i commenti
     const handleViewComments = (id) => {
         fetch(`http://localhost:3001/tickets/${id}/comments`)
             .then((res) => {
@@ -81,15 +80,15 @@ const VisualizzaTicket = () => {
                     [id]: data,
                 }));
                 setExpandedCommentId(id);
-                setShowOnlyComments(true); // Mostra solo i commenti
-                setShowSidebar(true); // Apri la barra laterale
+                setShowOnlyComments(true);
+                setShowSidebar(true);
             })
             .catch((error) => console.error("Error fetching comments:", error));
     };
 
     const handleCloseSidebar = () => {
-        setShowSidebar(false); // Nascondi la barra laterale
-        setExpandedCommentId(null); // Resetta l'ID attivo
+        setShowSidebar(false);
+        setExpandedCommentId(null);
     };
 
     return (
@@ -133,6 +132,10 @@ const VisualizzaTicket = () => {
                     <th>Category</th>
                     <th>Severity</th>
                     <th>Content</th>
+                    <th>Orario Apertura</th>
+                    <th>Ultimo Commento</th>
+                    <th>Orario Chiusura</th>
+                    <th>Riapertura</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -146,11 +149,16 @@ const VisualizzaTicket = () => {
                             </Link>
                         </td>
                         <td className={item.status === 'closed' ? 'status-closed' : 'status-open'}>
+                            {item.closed_previously ? <span className="ticket-previously-closed">Ticket precedentemente chiuso</span> : null}
                             {item.status}
                         </td>
                         <td>{item.category}</td>
                         <td>{item.severity}</td>
                         <td>{item.content}</td>
+                        <td>{new Date(item.created_at).toLocaleString()}</td>
+                        <td>{item.last_comment_at ? new Date(item.last_comment_at).toLocaleString() : 'N/A'}</td>
+                        <td>{item.closed_at ? new Date(item.closed_at).toLocaleString() : 'N/A'}</td>
+                        <td>{item.reopened_at ? new Date(item.reopened_at).toLocaleString() : 'N/A'}</td>
                         <td>
                             <button onClick={() => handleDelete(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Delete</button>
                             {item.status !== 'closed' && (
@@ -165,14 +173,12 @@ const VisualizzaTicket = () => {
                 </tbody>
             </table>
 
-            {/* Barra laterale per visualizzare solo lo storico dei commenti */}
             {showSidebar && (
                 <div className="sidebar">
                     <div className="sidebar-content">
                         <h3>Storico dei Commenti</h3>
                         <button className="sidebar-close" onClick={handleCloseSidebar}>Chiudi</button>
 
-                        {/* Storico dei commenti */}
                         <div className="comments-container">
                             {comments[expandedCommentId]?.length > 0 ? (
                                 comments[expandedCommentId].map((comment) => (
