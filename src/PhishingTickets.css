@@ -1,3 +1,14 @@
+.title-container {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460); /* Gradiente più definito */
+    padding: 25px 0; /* Aumentato padding per maggiore impatto */
+    text-align: center;
+    margin-bottom: 40px;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 2px solid #00e0ff;
+    box-shadow: 0px 5px 20px rgba(0, 224, 255, 0.5); /* Ombra neon più marcata */
+}
+
 .form-container-new {
     background-color: #1a1a2e;
     padding: 25px;
