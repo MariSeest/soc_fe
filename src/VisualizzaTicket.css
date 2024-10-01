@@ -1,14 +1,16 @@
 /* Stile per il contenitore del titolo */
 .title-container {
-    background-color: #1a1a2e; /* Colore scuro moderno */
-    padding: 20px 0;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460); /* Gradiente più definito */
+    padding: 25px 0; /* Aumentato padding per maggiore impatto */
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     width: 100%;
     box-sizing: border-box;
-    border-bottom: 2px solid #00e0ff; /* Bordo inferiore neon */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombra per dare profondità */
+    border-bottom: 2px solid #00e0ff;
+    box-shadow: 0px 5px 20px rgba(0, 224, 255, 0.5); /* Ombra neon più marcata */
 }
+
+/* Stile per la sidebar */
 .sidebar {
     position: fixed;
     right: 0;
@@ -17,340 +19,203 @@
     width: 300px;
     background-color: #1a1a2e;
     color: white;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: -2px 0 20px rgba(0, 0, 0, 0.6); /* Ombra più intensa */
     z-index: 1000;
     overflow-y: auto;
-    padding: 20px;
+    padding: 30px 20px;
+    transition: transform 0.3s ease; /* Animazione di apertura */
 }
 
-.comments-container {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 20px;
+.sidebar:hover {
+    transform: scale(1.01); /* Leggero ingrandimento al passaggio del mouse */
 }
 
-.comment-container {
-    background-color: #16213e;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-}
-
+/* Stile per il pulsante chiudi sidebar */
 .sidebar-close {
     background-color: #00e0ff;
     border: none;
     color: white;
-    padding: 10px;
+    padding: 12px;
     cursor: pointer;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-.ticket-previously-closed {
-    color: red;
-    font-weight: bold;
-}
-
-
-
-/* Stile per il contenitore dei pulsanti */
-.button-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0.8); /* Sfondo scuro trasparente */
-    border: 1px solid #00e0ff; /* Bordo neon */
-    border-radius: 10px;
-    z-index: 1000;
-    box-shadow: 0 0 15px #00e0ff; /* Ombra neon */
-}
-
-.button-container button {
-    margin-bottom: 10px;
-    padding: 12px 24px;
-    font-size: 1.2em; /* Aumentato per maggiore impatto */
-    font-family: 'Orbitron', sans-serif; /* Font futuristica */
-    background-color: transparent; /* Sfondo trasparente per effetto più pulito */
-    color: #00e0ff; /* Colore neon per il testo */
-    border: 2px solid #00e0ff; /* Bordo neon per un effetto più forte */
     border-radius: 8px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar-close:hover {
+    background-color: #00a3cc;
+    transform: scale(1.05);
+}
+
+/* Stile per i commenti */
+.comments-container {
+    max-height: 350px; /* Aumentato per contenere più commenti */
+    overflow-y: auto;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra neon */
+}
+
+.comment-container {
+    background-color: #16213e;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 224, 255, 0.2); /* Ombra neon interna */
+    transition: background-color 0.3s ease;
+}
+
+.comment-container:hover {
+    background-color: #1a1a2e;
+}
+
+/* Stile per i pulsanti futuristici */
+.button-container button {
+    margin-bottom: 12px;
+    padding: 14px 28px;
+    font-size: 1.3em;
+    background-color: transparent;
+    color: #00e0ff;
+    border: 2px solid #00e0ff;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .button-container button:hover {
-    background-color: rgba(0, 224, 255, 0.1); /* Leggero sfondo trasparente al passaggio del mouse */
-    box-shadow: 0 0 20px #00e0ff, 0 0 30px #00e0ff; /* Effetto neon più intenso */
-    transform: scale(1.1); /* Aumentato per un effetto di ingrandimento più evidente */
+    background-color: rgba(0, 224, 255, 0.15);
+    box-shadow: 0 0 25px #00e0ff, 0 0 40px #00e0ff;
+    transform: scale(1.1);
 }
 
 /* Stile per la tabella */
 .table {
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 30px;
-    background-color: rgba(0, 0, 0, 0.7); /* Sfondo scuro trasparente */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5); /* Ombra più marcata */
-    border-radius: 12px; /* Angoli arrotondati più morbidi */
-    overflow: hidden; /* Per mantenere gli angoli arrotondati */
+    margin-bottom: 40px;
+    background-color: rgba(0, 0, 0, 0.85); /* Sfondo scuro più opaco */
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.6); /* Ombra marcata */
+    border-radius: 15px; /* Angoli arrotondati più morbidi */
+    overflow: hidden;
 }
 
 .table th {
-    background-color: #00e0ff; /* Colore neon più luminoso */
+    background-color: #00e0ff;
     color: #1a1a2e;
     border: 2px solid #00e0ff;
-    padding: 14px;
-    font-family: 'Orbitron', sans-serif; /* Font futuristica */
+    padding: 16px;
+    font-family: 'Orbitron', sans-serif;
     font-weight: bold;
     text-transform: uppercase;
-    text-shadow: 0 0 10px #00e0ff; /* Effetto neon per il testo */
+    text-shadow: 0 0 15px #00e0ff;
+    letter-spacing: 2px;
 }
 
 .table td {
     border: 2px solid #00e0ff;
-    padding: 14px;
-    background-color: #16213e; /* Sfondo scuro per le celle */
+    padding: 16px;
+    background-color: #16213e;
     color: #ffffff;
     font-family: 'Roboto', sans-serif;
-    font-size: 1.1em; /* Aumentato per migliorare la leggibilità */
-    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.2); /* Ombra interna per effetto futuristico */
+    font-size: 1.2em;
+    box-shadow: inset 0 0 15px rgba(0, 224, 255, 0.3);
+    transition: background-color 0.3s ease;
 }
 
-/* Stile per gli stati aperto e chiuso */
-.status-closed {
-    color: #ff4d4d; /* Rosso acceso per indicare stato chiuso */
-    font-weight: bold;
+.table td:hover {
+    background-color: #1a1a2e;
 }
 
-.status-open {
-    color: #00ff00; /* Verde acceso per indicare stato aperto */
-    font-weight: bold;
-}
-
-/* Stile per i commenti e le risposte */
-.comment-list-container {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #0f3460; /* Sfondo scuro per il contenitore dei commenti */
-    border: 2px solid #00e0ff;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra neon più intensa */
-}
-
-/* Stile per i singoli commenti */
-.comment-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    padding: 20px; /* Aumentato per maggiore spazio */
-    background-color: #0f3460;
-    border: 1px solid #00e0ff;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra futuristica */
-}
-
-/* Stile per la sezione di risposta */
-.reply-container {
-    margin-top: 10px;
-    padding: 15px;
-    background-color: #16213e;
-    border: 1px solid #00e0ff;
-    border-radius: 6px;
-    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra neon più marcata */
-}
-
-/* Stile per il pulsante "Reply" */
+/* Stile per i pulsanti delle risposte */
 .reply-button {
-    padding: 8px 16px;
-    font-size: 1em;
+    padding: 10px 20px;
+    font-size: 1.1em;
     background-color: transparent;
     color: #00e0ff;
     border: 2px solid #00e0ff;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .reply-button:hover {
-    background-color: rgba(0, 224, 255, 0.1);
-    box-shadow: 0 0 20px #00e0ff, 0 0 30px #00e0ff; /* Effetto neon più forte */
+    background-color: rgba(0, 224, 255, 0.15);
+    box-shadow: 0 0 25px #00e0ff, 0 0 40px #00e0ff;
     transform: scale(1.1);
 }
 
-/* Contenitore separato per i commenti */
+/* Contenitore dei commenti */
 .comment-list-container {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #0f3460; /* Sfondo scuro per il contenitore dei commenti */
-    border: 2px solid #00e0ff; /* Bordo neon */
-    border-radius: 8px; /* Angoli arrotondati */
-    box-shadow: 0 0 10px rgba(0, 224, 255, 0.3); /* Ombra neon */
-    max-width: 100%; /* Limita la larghezza */
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #0f3460;
+    border: 2px solid #00e0ff;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 224, 255, 0.4);
+    max-width: 100%;
 }
 
-/* Stile per il titolo della sezione dei commenti */
 .comment-list-container strong {
-    font-size: 1.5em;
-    color: #00e0ff; /* Colore neon per il titolo */
-    margin-bottom: 20px;
+    font-size: 1.6em;
+    color: #00e0ff;
+    margin-bottom: 25px;
     display: block;
 }
 
-/* Stile per i singoli commenti */
-.comment-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #0f3460;
-    border: 1px solid #00e0ff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 224, 255, 0.3);
-}
-
-/* Contenitore per il testo e le risposte */
+/* Stile per il contenitore delle risposte */
 .reply-container {
-    margin-top: 10px;
-    padding: 10px;
+    margin-top: 12px;
+    padding: 15px;
     background-color: #16213e;
     border: 1px solid #00e0ff;
-    border-radius: 6px;
-    flex-grow: 1;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.2);
 }
 
-/* Stile per il testo della risposta */
 .reply-text {
     color: #ffffff;
+    font-size: 1.1em;
 }
 
-/* Contenitore per i pulsanti */
-.buttons-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: 20px;
-}
-
-/* Stile per il pulsante "Reply" */
-.reply-button {
-    padding: 5px 10px;
-    background-color: #00e0ff;
-    color: #1a1a2e;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.reply-button:hover {
-    background-color: #00a3cc;
-    transform: scale(1.05);
-}
-
-/* Stile per la sezione dei commenti */
-.comment-section {
-    margin-top: 10px;
-    padding: 10px;
-    border-top: 2px solid #00e0ff;
-    background-color: #1a1a2e;
-    color: #ffffff;
-    border-radius: 5px;
-    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.5); /* Ombra interna per effetto neon */
-}
-
-.comment-section strong {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    color: #00e0ff; /* Colore neon */
-}
-
-.comment-section ul {
-    padding-left: 20px;
-}
-
-.comment-section ul li {
-    list-style-type: disc;
-    margin-bottom: 5px;
-    color: #ffffff;
-}
-
-/* Contenitore per ogni commento */
-.comment-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Mantieni l'allineamento all'inizio per evitare di centrare verticalmente */
-    margin-bottom: 20px; /* Spazio tra i commenti */
-    padding: 15px;
-    background-color: #0f3460; /* Sfondo scuro per il commento */
-    border: 1px solid #00e0ff; /* Bordo neon per il commento */
-    border-radius: 8px; /* Angoli arrotondati */
-    box-shadow: 0 0 10px rgba(0, 224, 255, 0.3); /* Ombra per dare profondità */
-}
-
-/* Contenitore per le risposte */
-.reply-container {
-    margin-top: 10px; /* Spazio tra le risposte e il commento */
-    padding: 10px;
-    background-color: #16213e; /* Sfondo più scuro per le risposte */
-    border: 1px solid #00e0ff; /* Bordo neon per le risposte */
-    border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0, 224, 255, 0.2); /* Ombra leggera per differenziarle */
-    flex-grow: 1; /* Le risposte prendono tutto lo spazio disponibile a sinistra */
-}
-
-/* Stile per il testo della risposta */
-.reply-text {
-    color: #ffffff; /* Testo bianco per contrastare con lo sfondo scuro */
-    margin-bottom: 5px;
-}
-
-/* Stile per il contenitore dei filtri */
+/* Stile per i filtri */
 .filter-container {
     display: table;
     width: 100%;
-    margin-bottom: 2cm; /* Spazio di 2 cm tra la sezione dei filtri e la tabella */
-    background-color: rgba(0, 0, 0, 0.7); /* Sfondo scuro trasparente */
-    border: 2px solid #00e0ff; /* Bordo neon */
-    border-radius: 10px; /* Angoli arrotondati */
-    padding: 20px;
-    box-shadow: 0px 4px 15px rgba(0, 224, 255, 0.3); /* Ombra futuristica */
+    margin-bottom: 2cm;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00e0ff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0px 6px 25px rgba(0, 224, 255, 0.4);
 }
 
-/* Stile per le celle dei filtri */
 .filter-cell {
     display: table-cell;
-    padding: 10px 20px;
+    padding: 15px 20px;
     color: #ffffff;
     font-family: 'Orbitron', sans-serif;
     text-align: left;
     vertical-align: middle;
 }
 
-/* Stile per i label e i select */
 .filter-label {
-    color: #00e0ff; /* Testo neon */
-    margin-bottom: 10px;
+    color: #00e0ff;
+    margin-bottom: 12px;
     display: block;
 }
 
 .filter-select {
-    padding: 8px 16px;
+    padding: 10px 18px;
     background-color: #16213e;
     color: #ffffff;
-    border: 1px solid #00e0ff; /* Bordo neon */
-    border-radius: 5px;
+    border: 2px solid #00e0ff;
+    border-radius: 8px;
     font-family: 'Orbitron', sans-serif;
-    font-size: 1em;
+    font-size: 1.1em;
     outline: none;
     transition: border 0.3s ease;
 }
 
 .filter-select:focus {
-    border-color: #00e0ff;
+    border-color: #00ffcc;
 }

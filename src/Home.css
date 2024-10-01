@@ -79,21 +79,22 @@ body {
 }
 
 /* Stile per la toolbar */
+/* Stile per la toolbar */
 .toolbar {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 250px;
-    background: rgba(0, 0, 0, 0.7); /* Sfondo scuro semi-trasparente */
-    padding: 20px;
+    width: 280px; /* Leggermente più largo */
+    background: rgba(0, 0, 0, 0.75);
+    padding: 25px;
     position: fixed;
-    top: 180px; /* Posizionato sotto l'header */
+    top: 180px;
     left: 20px;
-    box-sizing: border-box;
     z-index: 1;
-    border-radius: 10px; /* Angoli arrotondati */
-    border: 1px solid #00e0ff; /* Bordo neon */
-    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    border-radius: 12px;
+    border: 2px solid #00e0ff;
+    box-shadow: 0 0 20px #00e0ff; /* Glow neon più marcato */
+    transition: transform 0.3s ease-in-out;
 }
 
 .toolbar span {
@@ -105,11 +106,10 @@ body {
 
 .toolbar img {
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    margin-bottom: 15px;
-    border: 2px solid #00e0ff; /* Bordo neon intorno all'immagine */
-    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    width: 60px; /* Immagine più grande */
+    height: 60px;
+    border: 2px solid #00e0ff;
+    box-shadow: 0 0 15px #00e0ff;
 }
 
 .toolbar h2 {
@@ -275,23 +275,34 @@ body {
 
 /* Bottoni 3D per la severity */
 .severity-box {
-    width: 120px;
-    height: 120px;
-    border-radius: 10px;
-    border: none;
-    font-size: 1.2em;
+    width: 130px;
+    height: 130px;
+    border-radius: 15px;
+    font-size: 1.3em;
     font-weight: bold;
-    color: black; /* Imposta il colore del testo su nero */
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3); /* Effetto 3D */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
     position: absolute;
 }
 
 /* Effetti hover per i bottoni */
 .severity-box:hover {
-    transform: translateY(-10px); /* Solleva il bottone al passaggio del mouse */
-    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.5); /* Aumenta l'ombra */
+    transform: translateY(-15px); /* Aumentato effetto hover */
+    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Posizionamento e colori */
+.high {
+    background-color: #ff4d4d;
+}
+
+.medium {
+    background-color: #ffd700;
+}
+
+.low {
+    background-color: #00ff00;
 }
 
 /* Posizionamento dei bottoni a triangolo */
