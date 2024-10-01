@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './PhishingTickets.css'; // Assicurati di avere questo file per lo stile
 
-
 const PhishingTickets = () => {
     const [tickets, setTickets] = useState([]);
     const [domain, setDomain] = useState(""); // Dominio del sito di phishing
@@ -13,6 +12,8 @@ const PhishingTickets = () => {
     const [replyText, setReplyText] = useState({}); // Testo della risposta
     const [selectedCommentId, setSelectedCommentId] = useState(null); // ID del commento selezionato per risposte
     const [ticketComments, setTicketComments] = useState({}); // Commenti per ogni ticket
+    const [showSidebar, setShowSidebar] = useState(false); // Stato per mostrare la barra laterale
+    const [isReplying, setIsReplying] = useState(false); // Stato per identificare se si sta rispondendo
     const navigate = useNavigate();
     const [author, setAuthor] = useState(""); // Autore del commento/risposta
 
@@ -54,7 +55,7 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error creating ticket:', error));
     };
 
-    // Funzione per aggiungere un commento a un ticket selezionato
+    // Funzione per aggiungere un commento al ticket selezionato
     const handleAddComment = () => {
         if (!selectedTicketId || !commentText || !author) {
             alert("Inserisci un commento e il tuo nome.");
@@ -76,6 +77,7 @@ const PhishingTickets = () => {
                 }));
                 setCommentText(""); // Pulisci il campo di testo
                 setAuthor(""); // Pulisci il nome dell'autore
+                setShowSidebar(false); // Chiudi la barra laterale
             })
             .catch(error => console.error('Error adding comment:', error));
     };
@@ -108,8 +110,13 @@ const PhishingTickets = () => {
                         ...prev,
                         [ticketId]: commentsWithReplies
                     }));
+                    // Mostra la barra laterale con i commenti
+                    toggleSidebar(ticketId, false);
                 })
                 .catch(error => console.error('Error fetching comments:', error));
+        } else {
+            // Se i commenti sono già presenti, mostra la barra laterale comunque
+            toggleSidebar(ticketId, false);
         }
     };
 
@@ -139,12 +146,27 @@ const PhishingTickets = () => {
                 }));
                 setReplyText(prevState => ({ ...prevState, [commentId]: "" })); // Resetta il campo di testo della risposta
                 setAuthor(""); // Pulisci il nome dell'autore
+                setShowSidebar(false); // Chiudi la barra laterale
             })
             .catch(error => console.error('Error adding reply:', error));
     };
 
+    // Funzione per mostrare la barra laterale
+    const toggleSidebar = (ticketId, isReply = false) => {
+        setSelectedTicketId(ticketId);
+        setIsReplying(isReply);
+        setShowSidebar(true); // Mostra la barra laterale
+    };
+
+    // Funzione per rispondere ai commenti nella barra laterale
+    const handleReplyClick = (commentId) => {
+        setSelectedCommentId(commentId);
+        setIsReplying(true);
+        setShowSidebar(true);
+    };
+
     return (
-        <div>
+        <div className="main-container">
             <div className="title-container">
                 <h2>Phishing Tickets</h2>
             </div>
@@ -154,34 +176,36 @@ const PhishingTickets = () => {
                 <button onClick={() => navigate('/home')}>Torna alla Home</button>
             </div>
 
-            {/* Form per aprire un nuovo ticket */}
-            <div className="form-container-new">
-                <div className="input-group">
-                    <label>Dominio del sito di phishing:</label>
-                    <input
-                        type="text"
-                        value={domain}
-                        onChange={(e) => setDomain(e.target.value)}
-                        placeholder="Inserisci il dominio..."
-                    />
+            {/* Contenitore separato per aprire un nuovo ticket */}
+            <div className="new-ticket-container">
+                <h3>Apri un nuovo ticket</h3>
+                <div className="form-container-new">
+                    <div className="input-group">
+                        <label>Dominio del sito di phishing:</label>
+                        <input
+                            type="text"
+                            value={domain}
+                            onChange={(e) => setDomain(e.target.value)}
+                            placeholder="Inserisci il dominio..."
+                        />
+                        <select value={severity} onChange={(e) => setSeverity(e.target.value)}>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
 
-                    <select value={severity} onChange={(e) => setSeverity(e.target.value)}>
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                    </select>
+                    <div className="textarea-container">
+                        <label>Commento:</label>
+                        <textarea
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="Inserisci un commento..."
+                        />
+                    </div>
+
+                    <button className="submit-ticket" onClick={handleSubmitTicket}>Apri Ticket</button>
                 </div>
-
-                <div className="textarea-container">
-                    <label>Commento:</label>
-                    <textarea
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Inserisci un commento..."
-                    />
-                </div>
-
-                <button className="submit-ticket" onClick={handleSubmitTicket}>Apri Ticket</button>
             </div>
 
             {/* Tabella per i ticket aperti */}
@@ -191,7 +215,7 @@ const PhishingTickets = () => {
                     <th>ID</th>
                     <th>Dominio</th>
                     <th>Status</th>
-                    <th>Severity</th>
+                    <th>Commento</th>
                     <th>Azioni</th>
                 </tr>
                 </thead>
@@ -201,72 +225,83 @@ const PhishingTickets = () => {
                         <td>{item.id}</td>
                         <td>{item.domain}</td>
                         <td>{item.status === 'closed' ? 'Chiuso' : 'Aperto'}</td>
-                        <td>{item.severity}</td>
                         <td>
-                            <button onClick={() => setSelectedTicketId(item.id)}>Commenta</button>
-                            <button onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
-                            <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
-                            {/* Mostra commenti e risposte se disponibili */}
-                            {ticketComments[item.id] && Array.isArray(ticketComments[item.id]) && ticketComments[item.id].map((comment) => (
-                                <div key={comment.id}>
-                                    <p>{comment.comment_text}</p>
-                                    <span> - {comment.author}</span> {/* Mostra l'autore del commento */}
-                                    <button onClick={() => setSelectedCommentId(comment.id)}>Rispondi</button>
-                                    {/* Mostra le risposte al commento */}
-                                    {Array.isArray(comment.replies) && comment.replies.length > 0 ? (
-                                        comment.replies.map((reply) => (
-                                            <p key={reply.id} className="reply">
-                                                {reply.reply_text} - {reply.author}
-                                            </p>
-                                        ))
-                                    ) : (
-                                        <p>Nessuna risposta</p>
-                                    )}
-                                </div>
-                            ))}
+                            <textarea
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                placeholder="Inserisci il commento..."
+                                className="comment-textarea"
+                            />
+                        </td>
+                        <td>
+                            <div className="table-actions">
+                                <button onClick={() => toggleSidebar(item.id)}>Commenta</button>
+                                <button onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
+                                <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
+                            </div>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
 
-            {/* Sezione per aggiungere un commento al ticket selezionato */}
-            {selectedTicketId && (
-                <div className="comment-form">
-                    <h3>Aggiungi un commento al ticket {selectedTicketId}</h3>
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        placeholder="Inserisci il tuo nome..."
-                        style={{ marginBottom: '5px' }}
-                    />
-                    <textarea
-                        value={commentText}
-                        onChange={(e) => setCommentText(e.target.value)}
-                        placeholder="Inserisci il commento..."
-                    />
-                    <button onClick={handleAddComment}>Aggiungi Commento</button>
-                </div>
-            )}
+            {/* Barra laterale per commenti e risposte */}
+            {showSidebar && (
+                <div className="sidebar">
+                    <div className="sidebar-content">
+                        <h3>{isReplying ? 'Rispondi al commento' : 'Storico dei commenti'}</h3>
 
-            {/* Sezione per rispondere a un commento */}
-            {selectedCommentId && (
-                <div className="reply-form">
-                    <h3>Rispondi al commento {selectedCommentId}</h3>
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        placeholder="Inserisci il tuo nome..."
-                        style={{ marginBottom: '5px' }}
-                    />
-                    <textarea
-                        value={replyText[selectedCommentId] || ""}
-                        onChange={(e) => setReplyText(prevState => ({ ...prevState, [selectedCommentId]: e.target.value }))}
-                        placeholder="Inserisci la risposta..."
-                    />
-                    <button onClick={() => handleReply(selectedCommentId)}>Invia Risposta</button>
+                        {/* Sezione per mostrare i commenti */}
+                        {!isReplying && ticketComments[selectedTicketId] && (
+                            <div>
+                                {ticketComments[selectedTicketId].map(comment => (
+                                    <div key={comment.id}>
+                                        <p>{comment.comment_text}</p>
+                                        <span className="comment-author">- {comment.author}</span>
+                                        {comment.replies && comment.replies.length > 0 && (
+                                            <ul className="reply-list">
+                                                {comment.replies.map(reply => (
+                                                    <li key={reply.id} className="reply-container">
+                                                        <p>{reply.reply_text}</p>
+                                                        <span className="comment-author">- {reply.author}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                        {/* Pulsante per rispondere al commento */}
+                                        <button onClick={() => handleReplyClick(comment.id)} className="reply-button">
+                                            Rispondi
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Sezione per aggiungere un commento o rispondere */}
+                        {isReplying && (
+                            <>
+                                <input
+                                    type="text"
+                                    value={author}
+                                    onChange={(e) => setAuthor(e.target.value)}
+                                    placeholder="Inserisci il tuo nome..."
+                                    className="input-author"
+                                />
+                                <textarea
+                                    value={isReplying ? replyText[selectedCommentId] : commentText}
+                                    onChange={(e) => isReplying
+                                        ? setReplyText({ ...replyText, [selectedCommentId]: e.target.value })
+                                        : setCommentText(e.target.value)}
+                                    placeholder={isReplying ? "Inserisci la risposta..." : "Inserisci il commento..."}
+                                    className="sidebar-textarea"
+                                />
+                                <button onClick={isReplying ? () => handleReply(selectedCommentId) : handleAddComment}>
+                                    {isReplying ? 'Invia Risposta' : 'Aggiungi Commento'}
+                                </button>
+                            </>
+                        )}
+                        <button onClick={() => setShowSidebar(false)}>Chiudi</button>
+                    </div>
                 </div>
             )}
         </div>

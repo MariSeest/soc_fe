@@ -21,6 +21,7 @@ const VisualizzaTicket = () => {
             .then((res) => res.json())
             .then((data) => {
                 setTickets(data);
+                console.log("Risposta dal server: ", data)
                 setFilteredTickets(data); // Imposta lo stato iniziale dei ticket filtrati
             })
             .catch(error => console.error('Error fetching tickets:', error));
@@ -35,6 +36,7 @@ const VisualizzaTicket = () => {
             );
         });
         setFilteredTickets(filtered);
+        console.log("filtrato: ", filtered)
     }, [categoryFilter, severityFilter, tickets]);
 
     const handleDelete = (id) => {
