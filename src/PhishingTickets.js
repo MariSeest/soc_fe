@@ -171,8 +171,8 @@ const PhishingTickets = () => {
             </div>
 
             <div className="button-container">
-                <button className="small-button" onClick={() => navigate('/PhishingTicketsClosed')}>Vai ai Ticket Chiusi</button>
-                <button className="small-button" onClick={() => navigate('/home')}>Torna alla Home</button>
+                <button className="small-button futuristic-button" onClick={() => navigate('/PhishingTicketsClosed')}>Vai ai Ticket Chiusi</button>
+                <button className="small-button futuristic-button" onClick={() => navigate('/home')}>Torna alla Home</button>
             </div>
 
             {/* Contenitore separato per aprire un nuovo ticket */}
@@ -203,7 +203,7 @@ const PhishingTickets = () => {
                         />
                     </div>
 
-                    <button className="submit-ticket" onClick={handleSubmitTicket}>Apri Ticket</button>
+                    <button className="submit-ticket futuristic-button" onClick={handleSubmitTicket}>Apri Ticket</button>
                 </div>
             </div>
 
@@ -234,9 +234,9 @@ const PhishingTickets = () => {
                         </td>
                         <td>
                             <div className="table-actions">
-                                <button onClick={() => toggleSidebar(item.id)}>Commenta</button>
-                                <button onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
-                                <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
+                                <button className="futuristic-button" onClick={() => toggleSidebar(item.id)}>Commenta</button>
+                                <button className="futuristic-button" onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
+                                <button className="futuristic-button" onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
                             </div>
                             {/* Aggiungi la nota per i ticket riaperti */}
                             {item.closed_previously && (
@@ -275,7 +275,7 @@ const PhishingTickets = () => {
                                                     ))}
                                                 </ul>
                                             )}
-                                            <button onClick={() => handleReplyClick(comment.id)} className="reply-button">
+                                            <button onClick={() => handleReplyClick(comment.id)} className="reply-button futuristic-button">
                                                 Rispondi
                                             </button>
                                         </div>
@@ -303,11 +303,11 @@ const PhishingTickets = () => {
                                 placeholder={isReplying ? "Inserisci la risposta..." : "Inserisci il commento..."}
                                 className="sidebar-textarea"
                             />
-                            <button onClick={isReplying ? () => handleReply(selectedCommentId) : handleAddComment}>
+                            <button className="futuristic-button" onClick={isReplying ? () => handleReply(selectedCommentId) : handleAddComment}>
                                 {isReplying ? 'Invia Risposta' : 'Aggiungi Commento'}
                             </button>
                         </div>
-                        <button onClick={handleCloseSidebar}>Chiudi</button>
+                        <button className="futuristic-button" onClick={handleCloseSidebar}>Chiudi</button>
                     </div>
                 </div>
             )}

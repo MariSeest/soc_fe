@@ -8,6 +8,7 @@ const ApriUnTicket = () => {
     const { user, isAuthenticated } = useAuth0();
     const [ticket, setTicket] = useState({
         name: "",
+        author: user?.name || "",  // Imposta l'autore se l'utente è autenticato
         status: "open",
         category: "Exfiltration", // Categoria di default
         severity: "Medium", // Severity di default
@@ -51,6 +52,10 @@ const ApriUnTicket = () => {
                         <input type="text" name="name" value={ticket.name} onChange={handleChange} required />
                     </label>
                     <label>
+                        Autore:
+                        <input type="text" name="author" value={ticket.author} onChange={handleChange} required />
+                    </label>
+                    <label>
                         Categoria:
                         <select name="category" value={ticket.category} onChange={handleChange} required>
                             <option value="Exfiltration">Exfiltration</option>
@@ -79,9 +84,3 @@ const ApriUnTicket = () => {
 };
 
 export default ApriUnTicket;
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './VisualizzaTicket.css';
+import './PhishingTicketsClosed.css';
 
 const PhishingTicketsClosed = () => {
     const [closedTickets, setClosedTickets] = useState([]);
@@ -33,26 +34,17 @@ const PhishingTicketsClosed = () => {
             .catch(error => console.error('Error fetching comments:', error));
     };
 
-// Funzione per riaprire un ticket e ritrasferirlo nei ticket aperti
+    // Funzione per riaprire un ticket
     const handleReopenTicket = (ticketId) => {
         fetch(`http://localhost:3001/phishing_tickets/${ticketId}/reopen`, {
             method: 'PUT',
         })
             .then(() => {
-                // Rimuovi il ticket dalla lista dei ticket chiusi
-                setClosedTickets(prevTickets => prevTickets.filter(ticket => ticket.id !== ticketId));
-
-                // Aggiungi il ticket riaperto alla lista dei ticket aperti
-                fetch(`http://localhost:3001/phishing_tickets/${ticketId}`)
-                    .then((res) => res.json())
-                    .then((reopenedTicket) => {
-                        // Aggiunge il ticket riaperto alla lista dei ticket aperti
-                        setTickets(prevTickets => [...prevTickets, reopenedTicket]);
-                    });
+                setClosedTickets(closedTickets.filter(ticket => ticket.id !== ticketId));
+                navigate('/PhishingTickets'); // Riporta alla pagina dei ticket aperti
             })
             .catch(error => console.error('Error reopening ticket:', error));
     };
-
 
     // Funzione per chiudere la finestra laterale
     const closeSidebar = () => {
@@ -65,7 +57,9 @@ const PhishingTicketsClosed = () => {
             <div className="title-container">
                 <h2>Phishing Tickets Chiusi</h2>
             </div>
-            <button onClick={() => navigate('/PhishingTickets')}>Torna ai Ticket Aperti</button>
+            <button className="futuristic-button" onClick={() => navigate('/PhishingTickets')}>
+                Torna ai Ticket Aperti
+            </button>
 
             <table className="table">
                 <thead>
@@ -89,8 +83,12 @@ const PhishingTicketsClosed = () => {
                         <td>{new Date(item.opened_at).toLocaleDateString()}</td> {/* Data apertura */}
                         <td>{new Date(item.last_status_change_at).toLocaleDateString()}</td> {/* Ultima modifica status */}
                         <td>
-                            <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
-                            <button onClick={() => handleReopenTicket(item.id)}>Riapri Ticket</button>
+                            <button className="futuristic-button" onClick={() => handleViewComments(item.id)}>
+                                Visualizza Commenti
+                            </button>
+                            <button className="futuristic-button" onClick={() => handleReopenTicket(item.id)}>
+                                Riapri Ticket
+                            </button>
                         </td>
                     </tr>
                 ))}
@@ -102,7 +100,9 @@ const PhishingTicketsClosed = () => {
                 <div className="sidebar">
                     <div className="sidebar-content">
                         <h3>Commenti per il Ticket ID: {selectedTicket}</h3>
-                        <button className="sidebar-close" onClick={closeSidebar}>Chiudi</button>
+                        <button className="sidebar-close futuristic-button" onClick={closeSidebar}>
+                            Chiudi
+                        </button>
 
                         <div className="comments-container"> {/* Aggiunto contenitore scorrevole */}
                             {ticketComments[selectedTicket]?.length > 0 ? (

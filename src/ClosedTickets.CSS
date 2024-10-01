@@ -22,7 +22,10 @@
     height: 50px;
     margin-right: 20px;
 }
-
+.comments-section {
+    color: #000000; /* Testo nero */
+    background-color: #c0c0c0; /* Sfondo grigio chiaro per contrasto */
+}
 .toolbar h2 {
     color: #00e0ff;
     font-family: 'Orbitron', sans-serif;
@@ -130,6 +133,20 @@ tbody td {
 .comments-section li {
     margin-bottom: 5px;
 }
+
+
+
+.futuristic-button:hover {
+    background: linear-gradient(135deg, #0077ff, #00e0ff);
+    box-shadow: 0 6px 20px rgba(0, 224, 255, 1);
+}
+
+.user-avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
 
 
 

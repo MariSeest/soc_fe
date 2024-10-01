@@ -214,3 +214,24 @@
     background-color: #00a3cc;
     transform: scale(1.05);
 }
+
+/* Stile futuristico per i pulsanti */
+.futuristic-button {
+    background: linear-gradient(135deg, #00e0ff, #0077ff);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 224, 255, 0.75);
+}
+
+.futuristic-button:hover {
+    background: linear-gradient(135deg, #0077ff, #00e0ff);
+    box-shadow: 0 6px 20px rgba(0, 224, 255, 1);
+}
+
