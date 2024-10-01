@@ -1,0 +1,83 @@
+/* Finestra laterale */
+.sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 400px;
+    height: 100%;
+    background-color: #1a1a2e;
+    color: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar-content {
+    flex-grow: 1;
+    overflow-x: hidden;  /* Disabilita lo scroll orizzontale */
+    overflow-y: auto;    /* Scroll verticale interno alla barra laterale */
+    max-height: 100%;    /* Imposta l'altezza massima per la barra laterale */
+}
+
+.sidebar-close {
+    background-color: #ff5f5f;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-bottom: 20px;
+}
+
+.sidebar-close:hover {
+    background-color: #ff2d2d;
+}
+
+/* Contenitore scorrevole per i commenti */
+.comments-container {
+    overflow-y: auto; /* Scroll verticale */
+    max-height: 75vh; /* Limita l'altezza del contenitore per i commenti */
+}
+
+/* Contenitore per ogni commento */
+.comment-container {
+    background-color: #1f2235;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-left: 4px solid #00e0ff;
+}
+
+/* Contenitore per ogni risposta */
+.reply-container {
+    background-color: #283046;
+    padding: 10px;
+    border-radius: 6px;
+    margin-left: 20px;
+    margin-top: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #00e0ff;
+}
+
+/* Sezione contenitore per tutte le risposte */
+.replies-container {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+/* Migliora la leggibilità del testo */
+p {
+    font-size: 1.1em;
+    line-height: 1.5;
+    color: #d1d1d1;
+}
+
+h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #00e0ff;
+}

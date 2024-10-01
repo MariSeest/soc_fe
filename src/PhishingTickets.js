@@ -7,9 +7,9 @@ const PhishingTickets = () => {
     const [domain, setDomain] = useState(""); // Dominio del sito di phishing
     const [severity, setSeverity] = useState("Low"); // Default severity "Low"
     const [newComment, setNewComment] = useState(""); // Commento per il nuovo ticket
-    const [selectedTicketId, setSelectedTicketId] = useState(null); // ID del ticket selezionato per commenti
-    const [commentText, setCommentText] = useState(""); // Testo del commento
+    const [commentText, setCommentText] = useState({}); // Commento per ciascun ticket nella tabella
     const [replyText, setReplyText] = useState({}); // Testo della risposta
+    const [selectedTicketId, setSelectedTicketId] = useState(null); // ID del ticket selezionato per commenti
     const [selectedCommentId, setSelectedCommentId] = useState(null); // ID del commento selezionato per risposte
     const [ticketComments, setTicketComments] = useState({}); // Commenti per ogni ticket
     const [showSidebar, setShowSidebar] = useState(false); // Stato per mostrare la barra laterale
@@ -22,7 +22,7 @@ const PhishingTickets = () => {
         fetch("http://localhost:3001/phishing_tickets")
             .then((res) => res.json())
             .then((data) => {
-                setTickets(data);
+                setTickets(data.filter(ticket => ticket.status !== 'closed')); // Mostra solo ticket aperti
             })
             .catch(error => console.error('Error fetching phishing tickets:', error));
     }, []);
@@ -57,7 +57,7 @@ const PhishingTickets = () => {
 
     // Funzione per aggiungere un commento al ticket selezionato
     const handleAddComment = () => {
-        if (!selectedTicketId || !commentText || !author) {
+        if (!selectedTicketId || !commentText[selectedTicketId] || !author) {
             alert("Inserisci un commento e il tuo nome.");
             return;
         }
@@ -67,7 +67,7 @@ const PhishingTickets = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ comment_text: commentText, author: author }),
+            body: JSON.stringify({ comment_text: commentText[selectedTicketId], author: author }),
         })
             .then((res) => res.json())
             .then((newComment) => {
@@ -75,49 +75,42 @@ const PhishingTickets = () => {
                     ...prev,
                     [selectedTicketId]: [...(prev[selectedTicketId] || []), newComment]
                 }));
-                setCommentText(""); // Pulisci il campo di testo
+                setCommentText(prevState => ({ ...prevState, [selectedTicketId]: "" })); // Pulisci il campo di testo
                 setAuthor(""); // Pulisci il nome dell'autore
-                setShowSidebar(false); // Chiudi la barra laterale
+                handleViewComments(selectedTicketId);
             })
             .catch(error => console.error('Error adding comment:', error));
     };
 
-    // Funzione per chiudere un ticket
+    // Funzione per chiudere un ticket e trasferirlo in 'PhishingTicketsClosed'
     const handleCloseTicket = (ticketId) => {
         fetch(`http://localhost:3001/phishing_tickets/${ticketId}/close`, {
             method: 'PUT',
         })
             .then((res) => res.json())
             .then(() => {
-                setTickets(tickets.map(ticket =>
-                    ticket.id === ticketId ? { ...ticket, status: 'closed' } : ticket
-                ));
+                setTickets(prevTickets => prevTickets.filter(ticket => ticket.id !== ticketId)); // Rimuove il ticket dalla lista corrente
+                navigate('/PhishingTicketsClosed'); // Redireziona alla pagina dei ticket chiusi
             })
             .catch(error => console.error('Error closing ticket:', error));
     };
 
     // Funzione per visualizzare i commenti associati a un ticket
     const handleViewComments = (ticketId) => {
-        if (!ticketComments[ticketId]) {
-            fetch(`http://localhost:3001/phishing_tickets/${ticketId}/comments`)
-                .then((res) => res.json())
-                .then((comments) => {
-                    const commentsWithReplies = comments.map(comment => ({
-                        ...comment,
-                        replies: comment.replies || []  // Assicurati che replies sia sempre un array
-                    }));
-                    setTicketComments(prev => ({
-                        ...prev,
-                        [ticketId]: commentsWithReplies
-                    }));
-                    // Mostra la barra laterale con i commenti
-                    toggleSidebar(ticketId, false);
-                })
-                .catch(error => console.error('Error fetching comments:', error));
-        } else {
-            // Se i commenti sono già presenti, mostra la barra laterale comunque
-            toggleSidebar(ticketId, false);
-        }
+        fetch(`http://localhost:3001/phishing_tickets/${ticketId}/comments`)
+            .then((res) => res.json())
+            .then((comments) => {
+                const commentsWithReplies = comments.map(comment => ({
+                    ...comment,
+                    replies: comment.replies || []  // Assicurati che replies sia sempre un array
+                }));
+                setTicketComments(prev => ({
+                    ...prev,
+                    [ticketId]: commentsWithReplies
+                }));
+                toggleSidebar(ticketId, false);
+            })
+            .catch(error => console.error('Error fetching comments:', error));
     };
 
     // Funzione per rispondere a un commento
@@ -144,9 +137,8 @@ const PhishingTickets = () => {
                             : comment
                     )
                 }));
-                setReplyText(prevState => ({ ...prevState, [commentId]: "" })); // Resetta il campo di testo della risposta
-                setAuthor(""); // Pulisci il nome dell'autore
-                setShowSidebar(false); // Chiudi la barra laterale
+                setReplyText(prevState => ({ ...prevState, [commentId]: "" }));
+                handleViewComments(selectedTicketId); // Aggiorna i commenti e mantieni aperta la barra laterale
             })
             .catch(error => console.error('Error adding reply:', error));
     };
@@ -155,7 +147,7 @@ const PhishingTickets = () => {
     const toggleSidebar = (ticketId, isReply = false) => {
         setSelectedTicketId(ticketId);
         setIsReplying(isReply);
-        setShowSidebar(true); // Mostra la barra laterale
+        setShowSidebar(true);
     };
 
     // Funzione per rispondere ai commenti nella barra laterale
@@ -165,6 +157,13 @@ const PhishingTickets = () => {
         setShowSidebar(true);
     };
 
+    // Funzione per chiudere la barra laterale
+    const handleCloseSidebar = () => {
+        setShowSidebar(false);
+        setIsReplying(false);
+        setSelectedTicketId(null);
+    };
+
     return (
         <div className="main-container">
             <div className="title-container">
@@ -172,8 +171,8 @@ const PhishingTickets = () => {
             </div>
 
             <div className="button-container">
-                <button onClick={() => navigate('/PhishingTicketsClosed')}>Vai ai Ticket Chiusi</button>
-                <button onClick={() => navigate('/home')}>Torna alla Home</button>
+                <button className="small-button" onClick={() => navigate('/PhishingTicketsClosed')}>Vai ai Ticket Chiusi</button>
+                <button className="small-button" onClick={() => navigate('/home')}>Torna alla Home</button>
             </div>
 
             {/* Contenitore separato per aprire un nuovo ticket */}
@@ -227,8 +226,8 @@ const PhishingTickets = () => {
                         <td>{item.status === 'closed' ? 'Chiuso' : 'Aperto'}</td>
                         <td>
                             <textarea
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
+                                value={commentText[item.id] || ""}
+                                onChange={(e) => setCommentText(prevState => ({...prevState, [item.id]: e.target.value}))}
                                 placeholder="Inserisci il commento..."
                                 className="comment-textarea"
                             />
@@ -239,6 +238,12 @@ const PhishingTickets = () => {
                                 <button onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
                                 <button onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
                             </div>
+                            {/* Aggiungi la nota per i ticket riaperti */}
+                            {item.closed_previously && (
+                                <p style={{color: 'red', fontStyle: 'italic'}}>
+                                    Ticket precedentemente chiuso
+                                </p>
+                            )}
                         </td>
                     </tr>
                 ))}
@@ -254,53 +259,55 @@ const PhishingTickets = () => {
                         {/* Sezione per mostrare i commenti */}
                         {!isReplying && ticketComments[selectedTicketId] && (
                             <div>
-                                {ticketComments[selectedTicketId].map(comment => (
-                                    <div key={comment.id}>
-                                        <p>{comment.comment_text}</p>
-                                        <span className="comment-author">- {comment.author}</span>
-                                        {comment.replies && comment.replies.length > 0 && (
-                                            <ul className="reply-list">
-                                                {comment.replies.map(reply => (
-                                                    <li key={reply.id} className="reply-container">
-                                                        <p>{reply.reply_text}</p>
-                                                        <span className="comment-author">- {reply.author}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                        {/* Pulsante per rispondere al commento */}
-                                        <button onClick={() => handleReplyClick(comment.id)} className="reply-button">
-                                            Rispondi
-                                        </button>
-                                    </div>
-                                ))}
+                                {/* Verifica se ci sono commenti */}
+                                {ticketComments[selectedTicketId].length > 0 ? (
+                                    ticketComments[selectedTicketId].map(comment => (
+                                        <div key={comment.id} className="comment-container">
+                                            <p>{comment.comment_text}</p>
+                                            <span className="comment-author">- {comment.author}</span>
+                                            {comment.replies && comment.replies.length > 0 && (
+                                                <ul className="reply-list">
+                                                    {comment.replies.map(reply => (
+                                                        <li key={reply.id} className="reply-container">
+                                                            <p>{reply.reply_text}</p>
+                                                            <span className="comment-author">- {reply.author}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                            <button onClick={() => handleReplyClick(comment.id)} className="reply-button">
+                                                Rispondi
+                                            </button>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>Nessun commento disponibile.</p>
+                                )}
                             </div>
                         )}
 
                         {/* Sezione per aggiungere un commento o rispondere */}
-                        {isReplying && (
-                            <>
-                                <input
-                                    type="text"
-                                    value={author}
-                                    onChange={(e) => setAuthor(e.target.value)}
-                                    placeholder="Inserisci il tuo nome..."
-                                    className="input-author"
-                                />
-                                <textarea
-                                    value={isReplying ? replyText[selectedCommentId] : commentText}
-                                    onChange={(e) => isReplying
-                                        ? setReplyText({ ...replyText, [selectedCommentId]: e.target.value })
-                                        : setCommentText(e.target.value)}
-                                    placeholder={isReplying ? "Inserisci la risposta..." : "Inserisci il commento..."}
-                                    className="sidebar-textarea"
-                                />
-                                <button onClick={isReplying ? () => handleReply(selectedCommentId) : handleAddComment}>
-                                    {isReplying ? 'Invia Risposta' : 'Aggiungi Commento'}
-                                </button>
-                            </>
-                        )}
-                        <button onClick={() => setShowSidebar(false)}>Chiudi</button>
+                        <div className="comment-form">
+                            <input
+                                type="text"
+                                value={author}
+                                onChange={(e) => setAuthor(e.target.value)}
+                                placeholder="Inserisci il tuo nome..."
+                                className="input-author"
+                            />
+                            <textarea
+                                value={isReplying ? replyText[selectedCommentId] : commentText[selectedTicketId]}
+                                onChange={(e) => isReplying
+                                    ? setReplyText({ ...replyText, [selectedCommentId]: e.target.value })
+                                    : setCommentText({ ...commentText, [selectedTicketId]: e.target.value })}
+                                placeholder={isReplying ? "Inserisci la risposta..." : "Inserisci il commento..."}
+                                className="sidebar-textarea"
+                            />
+                            <button onClick={isReplying ? () => handleReply(selectedCommentId) : handleAddComment}>
+                                {isReplying ? 'Invia Risposta' : 'Aggiungi Commento'}
+                            </button>
+                        </div>
+                        <button onClick={handleCloseSidebar}>Chiudi</button>
                     </div>
                 </div>
             )}

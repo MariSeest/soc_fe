@@ -8,7 +8,43 @@
     max-width: 650px;
     margin: 2cm auto; /* Aggiunto il margine per distanziare di 2cm dalla tabella */
     color: #00e0ff;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Orbitron', sans-serif; /* Cambiato il font per un look più futuristico */
+}
+
+/* Stile futuristico per l'input del dominio */
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    background-color: #16213e;
+    border: 1px solid #00e0ff;
+    color: #00e0ff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.input-group input:hover {
+    background-color: rgba(0, 224, 255, 0.1);
+    transform: scale(1.05);
+}
+
+/* Stile futuristico per il selettore di severity */
+.input-group select {
+    background-color: #16213e;
+    color: #00e0ff;
+    border: 1px solid #00e0ff;
+    padding: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.input-group select:hover {
+    background-color: rgba(0, 224, 255, 0.1);
+    transform: scale(1.05);
 }
 
 /* Riduzione della grandezza della textarea in 'Apri un Ticket' */
@@ -22,6 +58,25 @@
     border-radius: 5px;
     resize: none;
     box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Stile per i pulsanti futuristici */
+.submit-ticket {
+    background-color: #00e0ff;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submit-ticket:hover {
+    background-color: #00a3cc;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #00e0ff, 0 0 30px #00e0ff;
 }
 
 /* Stile per la tabella */
@@ -130,22 +185,6 @@
     box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
 }
 
-.sidebar button {
-    background-color: #00e0ff;
-    color: #1a1a2e;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.sidebar button:hover {
-    background-color: #00a3cc;
-    transform: scale(1.05);
-}
-
 /* Regolazione textarea nella tabella per non uscire dai bordi */
 .comment-textarea {
     width: 95%; /* Ridotta la larghezza per rimanere dentro i bordi della tabella */
@@ -157,4 +196,21 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
     resize: none;
+}
+
+/* Stile per i pulsanti Torna alla Home e Vai ai Ticket Chiusi */
+.small-button {
+    padding: 6px 12px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    background-color: #00e0ff;
+    color: #1a1a2e;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.small-button:hover {
+    background-color: #00a3cc;
+    transform: scale(1.05);
 }
