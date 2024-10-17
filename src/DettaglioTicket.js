@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import './DettaglioTicket.css'
+import './DettaglioTicket.css';
 
 const DettaglioTicket = () => {
     const { id } = useParams();  // Ottieni l'ID del ticket dalla rotta
     const [ticket, setTicket] = useState(null);  // Stato per memorizzare i dettagli del ticket
     const [comments, setComments] = useState([]);  // Stato per memorizzare i commenti
     const [commentText, setCommentText] = useState("");  // Stato per il testo del nuovo commento
+    const [showReplies, setShowReplies] = useState({}); // Stato per gestire la visibilità delle risposte
     const navigate = useNavigate();
 
     // Effettua il fetch per i dettagli del ticket quando il componente viene montato
@@ -21,12 +22,17 @@ const DettaglioTicket = () => {
 
     // Effettua il fetch per i commenti del ticket
     useEffect(() => {
-        fetch(`http://localhost:3001/tickets/${id}/comments`)
-            .then((res) => res.json())
-            .then((data) => {
+        const fetchComments = async () => {
+            try {
+                const res = await fetch(`http://localhost:3001/tickets/${id}/comments`);
+                const data = await res.json();
                 setComments(data);  // Imposta i commenti
-            })
-            .catch((error) => console.error("Error fetching comments:", error));
+            } catch (error) {
+                console.error("Error fetching comments:", error);
+            }
+        };
+
+        fetchComments();
     }, [id]);
 
     // Funzione per inviare un nuovo commento
@@ -41,20 +47,34 @@ const DettaglioTicket = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ comment: commentText }),  // Invia il commento al backend
+            body: JSON.stringify({
+                comment_text: commentText,
+                author: 'Nome Autore' // Modifica qui in base alla tua logica
+            }),
         })
-            .then((res) => res.json())
-            .then(() => {
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then((newComment) => {
+                // Aggiungi il nuovo commento direttamente alla lista
+                setComments((prevComments) => [
+                    ...prevComments,
+                    { ...newComment, replies: [] } // Inizializza le risposte vuote
+                ]);
                 setCommentText("");  // Reset del campo di testo
-                // Ricarica i commenti per aggiornare la lista
-                fetch(`http://localhost:3001/tickets/${id}/comments`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        setComments(data);  // Aggiorna i commenti
-                    })
-                    .catch((error) => console.error("Error fetching comments after submission:", error));
             })
             .catch((error) => console.error('Error submitting comment:', error));
+    };
+
+    // Funzione per visualizzare/nascondere le risposte
+    const toggleRepliesVisibility = (commentId) => {
+        setShowReplies((prev) => ({
+            ...prev,
+            [commentId]: !prev[commentId], // Inverte la visibilità
+        }));
     };
 
     if (!ticket) {
@@ -79,11 +99,28 @@ const DettaglioTicket = () => {
                 <h3>Commenti:</h3>
                 {comments.length > 0 ? (
                     <ul>
-                        {comments.map((comment, index) => (
-                            <li key={index}>
+                        {comments.map((comment) => (
+                            <li key={comment.id}> {/* Chiave unica per ogni commento */}
                                 <div className="comment-container">
                                     <p>{comment.comment_text}</p>
                                     <small>{new Date(comment.created_at).toLocaleString()}</small>
+                                    <button onClick={() => toggleRepliesVisibility(comment.id)}>
+                                        {showReplies[comment.id] ? 'Nascondi Risposte' : 'Visualizza Risposte'}
+                                    </button>
+                                    {showReplies[comment.id] && comment.replies && comment.replies.length > 0 ? (
+                                        <ul>
+                                            {comment.replies.map((reply) => (
+                                                <li key={`${reply.id}-${comment.id}`}> {/* Chiave unica per le risposte */}
+                                                    <div className="reply-container">
+                                                        <p>{reply.reply_text}</p>
+                                                        <small>{new Date(reply.created_at).toLocaleString()} - {reply.author || 'Anonimo'}</small>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        showReplies[comment.id] && <p>Nessuna risposta disponibile.</p>
+                                    )}
                                 </div>
                             </li>
                         ))}
@@ -99,7 +136,7 @@ const DettaglioTicket = () => {
                     placeholder="Aggiungi un commento"
                 />
 
-                {/* Bottone per aggiungere il commento spostato sotto al textbox */}
+                {/* Bottone per aggiungere il commento */}
                 <button onClick={handleSubmitComment}>Aggiungi Commento</button>
             </div>
         </div>
@@ -107,7 +144,3 @@ const DettaglioTicket = () => {
 };
 
 export default DettaglioTicket;
-
-
-
-

@@ -96,7 +96,6 @@
     background-color: rgba(0, 0, 0, 0.85); /* Sfondo scuro più opaco */
     box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.6); /* Ombra marcata */
     border-radius: 15px; /* Angoli arrotondati più morbidi */
-    overflow: hidden;
 }
 
 .table th {

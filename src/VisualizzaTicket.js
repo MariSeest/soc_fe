@@ -12,14 +12,17 @@ const VisualizzaTicket = () => {
     const [showSidebar, setShowSidebar] = useState(false);
     const [comment, setComment] = useState("");
     const [author, setAuthor] = useState("");
+    const [replyAuthor, setReplyAuthor] = useState("");
     const [selectedCommentId, setSelectedCommentId] = useState(null);
     const [replyText, setReplyText] = useState("");
+    const [showReplies, setShowReplies] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
         fetch("http://localhost:3001/tickets")
             .then((res) => res.json())
             .then((data) => {
+                console.log('Tickets fetched:', data);
                 setTickets(data);
                 setFilteredTickets(data);
             })
@@ -33,6 +36,7 @@ const VisualizzaTicket = () => {
                 (severityFilter === '' || ticket.severity === severityFilter)
             );
         });
+        console.log('Filtered tickets:', filtered);
         setFilteredTickets(filtered);
     }, [categoryFilter, severityFilter, tickets]);
 
@@ -41,6 +45,7 @@ const VisualizzaTicket = () => {
             method: 'DELETE',
         })
             .then(() => {
+                console.log('Ticket deleted:', id);
                 setTickets(tickets.filter(ticket => ticket.id !== id));
             })
             .catch(error => console.error('Error deleting ticket:', error));
@@ -61,6 +66,7 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then(() => {
+                console.log('Ticket closed:', id);
                 setTickets(tickets.map(ticket =>
                     ticket.id === id ? { ...ticket, status: 'closed' } : ticket
                 ));
@@ -78,14 +84,15 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then((data) => {
+                console.log('Comments fetched for ticket:', id, data);
                 setComments((prevComments) => ({
                     ...prevComments,
                     [id]: data,
                 }));
                 setExpandedCommentId(id);
                 setShowSidebar(true);
-                setComment(""); // Pulisci il campo commento
-                setAuthor(""); // Pulisci il campo autore
+                setComment("");
+                setAuthor("");
             })
             .catch((error) => console.error("Error fetching comments:", error));
     };
@@ -94,6 +101,7 @@ const VisualizzaTicket = () => {
         setShowSidebar(false);
         setExpandedCommentId(null);
         setSelectedCommentId(null);
+        setReplyAuthor("");
     };
 
     const handleAddComment = () => {
@@ -118,13 +126,14 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then((newComment) => {
+                console.log('New comment added:', newComment);
                 setComments(prev => ({
                     ...prev,
                     [ticketId]: [...(prev[ticketId] || []), newComment]
                 }));
-                setComment(""); // Pulisci il campo commento
-                setAuthor(""); // Pulisci il campo autore
-                handleViewComments(ticketId); // Ricarica i commenti
+                setComment("");
+                setAuthor("");
+                handleViewComments(ticketId);
             })
             .catch(error => {
                 console.error('Error adding comment:', error);
@@ -133,7 +142,7 @@ const VisualizzaTicket = () => {
     };
 
     const handleAddReply = (commentId) => {
-        if (!replyText || !author) {
+        if (!replyText || !replyAuthor) {
             alert("Inserisci una risposta e il tuo nome.");
             return;
         }
@@ -143,7 +152,7 @@ const VisualizzaTicket = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ reply_text: replyText, author: author }),
+            body: JSON.stringify({ reply_text: replyText, author: replyAuthor }),
         })
             .then(res => {
                 if (!res.ok) {
@@ -152,26 +161,21 @@ const VisualizzaTicket = () => {
                 return res.json();
             })
             .then(newReply => {
-                // Assicurati di controllare se newReply contiene l'ID della risposta appena aggiunta
                 console.log('New reply added:', newReply);
-                setComments(prev => ({
-                    ...prev,
-                    [expandedCommentId]: prev[expandedCommentId].map(comment =>
-                        comment.id === commentId ? { ...comment, replies: [...(comment.replies || []), newReply] } : comment
-                    )
-                }));
-                setReplyText(""); // Pulisci il campo di risposta
-                setSelectedCommentId(null); // Resetta l'ID del commento selezionato
+                handleViewComments(expandedCommentId);
+                setReplyText("");
+                setReplyAuthor("");
+                setSelectedCommentId(null);
             })
             .catch(error => console.error('Error adding reply:', error));
     };
-
 
     const handleDeleteComment = (commentId) => {
         fetch(`/comments/${commentId}`, {
             method: 'DELETE',
         })
             .then(() => {
+                console.log('Comment deleted:', commentId);
                 setComments(prev => ({
                     ...prev,
                     [expandedCommentId]: prev[expandedCommentId].filter(comment => comment.id !== commentId)
@@ -181,13 +185,13 @@ const VisualizzaTicket = () => {
     };
 
     const handleDeleteReply = (replyId) => {
-        // Trova il commento a cui la risposta appartiene
         const commentId = comments[expandedCommentId].find(comment => comment.replies?.some(reply => reply.id === replyId)).id;
 
         fetch(`/comments/${commentId}/replies/${replyId}`, {
             method: 'DELETE',
         })
             .then(() => {
+                console.log('Reply deleted:', replyId);
                 setComments(prev => ({
                     ...prev,
                     [expandedCommentId]: prev[expandedCommentId].map(comment => ({
@@ -197,6 +201,14 @@ const VisualizzaTicket = () => {
                 }));
             })
             .catch(error => console.error('Error deleting reply:', error));
+    };
+
+    const toggleRepliesVisibility = (commentId) => {
+        setShowReplies(prev => ({
+            ...prev,
+            [commentId]: !prev[commentId]
+        }));
+        console.log(showReplies);
     };
 
     return (
@@ -286,7 +298,6 @@ const VisualizzaTicket = () => {
                     <div className="sidebar-content">
                         <h3>Storico dei Commenti</h3>
                         <button className="sidebar-close" onClick={handleCloseSidebar}>Chiudi</button>
-
                         <div className="comments-container">
                             {comments[expandedCommentId]?.length > 0 ? (
                                 comments[expandedCommentId].map((comment) => (
@@ -295,13 +306,33 @@ const VisualizzaTicket = () => {
                                         <span className="comment-author">- {comment.author}</span>
                                         <button onClick={() => handleDeleteComment(comment.id)}>Elimina Commento</button>
                                         <button onClick={() => { setSelectedCommentId(comment.id); setReplyText(""); }}>Rispondi</button>
+                                        <button onClick={() => toggleRepliesVisibility(comment.id)}>
+                                            {showReplies[comment.id] ? 'Nascondi Risposte' : 'Mostra Risposte'}
+                                        </button>
+                                        {showReplies[comment.id] && (
+                                            <div className="replies-container">
+                                                <h4>Risposte:</h4>
+                                                {comment.replies && comment.replies.length > 0 ? (
+                                                    comment.replies.map(reply => (
+                                                        <div key={`${comment.id}-${reply.id}`} className="reply-container">
+                                                            <p>{reply.reply_text}</p>
+                                                            <span className="reply-author">- {reply.author}</span>
+                                                            <button onClick={() => handleDeleteReply(reply.id)}>Elimina Risposta</button>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p>Nessuna risposta disponibile.</p>
+                                                )}
+                                            </div>
+                                        )}
                                         {selectedCommentId === comment.id && (
                                             <div className="reply-form">
                                                 <input
                                                     type="text"
                                                     placeholder="Il tuo nome"
-                                                    value={author}
-                                                    onChange={(e) => setAuthor(e.target.value)}
+                                                    value={replyAuthor}
+                                                    onChange={(e) => setReplyAuthor(e.target.value)}
+                                                    key={`reply-author-${comment.id}`}
                                                 />
                                                 <textarea
                                                     placeholder="Inserisci la risposta..."
@@ -309,19 +340,6 @@ const VisualizzaTicket = () => {
                                                     onChange={(e) => setReplyText(e.target.value)}
                                                 />
                                                 <button onClick={() => handleAddReply(comment.id)}>Invia Risposta</button>
-                                            </div>
-                                        )}
-                                        {/* Visualizzazione delle risposte */}
-                                        {comment.replies && comment.replies.length > 0 && (
-                                            <div className="replies-container">
-                                                <h4>Risposte:</h4>
-                                                {comment.replies.map(reply => (
-                                                    <div key={reply.id} className="reply-container">
-                                                        <p>{reply.reply_text}</p>
-                                                        <span className="reply-author">- {reply.author}</span>
-                                                        <button onClick={() => handleDeleteReply(reply.id)}>Elimina Risposta</button>
-                                                    </div>
-                                                ))}
                                             </div>
                                         )}
                                     </div>
@@ -337,6 +355,7 @@ const VisualizzaTicket = () => {
                                 placeholder="Il tuo nome"
                                 value={author}
                                 onChange={(e) => setAuthor(e.target.value)}
+                                key={`comment-author-${expandedCommentId}`}
                             />
                             <textarea
                                 placeholder="Inserisci il commento..."
