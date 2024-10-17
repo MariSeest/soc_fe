@@ -10,7 +10,10 @@ const VisualizzaTicket = () => {
     const [severityFilter, setSeverityFilter] = useState('');
     const [comments, setComments] = useState({});
     const [showSidebar, setShowSidebar] = useState(false);
-    const [showOnlyComments, setShowOnlyComments] = useState(false);
+    const [comment, setComment] = useState("");
+    const [author, setAuthor] = useState("");
+    const [selectedCommentId, setSelectedCommentId] = useState(null);
+    const [replyText, setReplyText] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,7 +52,7 @@ const VisualizzaTicket = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ status: 'closed', closed_at: new Date() }),
+            body: JSON.stringify({ status: 'closed' }),
         })
             .then((res) => {
                 if (!res.ok) {
@@ -59,7 +62,7 @@ const VisualizzaTicket = () => {
             })
             .then(() => {
                 setTickets(tickets.map(ticket =>
-                    ticket.id === id ? { ...ticket, status: 'closed', closed_at: new Date() } : ticket
+                    ticket.id === id ? { ...ticket, status: 'closed' } : ticket
                 ));
                 navigate('/closedtickets');
             })
@@ -80,8 +83,9 @@ const VisualizzaTicket = () => {
                     [id]: data,
                 }));
                 setExpandedCommentId(id);
-                setShowOnlyComments(true);
                 setShowSidebar(true);
+                setComment(""); // Pulisci il campo commento
+                setAuthor(""); // Pulisci il campo autore
             })
             .catch((error) => console.error("Error fetching comments:", error));
     };
@@ -89,6 +93,110 @@ const VisualizzaTicket = () => {
     const handleCloseSidebar = () => {
         setShowSidebar(false);
         setExpandedCommentId(null);
+        setSelectedCommentId(null);
+    };
+
+    const handleAddComment = () => {
+        if (!comment || !author) {
+            alert("Inserisci un commento e il tuo nome.");
+            return;
+        }
+
+        const ticketId = expandedCommentId;
+
+        fetch(`http://localhost:3001/tickets/${ticketId}/comments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment_text: comment, author: author }),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Errore durante l\'aggiunta del commento');
+                }
+                return res.json();
+            })
+            .then((newComment) => {
+                setComments(prev => ({
+                    ...prev,
+                    [ticketId]: [...(prev[ticketId] || []), newComment]
+                }));
+                setComment(""); // Pulisci il campo commento
+                setAuthor(""); // Pulisci il campo autore
+                handleViewComments(ticketId); // Ricarica i commenti
+            })
+            .catch(error => {
+                console.error('Error adding comment:', error);
+                alert('Si è verificato un errore durante l\'aggiunta del commento.');
+            });
+    };
+
+    const handleAddReply = (commentId) => {
+        if (!replyText || !author) {
+            alert("Inserisci una risposta e il tuo nome.");
+            return;
+        }
+
+        fetch(`http://localhost:3001/comments/${commentId}/replies`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ reply_text: replyText, author: author }),
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Errore durante l\'invio della risposta');
+                }
+                return res.json();
+            })
+            .then(newReply => {
+                // Assicurati di controllare se newReply contiene l'ID della risposta appena aggiunta
+                console.log('New reply added:', newReply);
+                setComments(prev => ({
+                    ...prev,
+                    [expandedCommentId]: prev[expandedCommentId].map(comment =>
+                        comment.id === commentId ? { ...comment, replies: [...(comment.replies || []), newReply] } : comment
+                    )
+                }));
+                setReplyText(""); // Pulisci il campo di risposta
+                setSelectedCommentId(null); // Resetta l'ID del commento selezionato
+            })
+            .catch(error => console.error('Error adding reply:', error));
+    };
+
+
+    const handleDeleteComment = (commentId) => {
+        fetch(`/comments/${commentId}`, {
+            method: 'DELETE',
+        })
+            .then(() => {
+                setComments(prev => ({
+                    ...prev,
+                    [expandedCommentId]: prev[expandedCommentId].filter(comment => comment.id !== commentId)
+                }));
+            })
+            .catch(error => console.error('Error deleting comment:', error));
+    };
+
+    const handleDeleteReply = (replyId) => {
+        // Trova il commento a cui la risposta appartiene
+        const commentId = comments[expandedCommentId].find(comment => comment.replies?.some(reply => reply.id === replyId)).id;
+
+        fetch(`/comments/${commentId}/replies/${replyId}`, {
+            method: 'DELETE',
+        })
+            .then(() => {
+                setComments(prev => ({
+                    ...prev,
+                    [expandedCommentId]: prev[expandedCommentId].map(comment => ({
+                        ...comment,
+                        replies: comment.replies.filter(reply => reply.id !== replyId)
+                    }))
+                }));
+            })
+            .catch(error => console.error('Error deleting reply:', error));
     };
 
     return (
@@ -185,11 +293,57 @@ const VisualizzaTicket = () => {
                                     <div key={comment.id} className="comment-container">
                                         <p>{comment.comment_text}</p>
                                         <span className="comment-author">- {comment.author}</span>
+                                        <button onClick={() => handleDeleteComment(comment.id)}>Elimina Commento</button>
+                                        <button onClick={() => { setSelectedCommentId(comment.id); setReplyText(""); }}>Rispondi</button>
+                                        {selectedCommentId === comment.id && (
+                                            <div className="reply-form">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Il tuo nome"
+                                                    value={author}
+                                                    onChange={(e) => setAuthor(e.target.value)}
+                                                />
+                                                <textarea
+                                                    placeholder="Inserisci la risposta..."
+                                                    value={replyText}
+                                                    onChange={(e) => setReplyText(e.target.value)}
+                                                />
+                                                <button onClick={() => handleAddReply(comment.id)}>Invia Risposta</button>
+                                            </div>
+                                        )}
+                                        {/* Visualizzazione delle risposte */}
+                                        {comment.replies && comment.replies.length > 0 && (
+                                            <div className="replies-container">
+                                                <h4>Risposte:</h4>
+                                                {comment.replies.map(reply => (
+                                                    <div key={reply.id} className="reply-container">
+                                                        <p>{reply.reply_text}</p>
+                                                        <span className="reply-author">- {reply.author}</span>
+                                                        <button onClick={() => handleDeleteReply(reply.id)}>Elimina Risposta</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 ))
                             ) : (
                                 <p>Nessun commento ancora.</p>
                             )}
+                        </div>
+
+                        <div className="comment-form">
+                            <input
+                                type="text"
+                                placeholder="Il tuo nome"
+                                value={author}
+                                onChange={(e) => setAuthor(e.target.value)}
+                            />
+                            <textarea
+                                placeholder="Inserisci il commento..."
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                            />
+                            <button onClick={handleAddComment}>Aggiungi Commento</button>
                         </div>
                     </div>
                 </div>
