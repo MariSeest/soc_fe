@@ -3,10 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import './DettaglioTicket.css';
 
 const DettaglioTicket = () => {
-    const { id } = useParams();  // Ottieni l'ID del ticket dalla rotta
-    const [ticket, setTicket] = useState(null);  // Stato per memorizzare i dettagli del ticket
-    const [comments, setComments] = useState([]);  // Stato per memorizzare i commenti
-    const [commentText, setCommentText] = useState("");  // Stato per il testo del nuovo commento
+    const { id } = useParams(); // Ottieni l'ID del ticket dalla rotta
+    const [ticket, setTicket] = useState(null); // Stato per memorizzare i dettagli del ticket
+    const [comments, setComments] = useState([]); // Stato per memorizzare i commenti
+    const [commentText, setCommentText] = useState(""); // Stato per il testo del nuovo commento
     const [showReplies, setShowReplies] = useState({}); // Stato per gestire la visibilità delle risposte
     const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const DettaglioTicket = () => {
             try {
                 const res = await fetch(`http://localhost:3001/tickets/${id}/comments`);
                 const data = await res.json();
-                setComments(data);  // Imposta i commenti
+                setComments(data); // Imposta i commenti
             } catch (error) {
                 console.error("Error fetching comments:", error);
             }
@@ -64,7 +64,7 @@ const DettaglioTicket = () => {
                     ...prevComments,
                     { ...newComment, replies: [] } // Inizializza le risposte vuote
                 ]);
-                setCommentText("");  // Reset del campo di testo
+                setCommentText(""); // Reset del campo di testo
             })
             .catch((error) => console.error('Error submitting comment:', error));
     };
@@ -110,7 +110,7 @@ const DettaglioTicket = () => {
                                     {showReplies[comment.id] && comment.replies && comment.replies.length > 0 ? (
                                         <ul>
                                             {comment.replies.map((reply) => (
-                                                <li key={`${reply.id}-${comment.id}`}> {/* Chiave unica per le risposte */}
+                                                <li key={reply.id}> {/* Assicurati che l'ID della risposta sia unico */}
                                                     <div className="reply-container">
                                                         <p>{reply.reply_text}</p>
                                                         <small>{new Date(reply.created_at).toLocaleString()} - {reply.author || 'Anonimo'}</small>

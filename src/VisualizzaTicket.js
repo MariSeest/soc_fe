@@ -75,6 +75,29 @@ const VisualizzaTicket = () => {
             .catch(error => console.error('Error closing ticket:', error));
     };
 
+    const handleReopenTicket = (id) => {
+        fetch(`http://localhost:3001/tickets/${id}/reopen`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'reopened' }),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return res.json();
+            })
+            .then(() => {
+                console.log('Ticket reopened:', id);
+                setTickets(tickets.map(ticket =>
+                    ticket.id === id ? { ...ticket, status: 'reopened' } : ticket
+                ));
+            })
+            .catch(error => console.error('Error reopening ticket:', error));
+    };
+
     const handleViewComments = (id) => {
         fetch(`http://localhost:3001/tickets/${id}/comments`)
             .then((res) => {
@@ -269,8 +292,11 @@ const VisualizzaTicket = () => {
                             </Link>
                         </td>
                         <td className={item.status === 'closed' ? 'status-closed' : 'status-open'}>
-                            {item.closed_previously ? <span className="ticket-previously-closed">Ticket precedentemente chiuso</span> : null}
-                            {item.status}
+                            {item.status === 'reopened' ? (
+                                <span style={{ color: 'red' }}>{item.status}</span>
+                            ) : (
+                                item.status
+                            )}
                         </td>
                         <td>{item.category}</td>
                         <td>{item.severity}</td>
@@ -281,11 +307,18 @@ const VisualizzaTicket = () => {
                         <td>{item.reopened_at ? new Date(item.reopened_at).toLocaleString() : 'N/A'}</td>
                         <td>
                             <button onClick={() => handleDelete(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Delete</button>
-                            {item.status !== 'closed' && (
+                            {/* Mostra i pulsanti di chiusura e apertura in base allo stato */}
+                            {item.status === 'open' && (
                                 <>
                                     <button onClick={() => handleCloseTicket(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Close</button>
                                     <button onClick={() => handleViewComments(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Visualizza Commenti</button>
                                 </>
+                            )}
+                            {item.status === 'closed' && (
+                                <button onClick={() => handleReopenTicket(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Riapri Ticket</button>
+                            )}
+                            {item.status === 'reopened' && (
+                                <button onClick={() => handleCloseTicket(item.id)} className="reply-button" style={{ marginBottom: '5px' }}>Richiudi Ticket</button>
                             )}
                         </td>
                     </tr>

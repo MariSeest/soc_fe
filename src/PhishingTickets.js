@@ -227,7 +227,7 @@ const PhishingTickets = () => {
                         <td>
                             <textarea
                                 value={commentText[item.id] || ""}
-                                onChange={(e) => setCommentText(prevState => ({...prevState, [item.id]: e.target.value}))}
+                                onChange={(e) => setCommentText(prevState => ({ ...prevState, [item.id]: e.target.value }))}
                                 placeholder="Inserisci il commento..."
                                 className="comment-textarea"
                             />
@@ -240,7 +240,7 @@ const PhishingTickets = () => {
                             </div>
                             {/* Aggiungi la nota per i ticket riaperti */}
                             {item.closed_previously && (
-                                <p style={{color: 'red', fontStyle: 'italic'}}>
+                                <p style={{ color: 'red', fontStyle: 'italic' }}>
                                     Ticket precedentemente chiuso
                                 </p>
                             )}
@@ -304,7 +304,7 @@ const PhishingTickets = () => {
                                 className="sidebar-textarea"
                             />
                             <button className="futuristic-button" onClick={isReplying ? () => handleReply(selectedCommentId) : handleAddComment}>
-                                {isReplying ? 'Invia Risposta' : 'Aggiungi Commento'}
+                                {isReplying ? 'Invia Risposta' : 'Invia Commento'}
                             </button>
                         </div>
                         <button className="futuristic-button" onClick={handleCloseSidebar}>Chiudi</button>

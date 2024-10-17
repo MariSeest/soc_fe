@@ -26,6 +26,7 @@ function App() {
     }
 
     return (
+        <div className="app-container"> {/* Aggiunto un contenitore per una migliore responsività */}
             <Routes>
                 <Route path="/" element={<AuthenticationGuard component={Home} />} />
                 <Route path="/home" element={<AuthenticationGuard component={Home} />} />
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/PhishingTicketsClosed" element={<AuthenticationGuard component={PhishingTicketsClosed} />} />
                 <Route path="/ticket/:id" element={<AuthenticationGuard component={DettaglioTicket} />} />
             </Routes>
+        </div>
     );
 }
 

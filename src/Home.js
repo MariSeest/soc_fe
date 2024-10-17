@@ -6,35 +6,9 @@ import Chat from './Chat'; // Importa il componente Chat
 import './Home.css';
 
 export const Home = () => {
-    const [tickets, setTickets] = useState([]);
-    const [ticketsByCategory, setTicketsByCategory] = useState({});
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [news, setNews] = useState([]);
     const navigate = useNavigate();
     const { user, isAuthenticated, isLoading } = useAuth0();
-
-    useEffect(() => {
-        // Funzione per recuperare le news
-        const fetchNews = async () => {
-            try {
-                const response = await fetch("https://www.cybersecurity360.it/news/");
-                const text = await response.text();
-
-                // Esegui il parsing dell'HTML per estrarre i titoli (assicurati di usare il selettore giusto)
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const titles = Array.from(doc.querySelectorAll('.title-class-selector')) // Cambia con il giusto selettore
-                    .slice(0, 5)
-                    .map(el => el.textContent);
-
-                setNews(titles);
-            } catch (error) {
-                console.error('Error fetching news:', error);
-            }
-        };
-
-        fetchNews();
-    }, []);
 
     const handleProfile = (e) => {
         e.preventDefault();
@@ -70,30 +44,17 @@ export const Home = () => {
         setIsChatOpen(prevState => !prevState);
     };
 
-const handlePhishing=(e) => {
-    e.preventDefault();
-    navigate('/PhishingTickets');
-};
+    const handlePhishing = (e) => {
+        e.preventDefault();
+        navigate('/PhishingTickets');
+    };
 
     if (isLoading) return <div>Loading...</div>;
 
     return (
         isAuthenticated && (
             <div>
-                {/* Banner dinamico per le news */}
-                <div className="news-banner">
-                    <marquee>
-                        {news.length > 0 ? (
-                            news.map((title, index) => (
-                                <span key={index}>{title} | </span>
-                            ))
-                        ) : (
-                            <span>Loading latest news...</span>
-                        )}
-                    </marquee>
-                </div>
-
-                {/* Spazio per evitare sovrapposizione tra header e news banner */}
+                {/* Spazio per evitare sovrapposizione tra header e contenuti */}
                 <div style={{ height: '1cm' }}></div>
 
                 <div className="header">
@@ -134,15 +95,3 @@ const handlePhishing=(e) => {
 };
 
 export default Home;
-
-
-
-
-
-
-
-
-
-
-
-

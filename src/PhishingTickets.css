@@ -1,8 +1,11 @@
+/* Stile per il contenitore del titolo */
 .title-container {
     background: linear-gradient(135deg, #1a1a2e, #0f3460); /* Gradiente più definito */
-    padding: 25px; /* Aumentato padding per maggiore impatto */
+    padding: 25px 0; /* Aumentato padding per maggiore impatto */
     text-align: center;
     margin-bottom: 40px;
+    left: -50vw;
+    right: -50vw;
     width: 100%;
     box-sizing: border-box;
     border-bottom: 2px solid #00e0ff;
