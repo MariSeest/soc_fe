@@ -55,6 +55,23 @@ const PhishingTickets = () => {
             .catch(error => console.error('Error creating ticket:', error));
     };
 
+    // Funzione per eliminare un ticket
+
+    const handleDeleteTicket = (ticketId) => {
+        console.log(`Deleting ticket with ID: ${ticketId}`);
+        fetch(`http://localhost:3001/phishing_tickets/${ticketId}`, {
+            method: 'DELETE',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Error deleting ticket: ${response.statusText}`);
+                }
+                console.log(`Ticket ${ticketId} deleted successfully`);
+                setTickets(prevTickets => prevTickets.filter(ticket => ticket.id !== ticketId));
+            })
+            .catch(error => console.error('Error deleting ticket:', error));
+    };
+
     // Funzione per aggiungere un commento al ticket selezionato
     const handleAddComment = () => {
         if (!selectedTicketId || !commentText[selectedTicketId] || !author) {
@@ -97,16 +114,21 @@ const PhishingTickets = () => {
 
     // Funzione per visualizzare i commenti associati a un ticket
     const handleViewComments = (ticketId) => {
-        fetch(`http://localhost:3001/phishing_tickets/${ticketId}/comments`)
-            .then((res) => res.json())
+        fetch(`http://localhost:3001/phishing_tickets/${ticketId}/phishing_comments`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
             .then((comments) => {
-                const commentsWithReplies = comments.map(comment => ({
+                const commentsWithRepliesPhishing = comments.map(comment => ({
                     ...comment,
                     replies: comment.replies || []  // Assicurati che replies sia sempre un array
                 }));
                 setTicketComments(prev => ({
                     ...prev,
-                    [ticketId]: commentsWithReplies
+                    [ticketId]: commentsWithRepliesPhishing
                 }));
                 toggleSidebar(ticketId, false);
             })
@@ -127,7 +149,12 @@ const PhishingTickets = () => {
             },
             body: JSON.stringify({ reply_text: replyText[commentId], author: author }),
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Error adding reply');
+                }
+                return res.json();
+            })
             .then((reply) => {
                 setTicketComments(prev => ({
                     ...prev,
@@ -220,7 +247,7 @@ const PhishingTickets = () => {
                 </thead>
                 <tbody>
                 {tickets.map((item) => (
-                    <tr key={item.id}>
+                    <tr key={`phishing-${item.id}`}>
                         <td>{item.id}</td>
                         <td>{item.domain}</td>
                         <td>{item.status === 'closed' ? 'Chiuso' : 'Aperto'}</td>
@@ -236,6 +263,7 @@ const PhishingTickets = () => {
                             <div className="table-actions">
                                 <button className="futuristic-button" onClick={() => toggleSidebar(item.id)}>Commenta</button>
                                 <button className="futuristic-button" onClick={() => handleCloseTicket(item.id)}>Chiudi</button>
+                                <button className="futuristic-button" onClick={() => handleDeleteTicket(item.id)}>Elimina</button> {/* Nuovo tasto Elimina */}
                                 <button className="futuristic-button" onClick={() => handleViewComments(item.id)}>Visualizza Commenti</button>
                             </div>
                             {/* Aggiungi la nota per i ticket riaperti */}
@@ -262,13 +290,13 @@ const PhishingTickets = () => {
                                 {/* Verifica se ci sono commenti */}
                                 {ticketComments[selectedTicketId].length > 0 ? (
                                     ticketComments[selectedTicketId].map(comment => (
-                                        <div key={comment.id} className="comment-container">
+                                        <div key={`comment-${comment.id}`} className="comment-container">
                                             <p>{comment.comment_text}</p>
                                             <span className="comment-author">- {comment.author}</span>
                                             {comment.replies && comment.replies.length > 0 && (
                                                 <ul className="reply-list">
                                                     {comment.replies.map(reply => (
-                                                        <li key={reply.id} className="reply-container">
+                                                        <li key={`reply-${reply.id}`} className="reply-container">
                                                             <p>{reply.reply_text}</p>
                                                             <span className="comment-author">- {reply.author}</span>
                                                         </li>

@@ -85,6 +85,7 @@ const DettaglioTicket = () => {
         <div className="container">
             <div className="button-container">
                 <button onClick={() => navigate('/home')}>Torna alla Home</button>
+                <button onClick={() => navigate('/VisualizzaTicket')}>Torna alla visualizzazione</button>
             </div>
 
             <div className="ticket-content">
@@ -100,7 +101,7 @@ const DettaglioTicket = () => {
                 {comments.length > 0 ? (
                     <ul>
                         {comments.map((comment) => (
-                            <li key={comment.id}> {/* Chiave unica per ogni commento */}
+                            <li key={`comment-${comment.id}`}> {/* Chiave unica per ogni commento */}
                                 <div className="comment-container">
                                     <p>{comment.comment_text}</p>
                                     <small>{new Date(comment.created_at).toLocaleString()}</small>
@@ -110,7 +111,7 @@ const DettaglioTicket = () => {
                                     {showReplies[comment.id] && comment.replies && comment.replies.length > 0 ? (
                                         <ul>
                                             {comment.replies.map((reply) => (
-                                                <li key={reply.id}> {/* Assicurati che l'ID della risposta sia unico */}
+                                                <li key={`reply-${comment.id}-${reply.id}`}> {/* Chiave unica per ogni risposta */}
                                                     <div className="reply-container">
                                                         <p>{reply.reply_text}</p>
                                                         <small>{new Date(reply.created_at).toLocaleString()} - {reply.author || 'Anonimo'}</small>

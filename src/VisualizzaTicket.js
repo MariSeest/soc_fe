@@ -40,16 +40,22 @@ const VisualizzaTicket = () => {
         setFilteredTickets(filtered);
     }, [categoryFilter, severityFilter, tickets]);
 
-    const handleDelete = (id) => {
-        fetch(`http://localhost:3001/tickets/${id}`, {
+// Funzione per eliminare un ticket
+    const handleDelete = (ticketId) => {
+        console.log(`Deleting ticket with ID: ${ticketId}`);
+        fetch(`http://localhost:3001/tickets/${ticketId}`, {
             method: 'DELETE',
         })
-            .then(() => {
-                console.log('Ticket deleted:', id);
-                setTickets(tickets.filter(ticket => ticket.id !== id));
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Error deleting ticket: ${response.statusText}`);
+                }
+                console.log(`Ticket ${ticketId} deleted successfully`);
+                setTickets(prevTickets => prevTickets.filter(ticket => ticket.id !== ticketId));
             })
             .catch(error => console.error('Error deleting ticket:', error));
     };
+
 
     const handleCloseTicket = (id) => {
         fetch(`http://localhost:3001/tickets/${id}/status`, {

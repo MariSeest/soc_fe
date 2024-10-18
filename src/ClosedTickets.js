@@ -56,6 +56,10 @@ const ClosedTickets = () => {
     const handleGoBack = () => {
         navigate('/home');
     };
+    const handleGoBackList=() => {
+        navigate('/VisualizzaTicket')
+    };
+
 
     return (
         <div className="main-container">
@@ -65,12 +69,13 @@ const ClosedTickets = () => {
 
             <div className="button-container">
                 <button className="small-button futuristic-button" onClick={handleGoBack}>Torna alla Home</button>
+                <button className="small-button futuristic-button" onClick={handleGoBackList}>Torna alla lista</button>
             </div>
 
             <table className="table">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                <th>ID</th>
                     <th>Nome</th>
                     <th>Status</th>
                     <th>Categoria</th>

@@ -60,6 +60,9 @@ const PhishingTicketsClosed = () => {
             <button className="futuristic-button" onClick={() => navigate('/PhishingTickets')}>
                 Torna ai Ticket Aperti
             </button>
+            <button className="futuristic-button" onClick={() => navigate('/Home')}>
+                Torna alla Home
+            </button>
 
             <table className="table">
                 <thead>
@@ -80,8 +83,10 @@ const PhishingTicketsClosed = () => {
                         <td>{item.domain}</td>
                         <td>{item.status}</td>
                         <td>{item.severity}</td>
-                        <td>{new Date(item.opened_at).toLocaleDateString()}</td> {/* Data apertura */}
-                        <td>{new Date(item.last_status_change_at).toLocaleDateString()}</td> {/* Ultima modifica status */}
+                        <td>{new Date(item.opened_at).toLocaleDateString()}</td>
+                        {/* Data apertura */}
+                        <td>{new Date(item.last_status_change_at).toLocaleDateString()}</td>
+                        {/* Ultima modifica status */}
                         <td>
                             <button className="futuristic-button" onClick={() => handleViewComments(item.id)}>
                                 Visualizza Commenti
@@ -109,13 +114,16 @@ const PhishingTicketsClosed = () => {
                                 ticketComments[selectedTicket].map(comment => (
                                     <div className="comment-container" key={comment.id}>
                                         <p><strong>{comment.author}:</strong> {comment.comment_text}</p>
-                                        <p><em>Risposto il: {new Date(comment.replied_at).toLocaleDateString()}</em></p> {/* Data della risposta */}
+                                        <p><em>Risposto il: {new Date(comment.replied_at).toLocaleDateString()}</em>
+                                        </p> {/* Data della risposta */}
                                         {comment.replies && comment.replies.length > 0 && (
                                             <div className="replies-container">
                                                 {comment.replies.map(reply => (
                                                     <div className="reply-container" key={reply.id}>
                                                         <p><strong>{reply.author}:</strong> {reply.reply_text}</p>
-                                                        <p><em>Risposta il: {new Date(reply.replied_at).toLocaleDateString()}</em></p>
+                                                        <p><em>Risposta
+                                                            il: {new Date(reply.replied_at).toLocaleDateString()}</em>
+                                                        </p>
                                                     </div>
                                                 ))}
                                             </div>
