@@ -1,57 +1,57 @@
-/* Stile per il contenitore del titolo */
+
 .title-container {
-    background: linear-gradient(135deg, #1a1a2e, #0f3460); /* Gradiente più definito */
-    padding: 25px 0; /* Aumentato padding per maggiore impatto */
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    padding: 25px 0;
     text-align: center;
     margin-bottom: 40px;
     width: 100%;
     box-sizing: border-box;
     border-bottom: 2px solid #00e0ff;
-    box-shadow: 0px 5px 20px rgba(0, 224, 255, 0.5); /* Ombra neon più marcata */
+    box-shadow: 0px 5px 20px rgba(0, 224, 255, 0.5);
 }
 
-/* Stile per la sidebar */
+
 .sidebar {
     position: fixed;
     right: 0;
     top: 0;
     height: 100%;
-    width: 300px; /* Larghezza fissa per schermi grandi */
+    width: 300px;
     background-color: #1a1a2e;
     color: white;
-    box-shadow: -2px 0 20px rgba(0, 0, 0, 0.6); /* Ombra più intensa */
+    box-shadow: -2px 0 20px rgba(0, 0, 0, 0.6);
     z-index: 1000;
     overflow-y: auto;
     padding: 30px 20px;
-    border-left: 2px solid #00e0ff; /* Aggiunta di un bordo sinistro per definire meglio la sidebar */
-    display: flex; /* Utilizzo di Flexbox per il layout */
-    flex-direction: column; /* Layout verticale per i contenuti */
-    gap: 15px; /* Spaziatura uniforme tra gli elementi */
+    border-left: 2px solid #00e0ff;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* Media query per schermi più piccoli */
+
 @media (max-width: 768px) {
     .sidebar {
-        width: 80%; /* Larghezza percentuale per schermi più piccoli */
-        padding: 20px; /* Ridotto padding per risparmiare spazio */
-        border-left: none; /* Rimuove il bordo sinistro su schermi piccoli */
-        right: -100%; /* Nasconde la sidebar all'inizio */
-        transition: right 0.3s ease; /* Aggiunta di transizione per animazione */
+        width: 80%;
+        padding: 20px;
+        border-left: none;
+        right: -100%;
+        transition: right 0.3s ease;
     }
 
-    /* Classe per mostrare la sidebar */
+
     .sidebar.active {
-        right: 0; /* Ripristina la posizione */
+        right: 0;
     }
 
     .sidebar-close {
-        margin-bottom: 10px; /* Riduce il margine inferiore per schermi più piccoli */
+        margin-bottom: 10px;
     }
 }
 
-/* Pulsante per attivare la sidebar (per schermi piccoli) */
+
 .toggle-sidebar {
-    display: none; /* Nascosto per schermi grandi */
+    display: none;
     position: fixed;
     top: 20px;
     right: 20px;
@@ -61,91 +61,91 @@
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    z-index: 1001; /* Sopra la sidebar */
+    z-index: 1001;
 }
 
-/* Media query per mostrare il pulsante di attivazione su schermi piccoli */
+
 @media (max-width: 768px) {
     .toggle-sidebar {
-        display: block; /* Mostra il pulsante per schermi piccoli */
+        display: block;
     }
 }
 
-/* Stile per il pulsante chiudi sidebar */
+
 .sidebar-close {
     background-color: #00e0ff;
     border: none;
     color: white;
-    padding: 12px 15px; /* Modificato per una dimensione uniforme */
+    padding: 12px 15px;
     cursor: pointer;
     border-radius: 8px;
-    margin-bottom: 15px; /* Margine aumentato per separazione visiva */
+    margin-bottom: 15px;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    align-self: center; /* Centrato orizzontalmente */
+    align-self: center;
 }
 
-/* Hover effect per il pulsante chiudi sidebar */
+
 .sidebar-close:hover {
     background-color: #00a3cc;
     transform: scale(1.05);
 }
 
-/* Stile per i pulsanti nella sidebar */
+
 .sidebar button {
-    background-color: #00e0ff; /* Colore uniforme per i pulsanti */
+    background-color: #00e0ff;
     color: #1a1a2e;
     border: none;
-    padding: 12px 15px; /* Dimensioni uniformi per i pulsanti */
+    padding: 12px 15px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    width: 100%; /* Larghezza completa per i pulsanti */
-    text-align: left; /* Testo allineato a sinistra */
+    width: 100%;
+    text-align: left;
 }
 
 .sidebar button:hover {
-    background-color: #00a3cc; /* Colore di hover armonizzato */
+    background-color: #00a3cc;
 }
 
-/* Stile per le textbox nella sidebar */
+
 .sidebar input[type="text"],
 .sidebar textarea {
-    width: 100%; /* Larghezza completa */
-    padding: 10px; /* Padding uniforme */
-    border: 2px solid #00e0ff; /* Bordo in tinta con il design */
-    border-radius: 5px; /* Angoli arrotondati */
-    background-color: #16213e; /* Colore di sfondo scuro */
-    color: #ffffff; /* Colore del testo */
-    font-size: 1em; /* Dimensione del font uniforme */
-    margin-bottom: 15px; /* Margine inferiore per separazione */
-    outline: none; /* Rimuove il bordo di default al focus */
-    transition: border 0.3s ease; /* Transizione morbida per il focus */
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #00e0ff;
+    border-radius: 5px;
+    background-color: #16213e;
+    color: #ffffff;
+    font-size: 1em;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border 0.3s ease;
 }
 
-/* Effetto focus per le textbox */
+
 .sidebar input[type="text"]:focus,
 .sidebar textarea:focus {
-    border-color: #00ffcc; /* Colore del bordo al focus */
+    border-color: #00ffcc;
 }
 
-/* Stile per i commenti */
+
 .comments-container {
-    max-height: 350px; /* Aumentato per contenere più commenti */
+    max-height: 350px;
     overflow-y: auto;
     margin-bottom: 25px;
-    border-radius: 10px; /* Angoli arrotondati più morbidi */
-    padding: 15px; /* Padding uniformato */
-    box-shadow: inset 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra neon */
-    background-color: #16213e; /* Colore di sfondo dei commenti */
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: inset 0 0 15px rgba(0, 224, 255, 0.3);
+    background-color: #16213e;
 }
 
-/* Stile per i commenti */
+
 .comment-container {
-    background-color: #1a1a2e; /* Colore di sfondo più uniforme */
+    background-color: #1a1a2e;
     margin-bottom: 15px;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0px 4px 15px rgba(0, 224, 255, 0.2); /* Ombra neon interna */
+    box-shadow: 0px 4px 15px rgba(0, 224, 255, 0.2);
     transition: background-color 0.3s ease;
 }
 
@@ -153,12 +153,12 @@
     background-color: #1a1a2e;
 }
 
-/* Pulsanti all'interno dei commenti */
+
 .comment-container button {
-    margin-top: 5px; /* Margine tra i pulsanti e il testo */
-    padding: 8px 12px; /* Dimensioni uniformi per i pulsanti */
+    margin-top: 5px;
+    padding: 8px 12px;
     font-size: 1em;
-    background-color: #00e0ff; /* Colore uniforme per i pulsanti */
+    background-color: #00e0ff;
     color: #1a1a2e;
     border: none;
     border-radius: 5px;
@@ -167,10 +167,10 @@
 }
 
 .comment-container button:hover {
-    background-color: #00a3cc; /* Colore di hover armonizzato */
+    background-color: #00a3cc;
 }
 
-/* Risposte */
+
 .reply-container {
     margin-top: 10px;
     padding: 10px;
@@ -180,17 +180,17 @@
     box-shadow: 0 0 15px rgba(0, 224, 255, 0.2);
 }
 
-/* Modifica il testo delle risposte */
+
 .reply-text {
     color: #ffffff;
-    font-size: 1em; /* Uniformato alla dimensione dei commenti */
+    font-size: 1em;
 }
 
-/* Modifiche per i pulsanti delle risposte */
+
 .reply-button {
-    padding: 10px 15px; /* Dimensioni uniformi */
-    font-size: 1em; /* Uniforme */
-    background-color: #00e0ff; /* Colore uniforme */
+    padding: 10px 15px;
+    font-size: 1em;
+    background-color: #00e0ff;
     color: #1a1a2e;
     border: none;
     border-radius: 8px;
@@ -199,23 +199,23 @@
 }
 
 .reply-button:hover {
-    background-color: #00a3cc; /* Colore di hover armonizzato */
+    background-color: #00a3cc;
 }
 
-/* Filtri */
+
 .filter-container {
     display: table;
     width: 100%;
     margin-bottom: 2cm;
-    background-color: rgba(0, 0, 0, 0.85); /* Sfondo leggermente più scuro */
+    background-color: rgba(0, 0, 0, 0.85);
     border: 2px solid #00e0ff;
     border-radius: 12px;
-    padding: 20px; /* Padding ridotto per una maggiore armonia */
+    padding: 20px;
 }
 
 .filter-cell {
     display: table-cell;
-    padding: 10px 15px; /* Dimensioni uniformi */
+    padding: 10px 15px;
     color: #ffffff;
     font-family: 'Orbitron', sans-serif;
     text-align: left;
@@ -229,11 +229,11 @@
 }
 
 .filter-select {
-    padding: 8px 12px; /* Dimensioni uniformi */
+    padding: 8px 12px;
     background-color: #16213e;
     color: #ffffff;
     border: 2px solid #00e0ff;
-    border-radius: 5px; /* Angoli arrotondati più morbidi */
+    border-radius: 5px;
     outline: none;
     transition: border 0.3s ease;
 }
@@ -242,14 +242,14 @@
     border-color: #00ffcc;
 }
 
-/* Stile per la tabella */
+
 .table {
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 40px;
-    background-color: rgba(0, 0, 0, 0.85); /* Sfondo scuro più opaco */
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.6); /* Ombra marcata */
-    border-radius: 15px; /* Angoli arrotondati più morbidi */
+    background-color: rgba(0, 0, 0, 0.85);
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
 }
 
 .table th {
@@ -279,7 +279,7 @@
     background-color: #1a1a2e;
 }
 
-/* Contenitore dei commenti */
+
 .comment-list-container {
     margin-top: 30px;
     padding: 25px;
@@ -309,7 +309,7 @@
     display: block;
 }
 
-/* Stile per il contenitore delle risposte */
+
 .reply-container {
     margin-top: 12px;
     padding: 15px;

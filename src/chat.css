@@ -1,4 +1,4 @@
-/* Stili generali per la chat */
+
 .chat-popup {
     display: none;
     position: fixed;
@@ -28,12 +28,12 @@
     height: 200px;
     overflow-y: auto;
     background-color: #f1f1f1;
-    color: black; /* Cambia il colore del testo in nero */
+    color: black;
 }
 
 .chat-body p {
     margin: 5px 0;
-    color: black; /* Cambia il colore del testo in nero */
+    color: black;
 }
 
 form {
@@ -66,7 +66,7 @@ form button:hover {
     background-color: #0056b3;
 }
 
-/* Icona della chat per aprire la finestra */
+
 .chat-icon {
     position: fixed;
     bottom: 20px;
@@ -80,7 +80,7 @@ form button:hover {
     text-align: center;
 }
 
-/* Notifica del messaggio non letto */
+
 .chat-notification {
     position: absolute;
     top: 0;
@@ -93,7 +93,7 @@ form button:hover {
     font-weight: bold;
 }
 
-/* Aggiungi questo per evitare che la text box si estenda troppo */
+
 form input {
     box-sizing: border-box;
     width: 100%;

@@ -4,19 +4,19 @@ body, html {
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow-x: hidden; /* Evita lo scroll orizzontale */
+    overflow-x: hidden;
 }
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #0f0f1f; /* Colore di sfondo scuro */
-    color: #ffffff; /* Colore del testo */
+    background-color: #0f0f1f;
+    color: #ffffff;
     overflow-y: auto; /* Abilita lo scrolling verticale */
 }
 
 /* Contenitore principale */
 .container {
-    min-height: 100vh; /* Occupa almeno l'altezza dell'intera finestra */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -24,39 +24,39 @@ body {
     box-sizing: border-box;
 }
 
-/* Sezione dei commenti */
+
 .comment-section {
-    flex-grow: 1; /* Cresce per riempire lo spazio rimanente */
+    flex-grow: 1;
     overflow-y: auto; /* Permette lo scrolling verticale */
     background-color: #1a1a2e;
     padding: 20px;
-    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.5); /* Ombra neon */
+    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.5);
     border-radius: 5px;
     border: 1px solid #00e0ff;
 }
 
 /* Contenitore del titolo */
 .title-container {
-    background-color: #1a1a2e; /* Colore scuro moderno */
+    background-color: #1a1a2e;
     padding: 20px 0;
     text-align: center;
     margin-bottom: 30px;
     width: 100%;
     box-sizing: border-box;
-    border-bottom: 2px solid #00e0ff; /* Bordo inferiore neon */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombra per dare profondità */
+    border-bottom: 2px solid #00e0ff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .title-container h2 {
     margin: 0;
     font-size: 4vw;
-    color: #00e0ff; /* Testo neon */
-    font-family: 'Orbitron', sans-serif; /* Font futuristica */
+    color: #00e0ff;
+    font-family: 'Orbitron', sans-serif;
     text-transform: uppercase;
-    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff; /* Effetto neon */
+    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff;
 }
 
-/* Contenitore dei pulsanti */
+
 .button-container {
     position: fixed;
     top: 20px;
@@ -64,11 +64,11 @@ body {
     display: flex;
     flex-direction: column;
     padding: 15px;
-    background-color: rgba(0, 0, 0, 0.8); /* Sfondo scuro trasparente */
-    border: 1px solid #00e0ff; /* Bordo neon */
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00e0ff;
     border-radius: 10px;
     z-index: 1000;
-    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    box-shadow: 0 0 10px #00e0ff;
 }
 
 .button-container button {
@@ -76,45 +76,45 @@ body {
     padding: 10px 20px;
     font-size: 1em;
     font-family: 'Roboto', sans-serif;
-    background-color: #00e0ff; /* Colore neon per il bottone */
+    background-color: #00e0ff;
     color: #1a1a2e;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Transizione al passaggio del mouse */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .button-container button:hover {
-    background-color: #00a3cc; /* Colore più scuro al passaggio del mouse */
-    transform: scale(1.05); /* Leggero ingrandimento al passaggio del mouse */
+    background-color: #00a3cc;
+    transform: scale(1.05);
 }
 
 /* Tabella */
 .table {
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 30px; /* Spazio sotto la tabella */
-    background-color: rgba(0, 0, 0, 0.7); /* Sfondo scuro trasparente */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Ombra per dare profondità */
-    border-radius: 10px; /* Angoli arrotondati */
-    overflow: hidden; /* Per mantenere gli angoli arrotondati */
+    margin-bottom: 30px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .table th {
-    background-color: #00e0ff; /* Colore neon */
+    background-color: #00e0ff;
     color: #1a1a2e;
     border: 2px solid #00e0ff;
     padding: 12px;
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
-    text-transform: uppercase; /* Testo in maiuscolo */
+    text-transform: uppercase;
 }
 
 .table td {
     border: 2px solid #00e0ff;
     padding: 12px;
-    background-color: #16213e; /* Sfondo scuro per le celle */
-    color: #ffffff; /* Testo bianco per contrastare */
+    background-color: #16213e;
+    color: #ffffff;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -129,7 +129,7 @@ body {
     font-weight: bold;
 }
 
-/* Contenitore del singolo commento */
+
 .comment-container {
     max-height: 200px;
     overflow-y: auto;
@@ -138,7 +138,7 @@ body {
     background-color: #1a1a2e;
     border: 1px solid #00e0ff;
     border-radius: 5px;
-    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.5); /* Ombra neon */
+    box-shadow: inset 0 0 10px rgba(0, 224, 255, 0.5);
     scrollbar-width: thin;
 }
 
@@ -160,14 +160,14 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.8); /* Sfondo scuro trasparente */
-    border: 1px solid #00e0ff; /* Bordo neon */
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00e0ff;
     border-radius: 10px;
-    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    box-shadow: 0 0 10px #00e0ff;
 }
 
 .filter-container label {
-    color: #00e0ff; /* Testo neon */
+    color: #00e0ff;
     font-family: 'Roboto', sans-serif;
     margin-right: 10px;
 }
@@ -176,56 +176,56 @@ body {
     padding: 5px;
     border-radius: 5px;
     background-color: #1a1a2e;
-    color: #00e0ff; /* Colore neon */
+    color: #00e0ff;
     border: 1px solid #00e0ff;
 }
 
-/* Stile futuristico per la textarea */
+
 textarea {
     width: 100%;
     padding: 15px;
-    background-color: #0f3460; /* Colore scuro per lo sfondo */
-    color: #00e0ff; /* Testo neon */
-    border: 2px solid #00e0ff; /* Bordo neon */
-    border-radius: 8px; /* Angoli arrotondati */
+    background-color: #0f3460;
+    color: #00e0ff;
+    border: 2px solid #00e0ff;
+    border-radius: 8px;
     font-family: 'Roboto', sans-serif;
     font-size: 1.2em;
-    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3); /* Ombra neon */
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.3);
     transition: all 0.3s ease;
-    resize: vertical; /* Permette di ridimensionare verticalmente */
+    resize: vertical;
 }
 
 textarea:focus {
-    outline: none; /* Rimuove il contorno standard */
-    box-shadow: 0 0 20px rgba(0, 224, 255, 0.7); /* Ombra neon più intensa al focus */
-    border-color: #00ffcc; /* Cambia il colore del bordo quando in focus */
+    outline: none;
+    box-shadow: 0 0 20px rgba(0, 224, 255, 0.7);
+    border-color: #00ffcc;
 }
 
-/* Stile futuristico per il pulsante */
+
 textarea + button {
-    margin-top: 10px; /* Spazio tra il campo di testo e il pulsante */
+    margin-top: 10px;
     padding: 12px 24px;
     font-size: 1.2em;
     font-family: 'Roboto', sans-serif;
-    background-color: #00e0ff; /* Colore neon per lo sfondo */
-    color: #1a1a2e; /* Colore del testo scuro */
-    border: 2px solid #00e0ff; /* Bordo neon */
+    background-color: #00e0ff;
+    color: #1a1a2e;
+    border: 2px solid #00e0ff;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 0 15px rgba(0, 224, 255, 0.5); /* Ombra neon */
-    text-transform: uppercase; /* Testo in maiuscolo */
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.5);
+    text-transform: uppercase;
     letter-spacing: 2px;
 }
 
 textarea + button:hover {
-    background-color: #00a3cc; /* Cambia il colore al passaggio del mouse */
-    box-shadow: 0 0 25px rgba(0, 224, 255, 1); /* Effetto neon più intenso */
-    transform: scale(1.05); /* Leggera animazione di ingrandimento */
+    background-color: #00a3cc;
+    box-shadow: 0 0 25px rgba(0, 224, 255, 1);
+    transform: scale(1.05);
 }
 
 textarea + button:active {
-    transform: scale(0.98); /* Leggera animazione di riduzione quando il pulsante è attivato */
+    transform: scale(0.98);
     box-shadow: 0 0 20px rgba(0, 224, 255, 0.9);
 }
 

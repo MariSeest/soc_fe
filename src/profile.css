@@ -1,53 +1,53 @@
-/* Stile per il contenitore principale */
+
 .profile-container {
-    position: relative; /* Posizionamento relativo per contenere il pulsante assoluto */
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    background-color: #1a1a2e; /* Sfondo scuro */
+    background-color: #1a1a2e;
     border-radius: 15px;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Ombra per profondità */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
     max-width: 600px;
     margin: 60px auto;
     font-family: 'Roboto', sans-serif;
-    color: #ffffff; /* Testo bianco */
+    color: #ffffff;
 }
 
-/* Stile per l'immagine del profilo */
+
 .profile-container img {
-    border-radius: 50%; /* Rende l'immagine rotonda */
+    border-radius: 50%;
     width: 150px;
     height: 150px;
     margin-bottom: 20px;
-    border: 3px solid #00e0ff; /* Bordo neon */
-    box-shadow: 0px 0px 10px #00e0ff; /* Ombra neon */
+    border: 3px solid #00e0ff;
+    box-shadow: 0px 0px 10px #00e0ff;
 }
 
-/* Stile per il nome dell'utente */
+
 .profile-container h2 {
     font-size: 2.5em;
     margin-bottom: 10px;
-    color: #00e0ff; /* Testo neon */
-    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff; /* Effetto neon */
-    font-family: 'Orbitron', sans-serif; /* Font futuristica */
+    color: #00e0ff;
+    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff;
+    font-family: 'Orbitron', sans-serif;
     text-transform: uppercase;
 }
 
-/* Stile per l'email dell'utente */
+
 .profile-container p {
     font-size: 1.2em;
-    color: #e0e0e0; /* Testo grigio chiaro */
+    color: #e0e0e0;
     margin-bottom: 20px;
 }
 
-/* Stile per il pulsante Go Back */
+
 .profile-container button {
-    position: absolute; /* Posizionamento assoluto rispetto al contenitore */
-    top: 15px; /* Sposta il pulsante 15px dall'alto */
-    right: 15px; /* Sposta il pulsante 15px dal bordo destro */
+    position: absolute;
+    top: 15px;
+    right: 15px;
     padding: 10px 20px;
-    background-color: #00e0ff; /* Colore neon */
+    background-color: #00e0ff;
     color: #1a1a2e;
     border: none;
     border-radius: 8px;
@@ -59,8 +59,8 @@
     text-transform: uppercase;
 }
 
-/* Effetto hover sul pulsante Go Back */
+
 .profile-container button:hover {
     background-color: #00a3cc;
-    transform: scale(1.05); /* Leggero ingrandimento al passaggio del mouse */
+    transform: scale(1.05);
 }

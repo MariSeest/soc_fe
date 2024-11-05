@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React from 'react';
+import { Routes, Route,  } from "react-router-dom";
 import './App.css';
 import Home from "./Home";
 import VisualizzaTicket from "./VisualizzaTicket";
@@ -16,8 +16,8 @@ import SeverityMediumTickets from './SeverityMediumTickets';
 import SeverityLowTickets from './SeverityLowTickets';
 import PhishingTickets from './PhishingTickets';
 import PhishingTicketsClosed from "./PhishingTicketsClosed";
-import DettaglioTicket from './DettaglioTicket'; // Importa il nuovo componente
-import ErrorBoundary from './ErrorBoundary';  // Importa ErrorBoundary
+import DettaglioTicket from './DettaglioTicket';
+import ErrorBoundary from './ErrorBoundary';
 
 function App() {
     const { isLoading } = useAuth0();
@@ -26,7 +26,7 @@ function App() {
     }
 
     return (
-        <div className="app-container"> {/* Aggiunto un contenitore per una migliore responsività */}
+        <div className="app-container">
             <Routes>
                 <Route path="/" element={<AuthenticationGuard component={Home} />} />
                 <Route path="/home" element={<AuthenticationGuard component={Home} />} />

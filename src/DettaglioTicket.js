@@ -59,7 +59,7 @@ const DettaglioTicket = () => {
                 return res.json();
             })
             .then((newComment) => {
-                // Aggiungi il nuovo commento direttamente alla lista
+                // Aggiunge il nuovo commento direttamente alla lista
                 setComments((prevComments) => [
                     ...prevComments,
                     { ...newComment, replies: [] } // Inizializza le risposte vuote

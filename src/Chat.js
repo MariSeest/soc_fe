@@ -10,7 +10,7 @@ const Chat = ({ username }) => {
     const [recipient, setRecipient] = useState('');
     const [error, setError] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const [newMessage, setNewMessage] = useState(false);  // Stato per la notifica di nuovi messaggi
+    const [newMessage, setNewMessage] = useState(false);
 
     // Effettua la registrazione dell'utente appena entra nella chat
     useEffect(() => {

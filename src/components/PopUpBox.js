@@ -27,8 +27,6 @@ const PopUpBox = ({ onClose }) => {
     };
 
     const handleSubmit = () => {
-        // Handle submission logic here
-        // For example, you can send the data to the server or perform any other action
         console.log('Text Input 1:', textInput1);
         console.log('Text Input 2:', textInput2);
         console.log('Selected Category Options:', selectedCategoryOptions);

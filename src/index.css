@@ -5,8 +5,8 @@ body {
   sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #007bff; /* Aggiunge uno sfondo blu */
-  color: #ffffff; /* Imposta il testo su bianco per un migliore contrasto */
+  background-color: #007bff;
+  color: #ffffff;
 }
 
 code {

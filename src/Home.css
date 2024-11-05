@@ -3,27 +3,27 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Gradiente futuristico blu */
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    color: #e0e0e0; /* Testo chiaro su sfondo scuro */
+    color: #e0e0e0;
 }
 
-/* Stile per l'header */
+
 .header {
     display: flex;
-    justify-content: flex-start; /* Allinea il contenuto a sinistra */
+    justify-content: flex-start;
     align-items: center;
     position: fixed;
     top: 0;
-    left: 0; /* Attacca l'header al bordo sinistro */
+    left: 0;
     z-index: 1;
-    width: 100%; /* Copre tutta la larghezza della pagina */
-    height: 150px; /* Altezza aumentata per un aspetto più imponente */
-    background: rgba(0, 0, 0, 0.8); /* Sfondo semi-trasparente per un look futuristico */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Aggiunge un'ombra all'header */
+    width: 100%;
+    height: 150px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Stile per il contenitore circolare nell'header */
@@ -31,34 +31,34 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 150px; /* Larghezza del cerchio */
+    width: 150px;
     height: 150px;
-    background-color: #282828; /* Colore scuro per contrastare il testo neon */
-    border: 5px solid #00e0ff; /* Bordo neon */
-    border-radius: 50%; /* Rende la figura rotonda */
-    box-shadow: 0 0 15px #00e0ff; /* Ombra neon per un effetto di luce */
-    margin-left: 0; /* Attacca il contenitore circolare al bordo sinistro */
+    background-color: #282828;
+    border: 5px solid #00e0ff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #00e0ff;
+    margin-left: 0;
     position: relative;
-    z-index: 1001; /* Posiziona il cerchio sopra il banner */
+    z-index: 1001;
 }
 
 /* Stile per la scritta SOC X */
 .header .circle-container h1 {
     font-size: 2em;
-    font-family: 'Orbitron', sans-serif; /* Font futuristica */
+    font-family: 'Orbitron', sans-serif;
     margin: 0;
     padding: 0;
-    color: #00e0ff; /* Colore del testo neon */
-    text-transform: uppercase; /* Testo in maiuscolo per un effetto futuristico */
-    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff; /* Effetto di luce neon */
-    text-align: center; /* Centra il testo all'interno del cerchio */
+    color: #00e0ff;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff;
+    text-align: center;
 }
 
 /* Stile per il banner delle notizie */
 .news-banner {
-    width: calc(100% - 150px); /* Larghezza meno la larghezza del cerchio SOCX */
+    width: calc(100% - 150px);
     background-color: #1a1a2e;
-    color: #FFFFFF; /* Colore del testo in bianco */
+    color: #FFFFFF;
     font-size: 14px;
     height: 1cm;
     display: flex;
@@ -66,24 +66,24 @@ body {
     justify-content: center;
     border-bottom: 2px solid #00e0ff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    position: absolute; /* Posizionato relativamente all'header */
-    top: 0; /* Posiziona il banner in cima alla pagina */
-    left: 150px; /* Allinea il banner al bordo destro del contenitore circolare */
-    z-index: 1000; /* Imposta un z-index alto per sovrapporsi agli altri elementi */
+    position: absolute;
+    top: 0;
+    left: 150px;
+    z-index: 1000;
 }
 
 .news-banner marquee {
     width: 100%;
     font-family: 'Orbitron', sans-serif;
-    color: #FFFFFF; /* Colore del testo in bianco */
+    color: #FFFFFF;
 }
 
-/* Stile per la toolbar */
+
 .toolbar {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 280px; /* Leggermente più largo */
+    width: 280px;
     background: rgba(0, 0, 0, 0.75);
     padding: 25px;
     position: fixed;
@@ -92,7 +92,7 @@ body {
     z-index: 1;
     border-radius: 12px;
     border: 2px solid #00e0ff;
-    box-shadow: 0 0 20px #00e0ff; /* Glow neon più marcato */
+    box-shadow: 0 0 20px #00e0ff;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -100,12 +100,12 @@ body {
     font-size: 1.2em;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #00e0ff; /* Testo neon */
+    color: #00e0ff;
 }
 
 .toolbar img {
     border-radius: 50%;
-    width: 60px; /* Immagine più grande */
+    width: 60px;
     height: 60px;
     border: 2px solid #00e0ff;
     box-shadow: 0 0 15px #00e0ff;
@@ -114,13 +114,13 @@ body {
 .toolbar h2 {
     margin: 0 0 10px 0;
     font-size: 1.5em;
-    color: #ffffff; /* Testo bianco per contrastare con lo sfondo scuro */
+    color: #ffffff;
 }
 
 .toolbar p {
     margin: 0 0 10px 0;
     font-size: 1em;
-    color: #b0b0b0; /* Testo grigio chiaro */
+    color: #b0b0b0;
 }
 
 .toolbar button {
@@ -129,26 +129,26 @@ body {
     font-size: 1em;
     cursor: pointer;
     border: none;
-    background-color: #00e0ff; /* Colore neon per il bottone */
-    color: #1f1c2c; /* Testo scuro per contrastare il bottone neon */
+    background-color: #00e0ff;
+    color: #1f1c2c;
     border-radius: 5px;
     width: 100%;
-    box-shadow: 0 0 10px #00e0ff; /* Ombra neon */
+    box-shadow: 0 0 10px #00e0ff;
     transition: background-color 0.3s ease;
 }
 
 .toolbar button:hover {
-    background-color: #00a3cc; /* Colore più scuro al passaggio del mouse */
+    background-color: #00a3cc;
 }
 
-/* Stile per il contenuto principale */
+
 .main-content {
     text-align: center;
-    margin-top: 200px; /* Aumenta la distanza dalla parte superiore per tenere conto dell'header */
+    margin-top: 200px;
     flex: 1;
     width: 100%;
     box-sizing: border-box;
-    padding-left: 270px; /* Spazio per evitare sovrapposizione con la toolbar */
+    padding-left: 270px;
 }
 
 .ticket-stats {
@@ -156,12 +156,12 @@ body {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
-    margin-top: 10cm; /* Aggiunge un margine superiore di 10 cm */
-    color: #00e0ff; /* Testo neon */
-    border: 1px solid #00e0ff; /* Bordo neon */
+    margin-top: 10cm;
+    color: #00e0ff;
+    border: 1px solid #00e0ff;
 }
 
-/* Stile per la chat popup */
+
 .chat-popup {
     display: none;
     position: fixed;
@@ -269,7 +269,7 @@ body {
     position: relative;
     height: 300px;
     width: 400px;
-    margin-top: 7cm; /* Aumenta il margine superiore a 7 cm per abbassare ulteriormente i bottoni */
+    margin-top: 7cm; /* margine superiore a 7 cm per abbassare ulteriormente i bottoni */
 }
 
 /* Bottoni 3D per la severity */
@@ -287,7 +287,7 @@ body {
 
 /* Effetti hover per i bottoni */
 .severity-box:hover {
-    transform: translateY(-15px); /* Aumentato effetto hover */
+    transform: translateY(-15px);
     box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.6);
 }
 

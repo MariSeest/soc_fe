@@ -1,4 +1,4 @@
-/* Stile futuristico per i pulsanti */
+
 .futuristic-button {
     background: linear-gradient(135deg, #00e0ff, #0077ff);
     color: white;
@@ -18,7 +18,7 @@
     box-shadow: 0 6px 20px rgba(0, 224, 255, 1);
 }
 
-/* Finestra laterale */
+
 .sidebar {
     position: fixed;
     right: 0;
@@ -36,9 +36,9 @@
 
 .sidebar-content {
     flex-grow: 1;
-    overflow-x: hidden;  /* Disabilita lo scroll orizzontale */
-    overflow-y: auto;    /* Scroll verticale interno alla barra laterale */
-    max-height: 100%;    /* Imposta l'altezza massima per la barra laterale */
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 100%;
 }
 
 .sidebar-close {
@@ -56,13 +56,13 @@
     background-color: #ff2d2d;
 }
 
-/* Contenitore scorrevole per i commenti */
+
 .comments-container {
-    overflow-y: auto; /* Scroll verticale */
-    max-height: 75vh; /* Limita l'altezza del contenitore per i commenti */
+    overflow-y: auto;
+    max-height: 75vh;
 }
 
-/* Contenitore per ogni commento */
+
 .comment-container {
     background-color: #1f2235;
     padding: 15px;
@@ -72,7 +72,7 @@
     border-left: 4px solid #00e0ff;
 }
 
-/* Contenitore per ogni risposta */
+
 .reply-container {
     background-color: #283046;
     padding: 10px;
@@ -83,13 +83,13 @@
     border-left: 4px solid #00e0ff;
 }
 
-/* Sezione contenitore per tutte le risposte */
+
 .replies-container {
     margin-top: 10px;
     margin-left: 10px;
 }
 
-/* Migliora la leggibilità del testo */
+
 p {
     font-size: 1.1em;
     line-height: 1.5;
